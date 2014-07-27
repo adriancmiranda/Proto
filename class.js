@@ -10,7 +10,7 @@
   Class.extend = function (object) {
   };
   
-  Class.implements = function (object) {
+  Class.implement = function (object) {
   };
   
 }(this));
