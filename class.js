@@ -1,10 +1,10 @@
 (function (window) {
   'use strict';
    
-  var Class = function() {
+  var Class = function (object) {
   };
   
-  Class.create = function () {
+  Class.create = function (object) {
   };
   
 }(this));
