@@ -36,8 +36,6 @@ var Observable = Class.create({
   hasChanged: function () {
   },
   notifyObservers: function () {
-  },
-  notifyObservers: function () {
   }
 });
 
@@ -62,3 +60,6 @@ var Robot = Class.create({
 });
 
 var eva = new Robot();
+eva.on('create', function (evt) {});
+eva.setVisible(true);
+eva.notifyObservers();
