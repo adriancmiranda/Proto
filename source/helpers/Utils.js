@@ -54,11 +54,3 @@ function typeOf(value, strict) {
 	}
 	return value ? type : value;
 }
-
-function wrap(wrapper) {
-	var __method = this;
-	return function () {
-		var a = update([__method.bind(this)], arguments);
-		return wrapper.apply(this, a);
-	}
-}
