@@ -2,6 +2,6 @@
 	"directory": "components",
 	"json": "bower.json",
 	"searchpath": [
-		"https://github.com/adriancmiranda/class.js"
+		"https://github.com/adriancmiranda/class.js" 
 	]
 }
