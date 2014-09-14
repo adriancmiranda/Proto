@@ -2,13 +2,13 @@
 
 // Based on Alex Arnell's and John Resig's inheritance implementation.
 
-var Class = (function () {
+window.Class = (function () {
 	function Subclass() {
 		// The base Subclass implementation (does nothing).
 	}
 
 	function create(source) {
-		return Class.extend(source);
+		return extend(source);
 	}
 
 	function extend(source) {
@@ -87,4 +87,4 @@ var Class = (function () {
 		extends: extend,
 		implements: implement
 	};
-})();
+}());
