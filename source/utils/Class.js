@@ -11,7 +11,7 @@ window.Class = (function () {
 		return extend(source);
 	}
 
-	function extend(source) {
+	function extend() {
 		var parent, properties, id;
 		id = -1;
 		parent = null;
@@ -24,6 +24,7 @@ window.Class = (function () {
 				this.initialize.apply(this, arguments);
 			}
 		}
+		Object.extend(caste, { implement: implement });
 		caste.superclass = parent;
 		caste.subclasses = [];
 		if (parent) {
@@ -32,7 +33,7 @@ window.Class = (function () {
 			parent.subclasses.push(caste);
 		}
 		while (++id < properties.length) {
-			caste.implements(properties[id]);
+			caste.implement(properties[id]);
 		}
 		if (!typeOf(caste.prototype.initialize)) {
 			caste.prototype.initialize = function () {
@@ -59,7 +60,7 @@ window.Class = (function () {
 		while (++id < properties.length) {
 			property = properties[id];
 			value = source[property];
-			if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] == '$super') {
+			if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
 				method = value;
 				value = (function (fn) {
 					return function () {
@@ -84,7 +85,7 @@ window.Class = (function () {
 
 	return {
 		create: create,
-		extends: extend,
-		implements: implement
+		extend: extend,
+		implement: implement
 	};
 }());

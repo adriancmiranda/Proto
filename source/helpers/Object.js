@@ -1,7 +1,7 @@
 'use strict';
 
 extend(Object, (function() {
-
+	
 	function keys(object) {
 		var property, id, results = [];
 		if (typeOf(object) !== 'object') {
@@ -23,6 +23,7 @@ extend(Object, (function() {
 	}
 	
 	var statics = {
+		extend: extend,
 		keys: Object.keys || keys
 	};
 	

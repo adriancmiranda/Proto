@@ -115,7 +115,10 @@
             }
             return results;
         }
-        var statics = { keys: Object.keys || keys };
+        var statics = {
+                extend: extend,
+                keys: Object.keys || keys
+            };
         return statics;
     }());
     extend(Function.prototype, function () {
@@ -182,7 +185,7 @@
         function create(source) {
             return extend(source);
         }
-        function extend(source) {
+        function extend() {
             var parent, properties, id;
             id = -1;
             parent = null;
@@ -195,6 +198,7 @@
                     this.initialize.apply(this, arguments);
                 }
             }
+            Object.extend(caste, { implement: implement });
             caste.superclass = parent;
             caste.subclasses = [];
             if (parent) {
@@ -203,7 +207,7 @@
                 parent.subclasses.push(caste);
             }
             while (++id < properties.length) {
-                caste.implements(properties[id]);
+                caste.implement(properties[id]);
             }
             if (!typeOf(caste.prototype.initialize)) {
                 caste.prototype.initialize = function () {
@@ -228,7 +232,7 @@
             while (++id < properties.length) {
                 property = properties[id];
                 value = source[property];
-                if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] == '$super') {
+                if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
                     method = value;
                     value = function (fn) {
                         return function () {
@@ -252,8 +256,8 @@
         }
         return {
             create: create,
-            extends: extend,
-            implements: implement
+            extend: extend,
+            implement: implement
         };
     }();
 }(this, this.document));
