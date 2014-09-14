@@ -7,8 +7,8 @@ window.Class = (function () {
 		// The base Subclass implementation (does nothing).
 	}
 
-	function create(source) {
-		return extend(source);
+	function create() {
+		return extend(arguments);
 	}
 
 	function extend() {

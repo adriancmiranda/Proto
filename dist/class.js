@@ -182,8 +182,8 @@
     window.Class = function () {
         function Subclass() {
         }
-        function create(source) {
-            return extend(source);
+        function create() {
+            return extend(arguments);
         }
         function extend() {
             var parent, properties, id;
