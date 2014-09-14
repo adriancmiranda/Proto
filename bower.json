@@ -1,0 +1,30 @@
+{
+  "name": "class.js",
+  "version": "0.0.2",
+  "main": "dist/class.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.18.2",
+    "cheerio": "~0.15.0"
+  },
+  "keywords": [
+    "class",
+    "inheritance",
+    "oop",
+    "javascript",
+    "library"
+  ],
+  "ignore": [
+    "components",
+    "node_modules",
+    "package.json",
+    "gulpfile.js",
+    "bower.json",
+    "source",
+    "test",
+    "**/.*"
+  ]
+} 
