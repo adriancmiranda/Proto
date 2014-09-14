@@ -21,7 +21,7 @@ if (exports) {
 		var files = [];
 		Array.prototype.slice.call(arguments, 0).forEach(function(filegroup) {
 			am[filegroup].forEach(function(file) {
-				// replace @ref
+				// replace @ref 
 				var match = file.match(/^\@(.*)/);
 				if (match) {
 					files = files.concat(am[match[1]]);
