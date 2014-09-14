@@ -190,28 +190,28 @@
             if (typeOf(properties[0]) === 'function') {
                 parent = properties.shift();
             }
-            function caste() {
+            function Caste() {
                 if (typeOf(this.initialize) === 'function') {
                     this.initialize.apply(this, arguments);
                 }
             }
-            Object.extend(caste, Class.Methods);
-            caste.superclass = parent;
-            caste.subclasses = [];
+            Object.extend(Caste, Class.Methods);
+            Caste.superclass = parent;
+            Caste.subclasses = [];
             if (parent) {
                 Subclass.prototype = parent.prototype;
-                caste.prototype = new Subclass();
-                parent.subclasses.push(caste);
+                Caste.prototype = new Subclass();
+                parent.subclasses.push(Caste);
             }
             while (++id < properties.length) {
-                caste.implement(properties[id]);
+                Caste.implement(properties[id]);
             }
-            if (!typeOf(caste.prototype.initialize)) {
-                caste.prototype.initialize = function () {
+            if (!typeOf(Caste.prototype.initialize)) {
+                Caste.prototype.initialize = function () {
                 };
             }
-            caste.prototype.constructor = caste;
-            return caste;
+            Caste.prototype.constructor = Caste;
+            return Caste;
         }
         function implement(source) {
             var ancestor, properties, id, property, value, method;
