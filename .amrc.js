@@ -8,6 +8,8 @@ if (exports) {
 			'files': [
 				'source/helpers/Polyfills.js',
 				'source/helpers/Utils.js',
+				'source/helpers/Object.js',
+				'source/helpers/Function.js',
 				'source/utils/Class.js'
 			]
 		}

@@ -54,3 +54,26 @@ function typeOf(value, strict) {
 	}
 	return value ? type : value;
 }
+
+function iterate(iterable) {
+	var length, results;
+	if (!typeOf(iterable)) {
+		return [];
+	}
+	if ('toArray' in Object(iterable)) {
+		return iterable.toArray();
+	}
+	length = iterable.length || 0;
+	results = new Array(length);
+	while (length--) {
+		results[length] = iterable[length];
+	}
+	return results;
+}
+
+function extend(destination, source) {
+	for (var property in source) {
+		destination[property] = source[property];
+	}
+	return destination;
+}
