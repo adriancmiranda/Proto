@@ -195,7 +195,7 @@
                     this.initialize.apply(this, arguments);
                 }
             }
-            Class.extend(caste, Class.Methods);
+            Object.extend(caste, Class.Methods);
             caste.superclass = parent;
             caste.subclasses = [];
             if (parent) {
