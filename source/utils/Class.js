@@ -21,7 +21,7 @@ window.Class = (function () {
 				this.initialize.apply(this, arguments);
 			}
 		}
-		Object.extend(caste, Class.Methods);
+		Class.extend(caste, Class.Methods);
 		caste.superclass = parent;
 		caste.subclasses = [];
 		if (parent) {
@@ -83,6 +83,7 @@ window.Class = (function () {
 	return {
 		create: create,
 		Methods: {
+			extend: Object.extend,
 			implement: implement
 		}
 	};

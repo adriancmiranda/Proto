@@ -178,14 +178,11 @@
         }
         return extensions;
     }());
-    // Based on Alex Arnell's and John Resig's inheritance implementation.
+    // Based on Alex Arnell's inheritance implementation.
     window.Class = function () {
         function Subclass() {
         }
         function create() {
-            return extend(arguments);
-        }
-        function extend() {
             var parent, properties, id;
             id = -1;
             parent = null;
@@ -198,7 +195,7 @@
                     this.initialize.apply(this, arguments);
                 }
             }
-            Object.extend(caste, { implement: implement });
+            Class.extend(caste, Class.Methods);
             caste.superclass = parent;
             caste.subclasses = [];
             if (parent) {
@@ -256,8 +253,10 @@
         }
         return {
             create: create,
-            extend: extend,
-            implement: implement
+            Methods: {
+                extend: Object.extend,
+                implement: implement
+            }
         };
     }();
 }(this, this.document));
