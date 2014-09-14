@@ -2,7 +2,7 @@
   "name": "class.js",
   "title": "Class",
   "description": "Class is a small JavaScript library for simple but powerful class based inheritance.",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "main": "dist/class.js",
   "homepage": "https://github.com/adriancmiranda/class.js",
   "dependencies": {},
