@@ -42,6 +42,7 @@ window.Class = (function () {
 	}
 	
 	function mutate(items) {
+		// N/A yet.
 	}
 
 	function implement(source) {
