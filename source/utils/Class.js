@@ -100,3 +100,7 @@ window.Class = (function () {
 	};
 
 }());
+
+// Externalize
+window.Class.getDefinitionName = getDefinitionName;
+window.Class.typeOf = typeOf;
