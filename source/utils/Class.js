@@ -40,6 +40,9 @@ window.Class = (function () {
 		Caste.prototype.constructor = Caste;
 		return Caste;
 	}
+	
+	function mutate(items) {
+	}
 
 	function implement(source) {
 		var ancestor, properties, id, property, value, method;
@@ -57,6 +60,13 @@ window.Class = (function () {
 		while (++id < properties.length) {
 			property = properties[id];
 			value = source[property];
+			if (property === 'implements') {
+				if (typeOf(value) === 'function') {
+					// N/A yet.
+				} else {
+					// N/A yet.
+				}
+			}
 			if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
 				method = value;
 				value = (function (fn) {
@@ -79,7 +89,7 @@ window.Class = (function () {
 		}
 		return this;
 	}
-
+	
 	return {
 		create: create,
 		Methods: {
