@@ -213,6 +213,8 @@
             Caste.prototype.constructor = Caste;
             return Caste;
         }
+        function mutate(items) {
+        }
         function implement(source) {
             var ancestor, properties, id, property, value, method;
             ancestor = this.superclass && this.superclass.prototype;
@@ -229,6 +231,11 @@
             while (++id < properties.length) {
                 property = properties[id];
                 value = source[property];
+                if (property === 'implements') {
+                    if (typeOf(value) === 'function') {
+                    } else {
+                    }
+                }
                 if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
                     method = value;
                     value = function (fn) {
