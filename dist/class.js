@@ -266,4 +266,7 @@
             }
         };
     }();
+    // Externalize
+    window.Class.getDefinitionName = getDefinitionName;
+    window.Class.typeOf = typeOf;
 }(this, this.document));
