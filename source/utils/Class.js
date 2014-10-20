@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 
 
 // Based on Alex Arnell's inheritance implementation.
 
