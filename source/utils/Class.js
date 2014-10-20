@@ -40,7 +40,7 @@ window.Class = (function () {
 		Caste.prototype.constructor = Caste;
 		return Caste;
 	}
-	
+
 	function mutate(items) {
 		// N/A yet.
 	}
@@ -68,7 +68,7 @@ window.Class = (function () {
 					// N/A yet.
 				}
 			}
-			if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
+			if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
 				method = value;
 				value = (function (fn) {
 					return function () {
@@ -90,7 +90,7 @@ window.Class = (function () {
 		}
 		return this;
 	}
-	
+
 	return {
 		create: create,
 		Methods: {

@@ -236,7 +236,7 @@
                     } else {
                     }
                 }
-                if (ancestor && typeOf(value) === 'function' && value.argumentNames()[0] === '$super') {
+                if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
                     method = value;
                     value = function (fn) {
                         return function () {

@@ -1,7 +1,7 @@
 (function (gulp, gulpLoadPlugins, pkg) {
 	'use strict';
 	//|**
-	//| 
+	//|
 	//| Gulpfile
 	//|
 	//| This file is the streaming build system
