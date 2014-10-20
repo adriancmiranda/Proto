@@ -187,4 +187,4 @@
 		return src;
 	}
 
-}(require('gulp'), require('gulp-load-plugins'), require('./package.json')));
+}(require('gulp'), require('gulp-load-plugins'), require('./package.json'))); 
