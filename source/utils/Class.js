@@ -2,7 +2,7 @@
 
 // Based on Alex Arnell's inheritance implementation.
 
-var Class = (function () {
+window.Class = (function () {
 
 	function Subclass() {
 		// The base Subclass implementation (does nothing).
@@ -102,21 +102,21 @@ var Class = (function () {
 }());
 
 // Externalize
-Class.getDefinitionName = getDefinitionName;
-Class.typeOf = typeOf;
-Class.isUndefined = isUndefined;
-Class.isDefined = isDefined;
-Class.isObject = isObject;
-Class.isString = isString;
-Class.isNumber = isNumber;
-Class.isUint = isUint;
-Class.isInt = isInt;
-Class.isDate = isDate;
-Class.isArray = isArray;
-Class.isArrayLike = isArrayLike;
-Class.isFunction = isFunction;
-Class.isRegExp = isRegExp;
-Class.isBoolean = isBoolean;
-Class.isElement = isElement;
-Class.isFile = isFile;
-Class.isWindow = isWindow;
+window.Class.getDefinitionName = getDefinitionName;
+window.Class.typeOf = typeOf;
+window.Class.isUndefined = isUndefined;
+window.Class.isDefined = isDefined;
+window.Class.isObject = isObject;
+window.Class.isString = isString;
+window.Class.isNumber = isNumber;
+window.Class.isUint = isUint;
+window.Class.isInt = isInt;
+window.Class.isDate = isDate;
+window.Class.isArray = isArray;
+window.Class.isArrayLike = isArrayLike;
+window.Class.isFunction = isFunction;
+window.Class.isRegExp = isRegExp;
+window.Class.isBoolean = isBoolean;
+window.Class.isElement = isElement;
+window.Class.isFile = isFile;
+window.Class.isWindow = isWindow;
