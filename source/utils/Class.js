@@ -2,7 +2,7 @@
 
 // Based on Alex Arnell's inheritance implementation.
 
-window.Class = (function () {
+var Class = (function () {
 
 	function Subclass() {
 		// The base Subclass implementation (does nothing).
@@ -102,5 +102,21 @@ window.Class = (function () {
 }());
 
 // Externalize
-window.Class.getDefinitionName = getDefinitionName;
-window.Class.typeOf = typeOf;
+Class.getDefinitionName = getDefinitionName;
+Class.typeOf = typeOf;
+Class.isUndefined = isUndefined;
+Class.isDefined = isDefined;
+Class.isObject = isObject;
+Class.isString = isString;
+Class.isNumber = isNumber;
+Class.isUint = isUint;
+Class.isInt = isInt;
+Class.isDate = isDate;
+Class.isArray = isArray;
+Class.isArrayLike = isArrayLike;
+Class.isFunction = isFunction;
+Class.isRegExp = isRegExp;
+Class.isBoolean = isBoolean;
+Class.isElement = isElement;
+Class.isFile = isFile;
+Class.isWindow = isWindow;
