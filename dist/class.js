@@ -1,7 +1,7 @@
 /**
  * Class
  * @description Class is a small JavaScript library for simple but powerful class based inheritance.
- * @version v0.0.1
+ * @version v0.0.2
  * @author Adrian C. Miranda
  * @link https://github.com/adriancmiranda/class.js
  * @license MIT Licensed
@@ -23,6 +23,7 @@
     //| @see http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
     //'
     'use strict';
+    // Class - Utilities methods
     var DONT_ENUMS, IS_DONTENUM_BUGGY;
     DONT_ENUMS = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
     IS_DONTENUM_BUGGY = function () {
@@ -33,6 +34,28 @@
         }
         return true;
     }();
+    function iterate(iterable) {
+        var length, results;
+        if (!typeOf(iterable)) {
+            return [];
+        }
+        if ('toArray' in Object(iterable)) {
+            return iterable.toArray();
+        }
+        length = iterable.length || 0;
+        results = new Array(length);
+        while (length--) {
+            results[length] = iterable[length];
+        }
+        return results;
+    }
+    function extend(destination, source) {
+        for (var property in source) {
+            destination[property] = source[property];
+        }
+        return destination;
+    }
+    // Class - Static methods
     function getDefinitionName(value, strict) {
         if (value === false) {
             return 'Boolean';
@@ -74,26 +97,61 @@
         }
         return value ? type : value;
     }
-    function iterate(iterable) {
-        var length, results;
-        if (!typeOf(iterable)) {
-            return [];
-        }
-        if ('toArray' in Object(iterable)) {
-            return iterable.toArray();
-        }
-        length = iterable.length || 0;
-        results = new Array(length);
-        while (length--) {
-            results[length] = iterable[length];
-        }
-        return results;
+    // Class - Other static methods
+    function isUndefined(value) {
+        return !typeOf(value);
     }
-    function extend(destination, source) {
-        for (var property in source) {
-            destination[property] = source[property];
+    function isDefined(value) {
+        return !isUndefined(value);
+    }
+    function isObject(value) {
+        return typeOf(value) === 'object';
+    }
+    function isString(value) {
+        return typeOf(value) === 'string';
+    }
+    function isNumber(value) {
+        return typeOf(value) === 'number';
+    }
+    function isUint(value) {
+        return typeOf(value, true) === 'uint';
+    }
+    function isInt(value) {
+        return typeOf(value, true) === 'int';
+    }
+    function isDate(value) {
+        return typeOf(value) === 'date';
+    }
+    function isArray(value) {
+        return typeOf(value) === 'array';
+    }
+    function isArrayLike(value) {
+        if (value == null || isWindow(value)) {
+            return false;
         }
-        return destination;
+        var length = value.length;
+        if (value.nodeType === 1 && length) {
+            return true;
+        }
+        return isString(value) || isArray(value) || length === 0 || isUint(length) && length > 0 && length - 1 in value;
+    }
+    function isFunction(value) {
+        return typeOf(value) === 'function';
+    }
+    function isRegExp(value) {
+        return typeOf(value) === 'regexp';
+    }
+    function isBoolean(value) {
+        return typeOf(value) === 'boolean';
+    }
+    function isElement(value) {
+        return !!(value && (value.nodeName || isFunction(value.on) && isFunction(value.find) && isFunction(value.eq) && isFunction(value.css)));
+    }
+    function isFile(value) {
+        return typeOf(value, true) === 'file';
+    }
+    function isWindow(value) {
+        return value && value.document && value.location && value.alert && value.setInterval && value.setTimeout;
     }
     extend(Object, function () {
         function keys(object) {
@@ -179,94 +237,110 @@
         return extensions;
     }());
     // Based on Alex Arnell's inheritance implementation.
-    window.Class = function () {
-        function Subclass() {
-        }
-        function create() {
-            var parent, properties, id;
-            id = -1;
-            parent = null;
-            properties = iterate(arguments);
-            if (typeOf(properties[0]) === 'function') {
-                parent = properties.shift();
+    var Class = function () {
+            function Subclass() {
             }
-            function Caste() {
-                if (typeOf(this.initialize) === 'function') {
-                    this.initialize.apply(this, arguments);
+            function create() {
+                var parent, properties, id;
+                id = -1;
+                parent = null;
+                properties = iterate(arguments);
+                if (typeOf(properties[0]) === 'function') {
+                    parent = properties.shift();
                 }
-            }
-            Object.extend(Caste, Class.Methods);
-            Caste.superclass = parent;
-            Caste.subclasses = [];
-            if (parent) {
-                Subclass.prototype = parent.prototype;
-                Caste.prototype = new Subclass();
-                parent.subclasses.push(Caste);
-            }
-            while (++id < properties.length) {
-                Caste.implement(properties[id]);
-            }
-            if (!typeOf(Caste.prototype.initialize)) {
-                Caste.prototype.initialize = function () {
-                };
-            }
-            Caste.prototype.constructor = Caste;
-            return Caste;
-        }
-        function mutate(items) {
-        }
-        function implement(source) {
-            var ancestor, properties, id, property, value, method;
-            ancestor = this.superclass && this.superclass.prototype;
-            properties = Object.keys(source);
-            id = -1;
-            if (IS_DONTENUM_BUGGY) {
-                if (source.toString != Object.prototype.toString) {
-                    properties.push('toString');
-                }
-                if (source.valueOf != Object.prototype.valueOf) {
-                    properties.push('valueOf');
-                }
-            }
-            while (++id < properties.length) {
-                property = properties[id];
-                value = source[property];
-                if (property === 'implements') {
-                    if (typeOf(value) === 'function') {
-                    } else {
+                function Caste() {
+                    if (typeOf(this.initialize) === 'function') {
+                        this.initialize.apply(this, arguments);
                     }
                 }
-                if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
-                    method = value;
-                    value = function (fn) {
-                        return function () {
-                            return ancestor[fn].apply(this, arguments);
-                        };
-                    }(property).wrap(method);
-                    value.valueOf = function (method) {
-                        return function () {
-                            return method.valueOf.call(method);
-                        };
-                    }(method);
-                    value.toString = function (method) {
-                        return function () {
-                            return method.toString.call(method);
-                        };
-                    }(method);
+                Object.extend(Caste, Class.Methods);
+                Caste.superclass = parent;
+                Caste.subclasses = [];
+                if (parent) {
+                    Subclass.prototype = parent.prototype;
+                    Caste.prototype = new Subclass();
+                    parent.subclasses.push(Caste);
                 }
-                this.prototype[property] = value;
+                while (++id < properties.length) {
+                    Caste.implement(properties[id]);
+                }
+                if (!typeOf(Caste.prototype.initialize)) {
+                    Caste.prototype.initialize = function () {
+                    };
+                }
+                Caste.prototype.constructor = Caste;
+                return Caste;
             }
-            return this;
-        }
-        return {
-            create: create,
-            Methods: {
-                extend: Object.extend,
-                implement: implement
+            function mutate(items) {
             }
-        };
-    }();
+            function implement(source) {
+                var ancestor, properties, id, property, value, method;
+                ancestor = this.superclass && this.superclass.prototype;
+                properties = Object.keys(source);
+                id = -1;
+                if (IS_DONTENUM_BUGGY) {
+                    if (source.toString != Object.prototype.toString) {
+                        properties.push('toString');
+                    }
+                    if (source.valueOf != Object.prototype.valueOf) {
+                        properties.push('valueOf');
+                    }
+                }
+                while (++id < properties.length) {
+                    property = properties[id];
+                    value = source[property];
+                    if (property === 'implements') {
+                        if (typeOf(value) === 'function') {
+                        } else {
+                        }
+                    }
+                    if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
+                        method = value;
+                        value = function (fn) {
+                            return function () {
+                                return ancestor[fn].apply(this, arguments);
+                            };
+                        }(property).wrap(method);
+                        value.valueOf = function (method) {
+                            return function () {
+                                return method.valueOf.call(method);
+                            };
+                        }(method);
+                        value.toString = function (method) {
+                            return function () {
+                                return method.toString.call(method);
+                            };
+                        }(method);
+                    }
+                    this.prototype[property] = value;
+                }
+                return this;
+            }
+            return {
+                create: create,
+                Methods: {
+                    extend: Object.extend,
+                    implement: implement
+                }
+            };
+        }();
     // Externalize
-    window.Class.getDefinitionName = getDefinitionName;
-    window.Class.typeOf = typeOf;
-}(this, this.document)); 
+    Class.getDefinitionName = getDefinitionName;
+    Class.typeOf = typeOf;
+    Class.isUndefined = isUndefined;
+    Class.isDefined = isDefined;
+    Class.isObject = isObject;
+    Class.isString = isString;
+    Class.isNumber = isNumber;
+    Class.isUint = isUint;
+    Class.isInt = isInt;
+    Class.isDate = isDate;
+    Class.isArray = isArray;
+    Class.isArrayLike = isArrayLike;
+    Class.isFunction = isFunction;
+    Class.isRegExp = isRegExp;
+    Class.isBoolean = isBoolean;
+    Class.isElement = isElement;
+    Class.isFile = isFile;
+    Class.isWindow = isWindow;
+}(this, this.document));
