@@ -95,6 +95,15 @@ function isObject(value) {
 	return typeOf(value) === 'object';
 }
 
+function isEmptyObject(value) {
+	for (var property in value) {
+		if (Object.prototype.hasOwnProperty.call(value, property)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function isString(value) {
 	return typeOf(value) === 'string';
 }
