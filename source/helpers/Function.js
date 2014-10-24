@@ -61,8 +61,8 @@ extend(Function.prototype, (function() {
 	};
 
 	if (!Function.prototype.bind) {
-	    extensions.bind = bind;
+		extensions.bind = bind;
 	}
-	
+
 	return extensions;
 })());
