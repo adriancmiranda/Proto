@@ -1,8 +1,7 @@
-'use strict'; 
-
 // Based on Alex Arnell's inheritance implementation.
+// --------------------------------------------------
 
-window.Class = (function () {
+var Class = function () {
 
 	function Subclass() {
 		// The base Subclass implementation (does nothing).
@@ -10,14 +9,13 @@ window.Class = (function () {
 
 	function create() {
 		var parent, properties, id;
-		id = -1;
 		parent = null;
-		properties = iterate(arguments);
-		if (typeOf(properties[0]) === 'function') {
+		properties = toArray(arguments);
+		if (isFunction(properties[0])) {
 			parent = properties.shift();
 		}
 		function Caste() {
-			if (typeOf(this.initialize) === 'function') {
+			if (isFunction(this.initialize)) {
 				this.initialize.apply(this, arguments);
 			}
 		}
@@ -26,67 +24,53 @@ window.Class = (function () {
 		Caste.subclasses = [];
 		if (parent) {
 			Subclass.prototype = parent.prototype;
-			Caste.prototype = new Subclass;
+			Caste.prototype = new Subclass();
 			parent.subclasses.push(Caste);
 		}
-		while (++id < properties.length) {
+		for (id = 0; id < properties.length; id++) {
 			Caste.implement(properties[id]);
 		}
 		if (!typeOf(Caste.prototype.initialize)) {
-			Caste.prototype.initialize = function () {
-				// No Operation
-			};
+			Caste.prototype.initialize = Ctor;
 		}
 		Caste.prototype.constructor = Caste;
 		return Caste;
 	}
 
-	function mutate(items) {
-		// N/A yet.
-	}
-
 	function implement(source) {
-		var ancestor, properties, id, property, value, method;
+		var ancestor, properties, id, value, valueOf, toString;
 		ancestor = this.superclass && this.superclass.prototype;
 		properties = Object.keys(source);
-		id = -1;
 		if (IS_DONTENUM_BUGGY) {
-			if (source.toString != Object.prototype.toString) {
+			if (source.toString !== ObjProto.toString) {
 				properties.push('toString');
 			}
-			if (source.valueOf != Object.prototype.valueOf) {
+			if (source.valueOf !== ObjProto.valueOf) {
 				properties.push('valueOf');
 			}
 		}
-		while (++id < properties.length) {
-			property = properties[id];
-			value = source[property];
-			if (property === 'implements') {
-				if (typeOf(value) === 'function') {
-					// N/A yet.
-				} else {
-					// N/A yet.
-				}
-			}
-			if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
-				method = value;
-				value = (function (fn) {
+		for (id = 0; id < properties.length; id++) {
+			if (ancestor && isFunction(source[properties[id]]) && /^\$super$/g.test(source[properties[id]].argumentNames()[0])) {
+				value = function (fn) {
 					return function () {
 						return ancestor[fn].apply(this, arguments);
 					};
-				})(property).wrap(method);
-				value.valueOf = (function (method) {
+				};
+				valueOf = function (fn) {
 					return function () {
-						return method.valueOf.call(method);
+						return fn.valueOf.call(fn);
 					};
-				})(method);
-				value.toString = (function (method) {
+				};
+				toString = function (fn) {
 					return function () {
-						return method.toString.call(method);
+						return fn.toString.call(fn);
 					};
-				})(method);
+				};
+				value = value(properties[id]).wrap(source[properties[id]]);
+				value.valueOf = valueOf(source[properties[id]]);
+				value.toString = toString(source[properties[id]]);
 			}
-			this.prototype[property] = value;
+			this.prototype[properties[id]] = value;
 		}
 		return this;
 	}
@@ -98,14 +82,14 @@ window.Class = (function () {
 			implement: implement
 		}
 	};
-
-}());
+}();
 
 // Externalize
+window.Class = Class;
 window.Class.getDefinitionName = getDefinitionName;
 window.Class.typeOf = typeOf;
-window.Class.isUndefined = isUndefined;
-window.Class.isDefined = isDefined;
+window.Class.bind = bindFn;
+window.Class.bindAll = bindAll;
 window.Class.isObject = isObject;
 window.Class.isString = isString;
 window.Class.isNumber = isNumber;
@@ -120,3 +104,7 @@ window.Class.isBoolean = isBoolean;
 window.Class.isElement = isElement;
 window.Class.isFile = isFile;
 window.Class.isWindow = isWindow;
+window.Class.toFloat = toFloat;
+window.Class.toUint = toUint;
+window.Class.toArray = toArray;
+window.Class.toInt = toInt;

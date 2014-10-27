@@ -43,6 +43,9 @@ indent_style = tab
 [*.xml]
 indent_style = tab
 
+[dist/**.js]
+indent_style = tab
+
 [components/**.js]
 indent_style = space
 

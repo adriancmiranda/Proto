@@ -24,7 +24,8 @@
     //'
     'use strict';
     // Class - Utilities methods
-    var DONT_ENUMS, IS_DONTENUM_BUGGY;
+    // -------------------------
+    var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind;
     DONT_ENUMS = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
     IS_DONTENUM_BUGGY = function () {
         for (var property in { toString: 1 }) {
@@ -33,21 +34,23 @@
             }
         }
         return true;
-    }();
-    function iterate(iterable) {
-        var length, results;
-        if (!typeOf(iterable)) {
-            return [];
-        }
-        if ('toArray' in Object(iterable)) {
-            return iterable.toArray();
-        }
-        length = iterable.length || 0;
-        results = new Array(length);
-        while (length--) {
-            results[length] = iterable[length];
-        }
-        return results;
+    };
+    IS_DONTENUM_BUGGY = IS_DONTENUM_BUGGY();
+    // Establish the root object, `window` in the browser, or `exports` on the server.
+    breaker = {};
+    // Save bytes in the minified (but not gzipped) version:
+    ArrayProto = Array.prototype;
+    FuncProto = Function.prototype;
+    ObjProto = Object.prototype;
+    // Create quick reference variables for speed access to core prototypes.
+    hasOwnProperty = ObjProto.hasOwnProperty;
+    toString = ObjProto.toString;
+    slice = ArrayProto.slice;
+    nativeForEach = ArrayProto.forEach;
+    nativeKeys = Object.keys;
+    nativeBind = FuncProto.bind;
+    // Reusable constructor function for prototype setting.
+    function Ctor() {
     }
     function extend(destination, source) {
         for (var property in source) {
@@ -56,6 +59,7 @@
         return destination;
     }
     // Class - Static methods
+    // ----------------------
     function getDefinitionName(value, strict) {
         if (value === false) {
             return 'Boolean';
@@ -67,7 +71,7 @@
             return 'Number';
         }
         if (value && value.constructor) {
-            var name = (value.constructor.toString() || Object.prototype.toString.apply(value)).replace(/^.*function([^\s]*|[^\(]*)\([^\x00]+$/, '$1').replace(/^(\[object\s)|]$/g, '').replace(/\s+/, '') || 'Object';
+            var name = (value.constructor.toString() || toString.apply(value)).replace(/^.*function([^\s]*|[^\(]*)\([^\x00]+$/, '$1').replace(/^(\[object\s)|]$/g, '').replace(/\s+/, '') || 'Object';
             if (strict !== true) {
                 if (!/^(Boolean|RegExp|Number|String|Array|Date)$/.test(name)) {
                     return 'Object';
@@ -98,14 +102,17 @@
         return value ? type : value;
     }
     // Class - Other static methods
-    function isUndefined(value) {
-        return !typeOf(value);
-    }
-    function isDefined(value) {
-        return !isUndefined(value);
-    }
+    // ----------------------------
     function isObject(value) {
         return typeOf(value) === 'object';
+    }
+    function isEmptyObject(value) {
+        for (var property in value) {
+            if (hasOwnProperty.call(value, property)) {
+                return false;
+            }
+        }
+        return true;
     }
     function isString(value) {
         return typeOf(value) === 'string';
@@ -126,7 +133,7 @@
         return typeOf(value) === 'array';
     }
     function isArrayLike(value) {
-        if (value == null || isWindow(value)) {
+        if (!typeOf(value) || isWindow(value)) {
             return false;
         }
         var length = value.length;
@@ -153,103 +160,170 @@
     function isWindow(value) {
         return value && value.document && value.location && value.alert && value.setInterval && value.setTimeout;
     }
-    extend(Object, function () {
-        function keys(object) {
-            var property, id, results = [];
-            if (typeOf(object) !== 'object') {
-                return results;
+    function toFloat(value, ceiling) {
+        value = window.parseFloat(value);
+        value = window.isNaN(value) || !window.isFinite(value) ? 0 : value;
+        if (ceiling) {
+            try {
+                value = window.parseFloat(value.toFixed(ceiling));
+            } catch (error) {
+                ceiling = Math.pow(10, ceiling);
+                value = window.parseInt(value * ceiling, 10) / ceiling;
             }
-            for (property in object) {
-                if (Object.prototype.hasOwnProperty.call(object, property)) {
-                    results.push(property);
-                }
-            }
-            if (IS_DONTENUM_BUGGY) {
-                for (id = 0; property = DONT_ENUMS[id]; id++) {
-                    if (Object.prototype.hasOwnProperty.call(object, property)) {
-                        results.push(property);
-                    }
-                }
-            }
+        }
+        return value;
+    }
+    function toInt(value) {
+        return 0 | window.parseInt(value, 10);
+    }
+    function toUint(value) {
+        value = toInt(value);
+        return value < 0 ? 0 : value;
+    }
+    function toArray(iterable) {
+        var length, results;
+        if (!typeOf(iterable)) {
+            return [];
+        }
+        if ('toArray' in Object(iterable)) {
+            return iterable.toArray();
+        }
+        length = iterable.length || 0;
+        results = new Array(length);
+        while (length--) {
+            results[length] = iterable[length];
+        }
+        return results;
+    }
+    function keys(object) {
+        var id, property, results = [];
+        if (!isObject(object)) {
             return results;
         }
-        var statics = {
-                extend: extend,
-                keys: Object.keys || keys
-            };
-        return statics;
-    }());
-    extend(Function.prototype, function () {
-        var slice = Array.prototype.slice;
-        function bind(context) {
-            var method, args, bound, noop;
-            if (arguments.length < 2 && !typeOf(arguments[0])) {
-                return this;
+        for (property in object) {
+            if (hasOwnProperty.call(object, property)) {
+                results.push(property);
             }
-            if (!typeOf(this) === 'function') {
-                throw new TypeError('The object is not callable.');
-            }
-            method = this;
-            args = slice.call(arguments, 1);
-            noop = function () {
-            };
-            bound = function () {
-                var params, instance;
-                params = merge(args, arguments);
-                instance = this instanceof bound ? this : context;
-                return method.apply(instance, params);
-            };
-            noop.prototype = this.prototype;
-            bound.prototype = new noop();
-            return bound;
         }
-        function argumentNames() {
+        if (IS_DONTENUM_BUGGY) {
+            for (id = 0; id < DONT_ENUMS.length; id++) {
+                if (hasOwnProperty.call(object, DONT_ENUMS[id])) {
+                    results.push(DONT_ENUMS[id]);
+                }
+            }
+        }
+        return results;
+    }
+    function each(obj, iterator, context) {
+        var id, keys, length;
+        if (!typeOf(obj)) {
+            return;
+        }
+        if (nativeForEach && obj.forEach === nativeForEach) {
+            obj.forEach(iterator, context);
+        } else if (obj.length === +obj.length) {
+            for (id = 0, length = obj.length; id < length; id++) {
+                if (iterator.call(context, obj[id], id, obj) === breaker) {
+                    return;
+                }
+            }
+        } else {
+            keys = (nativeKeys || keys)(obj);
+            for (id = 0, length = keys.length; id < length; id++) {
+                if (iterator.call(context, obj[keys[id]], keys[id], obj) === breaker) {
+                    return;
+                }
+            }
+        }
+    }
+    function update(list, args) {
+        var arrayLength, length;
+        arrayLength = list.length;
+        length = args.length;
+        while (length--) {
+            list[arrayLength + length] = args[length];
+        }
+        return list;
+    }
+    function bindFn(fn, context) {
+        var args, bound;
+        if (nativeBind && fn.bind === nativeBind) {
+            return nativeBind.apply(fn, slice.call(arguments, 1));
+        }
+        if (!isFunction(fn)) {
+            throw new TypeError();
+        }
+        args = slice.call(arguments, 2);
+        bound = function () {
+            var self, result;
+            if (!(this instanceof bound)) {
+                return fn.apply(context, args.concat(slice.call(arguments)));
+            }
+            Ctor.prototype = fn.prototype;
+            self = new Ctor();
+            Ctor.prototype = null;
+            result = fn.apply(self, args.concat(slice.call(arguments)));
+            if (Object(result) === result) {
+                return result;
+            }
+            return self;
+        };
+        return bound;
+    }
+    function bindAll(context) {
+        var methods = slice.call(arguments, 1);
+        if (methods.length === 0) {
+            throw new Error('bindAll must be passed function names');
+        }
+        each(methods, function (method) {
+            context[method] = bindFn(context[method], context);
+        });
+        return context;
+    }
+    function objectHelper() {
+        return {
+            extend: extend,
+            isEmpty: isEmptyObject,
+            keys: nativeKeys || keys
+        };
+    }
+    extend(Object, objectHelper());
+    function functionHelper() {
+        var extensions = {};
+        // Delegates to **ECMAScript 5**'s native `Function.bind` if available.
+        if (!nativeBind) {
+            extensions.bind = function (context) {
+                return bindFn(this, context);
+            };
+        }
+        extensions.argumentNames = function () {
             var names = this.toString().match(/^[\s\(]*function[^(]*\(([^)]*)\)/)[1].replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '').replace(/\s+/g, '').split(',');
-            return names.length == 1 && !names[0] ? [] : names;
-        }
-        function update(array, args) {
-            var arrayLength, length;
-            arrayLength = array.length;
-            length = args.length;
-            while (length--) {
-                array[arrayLength + length] = args[length];
-            }
-            return array;
-        }
-        function merge(array, args) {
-            array = slice.call(array, 0);
-            return update(array, args);
-        }
-        function wrap(wrapper) {
+            return names.length === 1 && !names[0] ? [] : names;
+        };
+        extensions.wrap = function (wrapper) {
             var methodCaller = this;
             return function () {
                 var args = update([methodCaller.bind(this)], arguments);
                 return wrapper.apply(this, args);
             };
-        }
-        var extensions = {
-                argumentNames: argumentNames,
-                wrap: wrap
-            };
-        if (!Function.prototype.bind) {
-            extensions.bind = bind;
-        }
+        };
         return extensions;
-    }());
+    }
+    extend(FuncProto, functionHelper());
     // Based on Alex Arnell's inheritance implementation.
-    window.Class = function () {
+    // --------------------------------------------------
+    var Class = function () {
         function Subclass() {
         }
         function create() {
             var parent, properties, id;
-            id = -1;
             parent = null;
-            properties = iterate(arguments);
-            if (typeOf(properties[0]) === 'function') {
+            properties = toArray(arguments);
+            if (isFunction(properties[0])) {
                 parent = properties.shift();
             }
             function Caste() {
-                if (typeOf(this.initialize) === 'function') {
+                if (isFunction(this.initialize)) {
                     this.initialize.apply(this, arguments);
                 }
             }
@@ -261,58 +335,49 @@
                 Caste.prototype = new Subclass();
                 parent.subclasses.push(Caste);
             }
-            while (++id < properties.length) {
+            for (id = 0; id < properties.length; id++) {
                 Caste.implement(properties[id]);
             }
             if (!typeOf(Caste.prototype.initialize)) {
-                Caste.prototype.initialize = function () {
-                };
+                Caste.prototype.initialize = Ctor;
             }
             Caste.prototype.constructor = Caste;
             return Caste;
         }
-        function mutate(items) {
-        }
         function implement(source) {
-            var ancestor, properties, id, property, value, method;
+            var ancestor, properties, id, value, valueOf, toString;
             ancestor = this.superclass && this.superclass.prototype;
             properties = Object.keys(source);
-            id = -1;
             if (IS_DONTENUM_BUGGY) {
-                if (source.toString != Object.prototype.toString) {
+                if (source.toString !== ObjProto.toString) {
                     properties.push('toString');
                 }
-                if (source.valueOf != Object.prototype.valueOf) {
+                if (source.valueOf !== ObjProto.valueOf) {
                     properties.push('valueOf');
                 }
             }
-            while (++id < properties.length) {
-                property = properties[id];
-                value = source[property];
-                if (property === 'implements') {
-                    if (typeOf(value) === 'function') {
-                    } else {
-                    }
-                }
-                if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
-                    method = value;
+            for (id = 0; id < properties.length; id++) {
+                if (ancestor && isFunction(source[properties[id]]) && /^\$super$/g.test(source[properties[id]].argumentNames()[0])) {
                     value = function (fn) {
                         return function () {
                             return ancestor[fn].apply(this, arguments);
                         };
-                    }(property).wrap(method);
-                    value.valueOf = function (method) {
+                    };
+                    valueOf = function (fn) {
                         return function () {
-                            return method.valueOf.call(method);
+                            return fn.valueOf.call(fn);
                         };
-                    }(method);
-                    value.toString = function (method) {
+                    };
+                    toString = function (fn) {
                         return function () {
-                            return method.toString.call(method);
+                            return fn.toString.call(fn);
                         };
-                    }(method);
+                    };
+                    value = value(properties[id]).wrap(source[properties[id]]);
+                    value.valueOf = valueOf(source[properties[id]]);
+                    value.toString = toString(source[properties[id]]);
                 }
-                this.prototype[property] = value;
+                this.prototype[properties[id]] = value;
             }
             return this;
         }
@@ -323,12 +388,13 @@
                 implement: implement
             }
         };
-    }();
+    };
     // Externalize
+    window.Class = new Class();
     window.Class.getDefinitionName = getDefinitionName;
     window.Class.typeOf = typeOf;
-    window.Class.isUndefined = isUndefined;
-    window.Class.isDefined = isDefined;
+    window.Class.bind = bindFn;
+    window.Class.bindAll = bindAll;
     window.Class.isObject = isObject;
     window.Class.isString = isString;
     window.Class.isNumber = isNumber;
@@ -343,4 +409,8 @@
     window.Class.isElement = isElement;
     window.Class.isFile = isFile;
     window.Class.isWindow = isWindow;
+    window.Class.toFloat = toFloat;
+    window.Class.toUint = toUint;
+    window.Class.toArray = toArray;
+    window.Class.toInt = toInt;
 }(this, this.document));

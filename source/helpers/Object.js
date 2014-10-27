@@ -1,31 +1,11 @@
 'use strict';
 
-extend(Object, (function() {
-	
-	function keys(object) {
-		var property, id, results = [];
-		if (typeOf(object) !== 'object') {
-			return results;
-		}
-		for (property in object) {
-			if (Object.prototype.hasOwnProperty.call(object, property)) {
-				results.push(property);
-			}
-		}
-		if (IS_DONTENUM_BUGGY) {
-			for (id = 0; property = DONT_ENUMS[id]; id++) {
-				if (Object.prototype.hasOwnProperty.call(object, property)) {
-					results.push(property);
-				}
-			}
-		}
-		return results;
-	}
-	
-	var statics = {
+function objectHelper() {
+	return {
 		extend: extend,
-		keys: Object.keys || keys
+		isEmpty: isEmptyObject,
+		keys: nativeKeys || keys
 	};
-	
-	return statics;
-})());
+}
+
+extend(Object, objectHelper());
