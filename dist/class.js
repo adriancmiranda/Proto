@@ -312,18 +312,19 @@
     extend(FuncProto, functionHelper());
     // Based on Alex Arnell's inheritance implementation.
     // --------------------------------------------------
-    var Class = function () {
+    window.Class = function () {
         function Subclass() {
         }
         function create() {
             var parent, properties, id;
+            id = -1;
             parent = null;
             properties = toArray(arguments);
-            if (isFunction(properties[0])) {
+            if (typeOf(properties[0]) === 'function') {
                 parent = properties.shift();
             }
             function Caste() {
-                if (isFunction(this.initialize)) {
+                if (typeOf(this.initialize) === 'function') {
                     this.initialize.apply(this, arguments);
                 }
             }
@@ -335,7 +336,7 @@
                 Caste.prototype = new Subclass();
                 parent.subclasses.push(Caste);
             }
-            for (id = 0; id < properties.length; id++) {
+            while (++id < properties.length) {
                 Caste.implement(properties[id]);
             }
             if (!typeOf(Caste.prototype.initialize)) {
@@ -345,39 +346,40 @@
             return Caste;
         }
         function implement(source) {
-            var ancestor, properties, id, value, valueOf, toString;
+            var ancestor, properties, id, property, value, method;
             ancestor = this.superclass && this.superclass.prototype;
             properties = Object.keys(source);
+            id = -1;
             if (IS_DONTENUM_BUGGY) {
-                if (source.toString !== ObjProto.toString) {
+                if (source.toString != Object.prototype.toString) {
                     properties.push('toString');
                 }
-                if (source.valueOf !== ObjProto.valueOf) {
+                if (source.valueOf != Object.prototype.valueOf) {
                     properties.push('valueOf');
                 }
             }
-            for (id = 0; id < properties.length; id++) {
-                if (ancestor && isFunction(source[properties[id]]) && /^\$super$/g.test(source[properties[id]].argumentNames()[0])) {
+            while (++id < properties.length) {
+                property = properties[id];
+                value = source[property];
+                if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
+                    method = value;
                     value = function (fn) {
                         return function () {
                             return ancestor[fn].apply(this, arguments);
                         };
-                    };
-                    valueOf = function (fn) {
+                    }(property).wrap(method);
+                    value.valueOf = function (method) {
                         return function () {
-                            return fn.valueOf.call(fn);
+                            return method.valueOf.call(method);
                         };
-                    };
-                    toString = function (fn) {
+                    }(method);
+                    value.toString = function (method) {
                         return function () {
-                            return fn.toString.call(fn);
+                            return method.toString.call(method);
                         };
-                    };
-                    value = value(properties[id]).wrap(source[properties[id]]);
-                    value.valueOf = valueOf(source[properties[id]]);
-                    value.toString = toString(source[properties[id]]);
+                    }(method);
                 }
-                this.prototype[properties[id]] = value;
+                this.prototype[property] = value;
             }
             return this;
         }
@@ -388,9 +390,8 @@
                 implement: implement
             }
         };
-    };
+    }();
     // Externalize
-    window.Class = new Class();
     window.Class.getDefinitionName = getDefinitionName;
     window.Class.typeOf = typeOf;
     window.Class.bind = bindFn;
