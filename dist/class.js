@@ -52,11 +52,26 @@
     // Reusable constructor function for prototype setting.
     function Ctor() {
     }
-    function extend(destination, source) {
+    function apply(object, source) {
         for (var property in source) {
-            destination[property] = source[property];
+            object[property] = source[property];
         }
-        return destination;
+        return object;
+    }
+    function extend(object) {
+        var source, property, id;
+        if (!isObject(object)) {
+            return object;
+        }
+        for (id = 1, length = arguments.length; id < length; id++) {
+            source = arguments[id];
+            for (var property in source) {
+                if (hasOwnProperty.call(source, property)) {
+                    object[property] = source[property];
+                }
+            }
+        }
+        return object;
     }
     // Class - Static methods
     // ----------------------
@@ -287,7 +302,7 @@
             keys: nativeKeys || keys
         };
     }
-    extend(Object, objectHelper());
+    apply(Object, objectHelper());
     function functionHelper() {
         var extensions = {};
         // Delegates to **ECMAScript 5**'s native `Function.bind` if available.
@@ -309,7 +324,7 @@
         };
         return extensions;
     }
-    extend(FuncProto, functionHelper());
+    apply(FuncProto, functionHelper());
     // Based on Alex Arnell's inheritance implementation.
     // --------------------------------------------------
     window.Class = function () {
@@ -328,7 +343,7 @@
                     this.initialize.apply(this, arguments);
                 }
             }
-            Object.extend(Caste, Class.Methods);
+            apply(Caste, Class.Methods);
             Caste.superclass = parent;
             Caste.subclasses = [];
             if (parent) {
@@ -386,7 +401,7 @@
         return {
             create: create,
             Methods: {
-                extend: Object.extend,
+                extend: apply,
                 implement: implement
             }
         };

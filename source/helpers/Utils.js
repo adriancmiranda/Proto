@@ -36,11 +36,27 @@ function Ctor() {
 	// No Operation
 }
 
-function extend(destination, source) {
+function apply(object, source) {
 	for (var property in source) {
-		destination[property] = source[property];
+		object[property] = source[property];
 	}
-	return destination;
+	return object;
+}
+
+function extend(object) {
+	var source, property, id;
+	if (!isObject(object)) {
+		return object;
+	}
+	for (id = 1, length = arguments.length; id < length; id++) {
+		source = arguments[id];
+		for (var property in source) {
+			if (hasOwnProperty.call(source, property)) {
+				object[property] = source[property];
+			}
+		}
+	}
+	return object;
 }
 
 // Class - Static methods

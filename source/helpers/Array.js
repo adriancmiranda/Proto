@@ -9,4 +9,4 @@ function arrayHelper() {
 	};
 }
 
-extend(ArrayProto, arrayHelper());
+apply(ArrayProto, arrayHelper());

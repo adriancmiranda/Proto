@@ -2,7 +2,7 @@
 // --------------------------------------------------
 
 window.Class = function () {
-	
+
 	function Subclass() {
 		// The base Subclass implementation (does nothing).
 	}
@@ -20,7 +20,7 @@ window.Class = function () {
 				this.initialize.apply(this, arguments);
 			}
 		}
-		Object.extend(Caste, Class.Methods);
+		apply(Caste, Class.Methods);
 		Caste.superclass = parent;
 		Caste.subclasses = [];
 		if (parent) {
@@ -78,7 +78,7 @@ window.Class = function () {
 	return {
 		create: create,
 		Methods: {
-			extend: Object.extend,
+			extend: apply,
 			implement: implement
 		}
 	};

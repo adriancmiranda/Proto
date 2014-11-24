@@ -8,4 +8,4 @@ function objectHelper() {
 	};
 }
 
-extend(Object, objectHelper());
+apply(Object, objectHelper());

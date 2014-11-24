@@ -28,4 +28,4 @@ function functionHelper() {
 	return extensions;
 }
 
-extend(FuncProto, functionHelper());
+apply(FuncProto, functionHelper());
