@@ -1,7 +1,7 @@
 /**
  * Class
  * @description Class is a small JavaScript library for simple but powerful class based inheritance.
- * @version v0.0.3
+ * @version v0.0.4
  * @author Adrian C. Miranda
  * @link https://github.com/adriancmiranda/class.js
  * @license MIT Licensed
@@ -25,7 +25,7 @@
     'use strict';
     // Class - Utilities methods
     // -------------------------
-    var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind;
+    var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind, idCounter;
     DONT_ENUMS = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
     IS_DONTENUM_BUGGY = function () {
         for (var property in { toString: 1 }) {
@@ -36,6 +36,7 @@
         return true;
     };
     IS_DONTENUM_BUGGY = IS_DONTENUM_BUGGY();
+    idCounter = 0;
     // Establish the root object, `window` in the browser, or `exports` on the server.
     breaker = {};
     // Save bytes in the minified (but not gzipped) version:
@@ -51,6 +52,10 @@
     nativeBind = FuncProto.bind;
     // Reusable constructor function for prototype setting.
     function Ctor() {
+    }
+    function uniqueId(prefix) {
+        var id = ++idCounter + '';
+        return prefix ? prefix + id : id;
     }
     function apply(object, source) {
         for (var property in source) {
