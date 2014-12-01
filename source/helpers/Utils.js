@@ -3,7 +3,7 @@
 // Class - Utilities methods
 // -------------------------
 
-var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind, idCounter;
+var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind, uidCounter;
 DONT_ENUMS = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
 IS_DONTENUM_BUGGY = function () {
 	for (var property in { toString: 1 }) {
@@ -14,7 +14,7 @@ IS_DONTENUM_BUGGY = function () {
 	return true;
 }
 IS_DONTENUM_BUGGY = IS_DONTENUM_BUGGY();
-idCounter = 0;
+uidCounter = 0;
 
 // Establish the root object, `window` in the browser, or `exports` on the server.
 breaker = {};
@@ -38,7 +38,7 @@ function Ctor() {
 }
 
 function uniqueId(prefix) {
-	var id = ++idCounter + '';
+	var id = ++uidCounter + '';
 	return prefix ? prefix + id : id;
 }
 

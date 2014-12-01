@@ -86,6 +86,7 @@ window.Class = function () {
 // Externalize
 window.Class.getDefinitionName = getDefinitionName;
 window.Class.typeOf = typeOf;
+window.Class.uniqueId = uniqueId;
 window.Class.bind = bindFn;
 window.Class.bindAll = bindAll;
 window.Class.isObject = isObject;
