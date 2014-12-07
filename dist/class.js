@@ -313,7 +313,7 @@
         // Delegates to **ECMAScript 5**'s native `Function.bind` if available.
         if (!nativeBind) {
             extensions.bind = function (context) {
-                return bindFn(this, context);
+                return bindFn(this, context, slice.call(arguments, 1));
             };
         }
         extensions.argumentNames = function () {
