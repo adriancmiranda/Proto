@@ -10,16 +10,16 @@
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
         // For CommonJS and CommonJS-like environments where a proper window is present,
-        // execute the factory and get trace
+        // execute the factory and get Class
         // For environments that do not inherently posses a window with a document
-        // (such as Node.js), expose a trace-making factory as module.exports
+        // (such as Node.js), expose a Class-making factory as module.exports
         // This accentuates the need for the creation of a real window
-        // e.g. var trace = require('trace')(window);
+        // e.g. var Class = require('class');
         module.exports = global.document ?
             factory(global, true) :
             function(w) {
                 if (!w.document) {
-                    throw new Error('trace requires a window with a document');
+                    throw new Error('Class requires a window with a document');
                 }
                 return factory(w);
             };
@@ -462,7 +462,7 @@
     Class.toArray = toArray;
     Class.toInt = toInt;
 
-    // Expose trace identifier, even in AMD
+    // Expose Class identifier, even in AMD
     // and CommonJS for browser emulators
     if (typeof noGlobal === strundefined) {
         window.Class = Class;
