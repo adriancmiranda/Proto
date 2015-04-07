@@ -6,7 +6,31 @@
  * @link https://github.com/adriancmiranda/class.js
  * @license MIT Licensed
  */
-(function (window, document, undefined) {
+(function(global, factory) {
+
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        // For CommonJS and CommonJS-like environments where a proper window is present,
+        // execute the factory and get trace
+        // For environments that do not inherently posses a window with a document
+        // (such as Node.js), expose a trace-making factory as module.exports
+        // This accentuates the need for the creation of a real window
+        // e.g. var trace = require('trace')(window);
+        module.exports = global.document ?
+            factory(global, true) :
+            function(w) {
+                if (!w.document) {
+                    throw new Error('trace requires a window with a document');
+                }
+                return factory(w);
+            };
+    } else {
+        factory(global);
+    }
+
+// Pass this if window is not defined yet
+}(typeof window !== 'undefined' ? window : this, function(window, noGlobal) {
+    'use strict';
+    
     //| .-------------------------------------------------------------------.
     //| | NAMING CONVENTIONS:                                               |
     //| |-------------------------------------------------------------------|
@@ -22,7 +46,8 @@
     //| Comment syntax for the entire project follows JSDoc:
     //| @see http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
     //'
-    'use strict';
+    var strundefined = typeof undefined;
+
     // Class - Utilities methods
     // -------------------------
     var DONT_ENUMS, IS_DONTENUM_BUGGY, breaker, ArrayProto, ObjProto, FuncProto, hasOwnProperty, toString, slice, nativeForEach, nativeKeys, nativeBind, uidCounter;
@@ -332,7 +357,7 @@
     apply(FuncProto, functionHelper());
     // Based on Alex Arnell's inheritance implementation.
     // --------------------------------------------------
-    window.Class = function () {
+    var Class = (function() {
         function Subclass() {
         }
         function create() {
@@ -410,29 +435,38 @@
                 implement: implement
             }
         };
-    }();
-    // Externalize
-    window.Class.getDefinitionName = getDefinitionName;
-    window.Class.typeOf = typeOf;
-    window.Class.uniqueId = uniqueId;
-    window.Class.bind = bindFn;
-    window.Class.bindAll = bindAll;
-    window.Class.isObject = isObject;
-    window.Class.isString = isString;
-    window.Class.isNumber = isNumber;
-    window.Class.isUint = isUint;
-    window.Class.isInt = isInt;
-    window.Class.isDate = isDate;
-    window.Class.isArray = isArray;
-    window.Class.isArrayLike = isArrayLike;
-    window.Class.isFunction = isFunction;
-    window.Class.isRegExp = isRegExp;
-    window.Class.isBoolean = isBoolean;
-    window.Class.isElement = isElement;
-    window.Class.isFile = isFile;
-    window.Class.isWindow = isWindow;
-    window.Class.toFloat = toFloat;
-    window.Class.toUint = toUint;
-    window.Class.toArray = toArray;
-    window.Class.toInt = toInt;
-}(this, this.document));
+    }());
+
+    // Static methods
+    Class.getDefinitionName = getDefinitionName;
+    Class.typeOf = typeOf;
+    Class.uniqueId = uniqueId;
+    Class.bind = bindFn;
+    Class.bindAll = bindAll;
+    Class.isObject = isObject;
+    Class.isString = isString;
+    Class.isNumber = isNumber;
+    Class.isUint = isUint;
+    Class.isInt = isInt;
+    Class.isDate = isDate;
+    Class.isArray = isArray;
+    Class.isArrayLike = isArrayLike;
+    Class.isFunction = isFunction;
+    Class.isRegExp = isRegExp;
+    Class.isBoolean = isBoolean;
+    Class.isElement = isElement;
+    Class.isFile = isFile;
+    Class.isWindow = isWindow;
+    Class.toFloat = toFloat;
+    Class.toUint = toUint;
+    Class.toArray = toArray;
+    Class.toInt = toInt;
+
+    // Expose trace identifier, even in AMD
+    // and CommonJS for browser emulators
+    if (typeof noGlobal === strundefined) {
+        window.Class = Class;
+    }
+
+    return Class;
+}));
