@@ -8,3 +8,16 @@ An extensible program-code-template for creating objects
 ```bash
 bower install --save class=adriancmiranda/class.js
 ```
+
+## CDN
+Use this URL for dev/testing
+
+```javascript
+<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/class.min.js"></script>
+```
+
+Use this URL in production
+
+```javascript
+<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/class.min.js"></script>
+```
