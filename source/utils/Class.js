@@ -1,12 +1,9 @@
 // Based on Alex Arnell's inheritance implementation.
 // --------------------------------------------------
 
-window.Class = function () {
-
+var Class = (function() {
 	function Subclass() {
-		// The base Subclass implementation (does nothing).
 	}
-
 	function create() {
 		var parent, properties, id;
 		id = -1;
@@ -53,7 +50,7 @@ window.Class = function () {
 		while (++id < properties.length) {
 			property = properties[id];
 			value = source[property];
-			if (ancestor && typeOf(value) === 'function' && /\$super/g.test(value.argumentNames()[0])) {
+			if (ancestor && typeOf(value) === 'function' && (/\$super/g.test(value.argumentNames()[0]))) {
 				method = value;
 				value = function (fn) {
 					return function () {
@@ -82,28 +79,37 @@ window.Class = function () {
 			implement: implement
 		}
 	};
-}();
-// Externalize
-window.Class.getDefinitionName = getDefinitionName;
-window.Class.typeOf = typeOf;
-window.Class.uniqueId = uniqueId;
-window.Class.bind = bindFn;
-window.Class.bindAll = bindAll;
-window.Class.isObject = isObject;
-window.Class.isString = isString;
-window.Class.isNumber = isNumber;
-window.Class.isUint = isUint;
-window.Class.isInt = isInt;
-window.Class.isDate = isDate;
-window.Class.isArray = isArray;
-window.Class.isArrayLike = isArrayLike;
-window.Class.isFunction = isFunction;
-window.Class.isRegExp = isRegExp;
-window.Class.isBoolean = isBoolean;
-window.Class.isElement = isElement;
-window.Class.isFile = isFile;
-window.Class.isWindow = isWindow;
-window.Class.toFloat = toFloat;
-window.Class.toUint = toUint;
-window.Class.toArray = toArray;
-window.Class.toInt = toInt;
+}());
+
+// Static methods
+Class.getDefinitionName = getDefinitionName;
+Class.typeOf = typeOf;
+Class.uniqueId = uniqueId;
+Class.bind = bindFn;
+Class.bindAll = bindAll;
+Class.isObject = isObject;
+Class.isString = isString;
+Class.isNumber = isNumber;
+Class.isUint = isUint;
+Class.isInt = isInt;
+Class.isDate = isDate;
+Class.isArray = isArray;
+Class.isArrayLike = isArrayLike;
+Class.isFunction = isFunction;
+Class.isRegExp = isRegExp;
+Class.isBoolean = isBoolean;
+Class.isElement = isElement;
+Class.isFile = isFile;
+Class.isWindow = isWindow;
+Class.toFloat = toFloat;
+Class.toUint = toUint;
+Class.toArray = toArray;
+Class.toInt = toInt;
+
+// Expose Class identifier, even in AMD
+// and CommonJS for browser emulators
+if (typeof noGlobal === strundefined) {
+	window.Class = Class;
+}
+
+return Class;
