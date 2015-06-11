@@ -1,7 +1,7 @@
 /**
  * Class
  * @description Class is a small JavaScript library for simple but powerful class based inheritance.
- * @version v0.0.4
+ * @version v0.0.5
  * @author Adrian C. Miranda
  * @link https://github.com/adriancmiranda/class.js
  * @license MIT Licensed
