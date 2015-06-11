@@ -89,20 +89,20 @@
         return object;
     }
     function extend(object) {
-        var source, property, id;
-        if (!isObject(object)) {
-            return object;
-        }
-        for (id = 1, length = arguments.length; id < length; id++) {
-            source = arguments[id];
-            for (var property in source) {
-                if (hasOwnProperty.call(source, property)) {
-                    object[property] = source[property];
-                }
-            }
-        }
-        return object;
-    }
+			var source, property, id, params = toArray(arguments);
+			if (!isObject(object)) {
+				return object;
+			}
+			for (id = 1; id < params.length; id++) {
+				source = params[id];
+				for (var property in source) {
+					if (hasOwnProperty.call(source, property)) {
+						object[property] = source[property];
+					}
+				}
+			}
+			return object;
+		}
     // Class - Static methods
     // ----------------------
     function getDefinitionName(value, strict) {
