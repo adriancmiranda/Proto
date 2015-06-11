@@ -50,12 +50,12 @@ function apply(object, source) {
 }
 
 function extend(object) {
-	var source, property, id;
+	var source, property, id, params = toArray(arguments);
 	if (!isObject(object)) {
 		return object;
 	}
-	for (id = 1, length = arguments.length; id < length; id++) {
-		source = arguments[id];
+	for (id = 1; id < params.length; id++) {
+		source = params[id];
 		for (var property in source) {
 			if (hasOwnProperty.call(source, property)) {
 				object[property] = source[property];
