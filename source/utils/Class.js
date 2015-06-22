@@ -88,6 +88,7 @@ Class.uniqueId = uniqueId;
 Class.bind = bindFn;
 Class.bindAll = bindAll;
 Class.isObject = isObject;
+Class.isEmptyObject = isEmptyObject;
 Class.isString = isString;
 Class.isNumber = isNumber;
 Class.isUint = isUint;
