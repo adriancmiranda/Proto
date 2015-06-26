@@ -13,7 +13,7 @@ bower install --save class=adriancmiranda/class.js
 Use this URL for dev/testing
 
 ```javascript
-<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/class.min.js"></script>
+<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/class.js"></script>
 ```
 
 Use this URL in production
