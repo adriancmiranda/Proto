@@ -82,6 +82,12 @@ Get Started
 Usage
 -----
 
+## NodeJS
+
+```javascript
+var Proto = require('Proto');
+```
+
 ## CDN (browser)
 Use this URL for dev/testing
 
@@ -93,12 +99,6 @@ Use this URL in production
 
 ```html
 <script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/Proto.min.js"></script>
-```
-
-## Available 4 [NodeJS](https://nodejs.org/en/) 2
-
-```javascript
-var Proto = require('Proto');
 ```
 
 ```javascript
