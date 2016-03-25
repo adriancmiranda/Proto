@@ -79,11 +79,30 @@ Get Started
 ### via Component
 `component install adriancmiranda/Proto`
 
-
 Usage
 -----
 
+## CDN (browser)
+Use this URL for dev/testing
+
+```html
+<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/class.js"></script>
+```
+
+Use this URL in production
+
+```html
+<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/class.min.js"></script>
+```
+
+## Available 4 [NodeJS](https://nodejs.org/en/) 2
+
 ```javascript
+var Proto = require('Proto');
+```
+
+```javascript
+
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// SimpleHTTPServer
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,4 +168,5 @@ Usage
 	var server = new Server('yourServerName');
 	server.startup();
 	Server.killAll();
+
 ```
