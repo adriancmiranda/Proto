@@ -175,4 +175,4 @@ Use this URL in production
 
 ## License
 
-[MIT]
+[MIT](https://github.com/adriancmiranda/class.js/blob/master/LICENSE.md)
