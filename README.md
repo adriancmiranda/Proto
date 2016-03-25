@@ -86,13 +86,13 @@ Usage
 Use this URL for dev/testing
 
 ```html
-<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/class.js"></script>
+<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/Proto.js"></script>
 ```
 
 Use this URL in production
 
 ```html
-<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/class.min.js"></script>
+<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/Proto.min.js"></script>
 ```
 
 ## Available 4 [NodeJS](https://nodejs.org/en/) 2
