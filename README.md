@@ -121,7 +121,9 @@ Usage
 
 	var Server = Proto(function Server(){
 		Server.super.apply(this, arguments);
-	}).extends(HTTPServer);
+	})
+
+	Server.extends(HTTPServer);
 
 	Server.public('start', function(){
 		Server.super.prototype.start.apply(this, arguments);
