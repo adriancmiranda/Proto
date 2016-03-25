@@ -1,0 +1,61 @@
+{
+  "name": "class.js",
+  "title": "Class",
+  "description": "Class is a small JavaScript library for simple but powerful class based inheritance.",
+  "version": "0.0.5",
+  "main": "dist/class.js",
+  "homepage": "https://github.com/adriancmiranda/class.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.6.0",
+    "gulp-load-plugins": "~0.5.0",
+    "gulp-bump": "~0.1.7",
+    "gulp-clean": "~0.2.4",
+    "gulp-git": "~0.4.0",
+    "gulp-header": "~1.0.2",
+    "gulp-jshint": "~1.5.3",
+    "gulp-mocha": "~0.4.1",
+    "gulp-size": "~0.3.0",
+    "gulp-uglify": "~0.2.1",
+    "gulp-plumber": "~0.6.1",
+    "gulp-jscs": "~0.4.1",
+    "gulp-rename": "~1.2.0",
+    "gulp-jsonlint": "0.0.3",
+    "gulp-concat": "~2.2.0",
+    "gulp-remove-use-strict": "~0.0.2",
+    "gulp-notify": "~1.2.5"
+  },
+  "author": {
+    "name": "Adrian C. Miranda",
+    "email": "adriancmiranda@gmail.com",
+    "url": "https://github.com/adriancmiranda"
+  },
+  "keywords": [
+    "class",
+    "inheritance",
+    "oop",
+    "javascript",
+    "library"
+  ],
+  "license": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/adriancmiranda/class.js/blob/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adriancmiranda/class.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adriancmiranda/class.js/issues"
+  },
+  "engines": {
+    "node": ">=0.10.22"
+  },
+  "scripts": {
+    "build": "npm install && gulp",
+    "start": "gulp watch",
+    "test": "gulp test"
+  }
+}
