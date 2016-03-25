@@ -78,3 +78,73 @@ Get Started
 
 ### via Component
 `component install adriancmiranda/Proto`
+
+
+Usage
+-----
+
+```javascript
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// SimpleHTTPServer
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var SimpleHTTPServer = new Proto(function SimpleHTTPServer(){
+		console.log('SimpleHTTPServer created', arguments);
+	});
+
+	SimpleHTTPServer.prototype.start = function(){
+		console.log('SimpleHTTPServer started', arguments);
+	};
+
+	SimpleHTTPServer.prototype.stop = function(){
+		console.log('SimpleHTTPServer stopped', arguments);
+	};
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// HTTPServer
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var HTTPServer = Proto(function HTTPServer(){
+		HTTPServer.super.apply(this, arguments);
+		Proto.bindAll(this);
+	}).extends(SimpleHTTPServer).public('start', function(){
+		HTTPServer.super.prototype.start.apply(this, arguments);
+		console.log('HTTPServer started');
+	}).public('stop', function(){
+		HTTPServer.super.prototype.stop.apply(this, arguments);
+		console.log('HTTPServer stopped');
+	});
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// Server
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var Server = Proto(function Server(){
+		Server.super.apply(this, arguments);
+	}).extends(HTTPServer);
+
+	Server.public('start', function(){
+		Server.super.prototype.start.apply(this, arguments);
+		console.log('Server started', Proto.keys(this));
+	});
+
+	Server.public('stop', function(){
+		Server.super.prototype.stop.apply(this, arguments);
+		console.log('Server stopped');
+	});
+
+	Server.public('startup', function(){
+		console.log('Server up and running!');
+		this.start();
+	}).static('killAll', function(){
+		console.log('Killed!');
+	});
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// Tests
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var server = new Server('yourServerName');
+	server.startup();
+	Server.killAll();
+```
