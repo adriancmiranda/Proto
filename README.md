@@ -93,7 +93,7 @@ Use this URL in production
 ### via Component
 `component install adriancmiranda/Proto`
 
-## Import on Node/Browserify/Webpack
+### Node/Browserify/Webpack
 
 ```javascript
 var Proto = require('Proto');
