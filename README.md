@@ -155,8 +155,10 @@ Use this URL in production
 	});
 
 	Server.public('startup', function(){
+		this.start('server 1');
+		this.start('server 2');
+		this.start('server 3');
 		console.log('Server up and running!');
-		this.start();
 	}).static('killAll', function(){
 		console.log('Killed!');
 	});
@@ -170,3 +172,7 @@ Use this URL in production
 	Server.killAll();
 
 ```
+
+## License
+
+[MIT]
