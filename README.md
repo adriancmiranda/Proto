@@ -93,6 +93,8 @@ Use this URL in production
 ### via Component
 `component install adriancmiranda/Proto`
 
+## Node/Browserify/Webpack
+
 ```javascript
 var Proto = require('Proto');
 ```
