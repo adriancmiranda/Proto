@@ -37,7 +37,7 @@ define([
 		return value;
 	};
 
-	Proto.create = (create || function(obj, props){
+	Proto.create = (create || function(obj, props){// jshint ignore:line
 		var instance, prop;
 		function Proto(){}
 		Proto.prototype = obj;
@@ -121,7 +121,7 @@ define([
 			return this;
 		}
 		this.super = superclass;
-		if(nodeEnv){
+		if(nodeEnv){// jshint ignore:line
 			require('util').inherits(this, superclass);
 			return this;
 		}

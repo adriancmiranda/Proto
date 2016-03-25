@@ -36,12 +36,9 @@
     "test": "npm run grunt test"
   },
   "scaffold": {
-    "modules": ["desktop"],
-    "server": "server",
     "source": "source",
     "static": "dist",
-    "test": "test",
-    "tmp": ".tmp"
+    "test": "test"
   },
   "commitplease": {
     "components": [

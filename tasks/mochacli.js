@@ -10,6 +10,6 @@ module.exports = function mochacli(){
 			timeout:6000,
 			ui:'bdd'
 		},
-		client:['test/{,*/}*.js'],
+		client:['<%= scaffold.test %>/{,*/}*.js'],
 	})
 };

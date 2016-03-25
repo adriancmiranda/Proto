@@ -4,7 +4,9 @@
 	var create = typeof Object.create === 'function' && Object.create;
 	if(typeof module === 'object' && typeof module.exports === 'object'){
 		module.exports = factory(global, create, true);
-	}else factory(global, create);
+	}else{
+		factory(global, create);
+	}
 
 }(typeof window !== 'undefined' ? window : this, function(window, create, nodeEnv){
 
@@ -62,7 +64,7 @@
 		return value;
 	};
 
-	Proto.create = (create || function(obj, props){
+	Proto.create = (create || function(obj, props){// jshint ignore:line
 		var instance, prop;
 		function Proto(){}
 		Proto.prototype = obj;
@@ -146,7 +148,7 @@
 			return this;
 		}
 		this.super = superclass;
-		if(nodeEnv){
+		if(nodeEnv){// jshint ignore:line
 			require('util').inherits(this, superclass);
 			return this;
 		}

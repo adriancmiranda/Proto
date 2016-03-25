@@ -4,7 +4,9 @@
 	var create = typeof Object.create === 'function' && Object.create;
 	if(typeof module === 'object' && typeof module.exports === 'object'){
 		module.exports = factory(global, create, true);
-	}else factory(global, create);
+	}else{
+		factory(global, create);
+	}
 
 }(typeof window !== 'undefined' ? window : this, function(window, create, nodeEnv){
 
