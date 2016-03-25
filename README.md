@@ -150,6 +150,18 @@ Usage
 		Server.super.prototype.start.apply(this, arguments);
 		console.log('Server started', Proto.keys(this));
 	});
+	
+	Server.charge('listen', function(){
+		console.log('listen http://%s:%i', '0.0.0.0', 3000);
+	});
+	
+	Server.charge('listen', function(port){
+		console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
+	});
+	
+	Server.charge('listen', function(host, port){
+		console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
+	});
 
 	Server.public('stop', function(){
 		Server.super.prototype.stop.apply(this, arguments);
