@@ -1,0 +1,26 @@
+{
+	"name": "Proto",
+	"description": "An extensible program-code-template for creating objects",
+	"type": "component",
+	"license": "MIT",
+	"support": {
+		"source": "https://github.com/adriancmiranda/Proto"
+	},
+	"authors": [
+		{
+			"name": "Adrian C. Miranda",
+			"email": "adriancmiranda@gmail.com"
+		}
+	],
+	"extra": {
+		"component": {
+			"scripts": [
+				"./dist/Proto.js"
+			],
+			"files": [
+				"./dist/Proto.min.js",
+				"./dist/Proto.min.map"
+			]
+		}
+	}
+}

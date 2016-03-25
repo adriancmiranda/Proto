@@ -1,61 +1,50 @@
 {
-  "name": "class.js",
-  "title": "Class",
-  "description": "Class is a small JavaScript library for simple but powerful class based inheritance.",
-  "version": "0.0.5",
-  "main": "dist/class.js",
-  "homepage": "https://github.com/adriancmiranda/class.js",
+  "name": "Proto",
+  "title": "Proto",
+  "description": "An extensible program-code-template for creating objects",
+  "version": "0.0.1",
+  "main": "dist/Proto.js",
+  "homepage": "https://github.com/adriancmiranda/Proto",
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "~3.6.0",
-    "gulp-load-plugins": "~0.5.0",
-    "gulp-bump": "~0.1.7",
-    "gulp-clean": "~0.2.4",
-    "gulp-git": "~0.4.0",
-    "gulp-header": "~1.0.2",
-    "gulp-jshint": "~1.5.3",
-    "gulp-mocha": "~0.4.1",
-    "gulp-size": "~0.3.0",
-    "gulp-uglify": "~0.2.1",
-    "gulp-plumber": "~0.6.1",
-    "gulp-jscs": "~0.4.1",
-    "gulp-rename": "~1.2.0",
-    "gulp-jsonlint": "0.0.3",
-    "gulp-concat": "~2.2.0",
-    "gulp-remove-use-strict": "~0.0.2",
-    "gulp-notify": "~1.2.5"
+    "commitplease": "latest",
+    "grunt": "latest",
+    "grunt-cli": "latest",
+    "grunt-contrib-requirejs": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-compare-size": "latest",
+    "grunt-jsonlint": "latest",
+    "grunt-jscs": "latest",
+    "load-grunt-config": "latest",
+    "load-grunt-tasks": "latest",
+    "jshint-stylish": "latest",
+    "grunt-mocha-cli": "latest",
+    "gzip-js": "latest",
+    "mocha": "latest"
   },
-  "author": {
-    "name": "Adrian C. Miranda",
-    "email": "adriancmiranda@gmail.com",
-    "url": "https://github.com/adriancmiranda"
-  },
-  "keywords": [
-    "class",
-    "inheritance",
-    "oop",
-    "javascript",
-    "library"
-  ],
-  "license": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/adriancmiranda/class.js/blob/master/LICENSE"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/adriancmiranda/class.js.git"
-  },
-  "bugs": {
-    "url": "https://github.com/adriancmiranda/class.js/issues"
-  },
-  "engines": {
-    "node": ">=0.10.22"
+  "jsdomVersions": {
+    "node": "3.1.2",
+    "iojs": "5.3.0"
   },
   "scripts": {
-    "build": "npm install && gulp",
-    "start": "gulp watch",
-    "test": "gulp test"
+    "grunt": "./node_modules/grunt-cli/bin/grunt",
+    "build": "npm run grunt",
+    "start": "npm run grunt watch",
+    "test": "npm run grunt test"
+  },
+  "scaffold": {
+    "modules": ["desktop"],
+    "server": "server",
+    "source": "source",
+    "static": "dist",
+    "test": "test",
+    "tmp": ".tmp"
+  },
+  "commitplease": {
+    "components": [
+    ]
   }
 }

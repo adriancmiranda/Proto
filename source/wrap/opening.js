@@ -1,29 +1,13 @@
-(function(global, factory) {
+(function(global, factory){
 	'use strict';
 
-	if (typeof module === 'object' && typeof module.exports === 'object') {
-		// For CommonJS and CommonJS-like environments where a proper window is present,
-		// execute the factory and get Class
-		// For environments that do not inherently posses a window with a document
-		// (such as Node.js), expose a Class-making factory as module.exports
-		// This accentuates the need for the creation of a real window
-		// e.g. var Class = require('class');
-		module.exports = global.document ?
-			factory(global, true) :
-			function(w) {
-				if (!w.document) {
-					throw new Error('Class requires a window with a document');
-				}
-				return factory(w);
-			};
-	} else {
-		factory(global);
-	}
+	var create = typeof Object.create === 'function' && Object.create;
+	if(typeof module === 'object' && typeof module.exports === 'object'){
+		module.exports = factory(global, create, true);
+	}else factory(global, create);
 
-// Pass this if window is not defined yet
-}(typeof window !== 'undefined' ? window : this, function(window, noGlobal) {
-	'use strict';
-	
+}(typeof window !== 'undefined' ? window : this, function(window, create, nodeEnv){
+
 	//| .-------------------------------------------------------------------.
 	//| | NAMING CONVENTIONS:                                               |
 	//| |-------------------------------------------------------------------|
@@ -39,5 +23,3 @@
 	//| Comment syntax for the entire project follows JSDoc:
 	//| @see http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 	//'
-	var strundefined = typeof undefined;
-	

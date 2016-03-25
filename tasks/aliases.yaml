@@ -1,0 +1,17 @@
+default:
+  - dev
+  - compare_size
+
+test:
+  - mochacli
+
+lint:
+  - jsonlint
+  - jshint
+  - jscs
+
+dev:
+  - requirejs
+  - lint
+  - uglify
+  - sourcemap
