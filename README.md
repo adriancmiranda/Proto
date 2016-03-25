@@ -61,11 +61,25 @@ The built version of Proto will be put in the `dist/` subdirectory, along with t
 
 Get Started
 -----------
+
+## Installation
+
 ### Links to CDN
 * [Proto.js](https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js)
 * [Proto.min.js](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.js)
 * [Proto.min.map](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.map)
 
+Use this URL for dev/testing
+
+```html
+<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/Proto.js"></script>
+```
+
+Use this URL in production
+
+```html
+<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/Proto.min.js"></script>
+```
 
 ### via JSPM
 `jspm install adriancmiranda/Proto`
@@ -79,27 +93,13 @@ Get Started
 ### via Component
 `component install adriancmiranda/Proto`
 
-Usage
------
-
-## NodeJS
-
 ```javascript
 var Proto = require('Proto');
 ```
 
-## CDN (browser)
-Use this URL for dev/testing
 
-```html
-<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/Proto.js"></script>
-```
-
-Use this URL in production
-
-```html
-<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/Proto.min.js"></script>
-```
+Usage
+-----
 
 ```javascript
 
