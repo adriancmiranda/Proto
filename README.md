@@ -184,6 +184,12 @@ Usage
 	var server = new Server('yourServerName');
 	server.startup();
 	Server.killAll();
+	
+	console.log(
+		server instanceof Server &&
+		server instanceof HTTPServer &&
+		server instanceof SimpleHTTPServer
+	)
 
 ```
 
