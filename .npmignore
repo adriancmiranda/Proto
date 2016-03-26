@@ -1,0 +1,11 @@
+dist/Proto.js
+node_modules/
+source/
+tasks/
+test/
+**/.*
+gruntfile.js
+bower.json
+component.json
+composer.json
+package.json
