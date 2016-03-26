@@ -26,7 +26,7 @@ define([
 		for(id = 1; id < params.length; id++){
 			source = params[id];
 			for(property in source){
-				if(Object.prototype.hasOwnProperty.call(source, property)){
+				if(Proto.hasProp(source, property)){
 					target[property] = source[property];
 				}
 			}
