@@ -244,15 +244,6 @@ or
 			Server.super.start.apply(this, arguments);
 			console.log('Server started', Proto.keys(this));
 		},
-		listen:function(){
-			console.log('listen http://%s:%i', '0.0.0.0', 3000);
-		},
-		listen:function(port){
-			console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
-		},
-		listen:function(host, port){
-			console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
-		},
 		stop:function(){
 			Server.super.stop.apply(this, arguments);
 			console.log('Server stopped');
@@ -263,6 +254,18 @@ or
 			this.start('server 3');
 			console.log('Server up and running!');
 		}
+	});
+	
+	Proto.overload(Server.prototype, 'listen', function(){
+		console.log('listen http://%s:%i', '0.0.0.0', 3000);
+	});
+
+	Proto.overload(Server.prototype, 'listen', function(port){
+		console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
+	});
+
+	Proto.overload(Server.prototype, 'listen', function(host, port){
+		console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
 	});
 	
 	Server.killAll = function(){
