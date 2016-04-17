@@ -288,6 +288,8 @@ Usage
 
 ```
 
+## JSBin Sample
+[UI](https://jsbin.com/dudicul/edit?js,output)
 
 ## License
 
