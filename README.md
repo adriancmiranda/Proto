@@ -193,7 +193,7 @@ Usage
 
 ```
 
-or
+## Another Usage
 
 ```javascript
 
