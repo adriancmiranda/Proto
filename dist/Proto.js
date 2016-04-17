@@ -157,6 +157,24 @@
 		return Proto.hasProp(this, prop);
 	};
 
+	Proto.extends = function(proto, properties){
+		var parent = this;
+		var Prototype = function(){
+			return parent.apply(this, arguments);
+		};
+		if(proto && Proto.hasProp(proto, 'constructor')){
+			Prototype = proto.constructor;
+		}
+		Proto.merge(Prototype, parent, properties);
+		var Caste = function(){ this.constructor = Prototype; };
+		Caste.prototype = parent.prototype;
+		Prototype.prototype = Proto.create(Caste.prototype);
+		proto && Proto.merge(Prototype.prototype, proto);
+		Prototype.super = parent.prototype;
+		parent.extends = Prototype.extends;
+		return Prototype;
+	};
+
 	Proto.prototype.extends = function(superclass){
 		if(typeof superclass !== 'function'){
 			return this;

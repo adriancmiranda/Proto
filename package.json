@@ -11,6 +11,7 @@
     "commitplease": "latest",
     "grunt": "latest",
     "grunt-cli": "latest",
+    "grunt-bower-task": "0.4.0",
     "grunt-contrib-requirejs": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-jshint": "latest",

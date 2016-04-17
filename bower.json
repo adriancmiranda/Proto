@@ -5,6 +5,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {},
+  "exportsOverride": {},
   "ignore": [
     "node_modules",
     "source",
