@@ -219,7 +219,7 @@ or
 
 	var HTTPServer = SimpleHTTPServer.extends({
 		initialize:function(){
-			HTTPServer.super.apply(this, arguments);
+			HTTPServer.super.initialize.apply(this, arguments);
 			Proto.bindAll(this);
 		},
 		start:function(){
@@ -238,7 +238,7 @@ or
 
 	var Server = HTTPServer.extends({
 		initialize:function(){
-			Server.super.apply(this, arguments);
+			Server.super.initialize.apply(this, arguments);
 		},
 		start:function(){
 			Server.super.start.apply(this, arguments);
