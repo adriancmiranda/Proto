@@ -223,11 +223,11 @@ or
 			Proto.bindAll(this);
 		},
 		start:function(){
-			HTTPServer.super.prototype.start.apply(this, arguments);
+			HTTPServer.super.start.apply(this, arguments);
 			console.log('HTTPServer started');
 		},
 		stop:function(){
-			HTTPServer.super.prototype.stop.apply(this, arguments);
+			HTTPServer.super.stop.apply(this, arguments);
 			console.log('HTTPServer stopped');
 		}
 	});
@@ -241,7 +241,7 @@ or
 			Server.super.apply(this, arguments);
 		},
 		start:function(){
-			Server.super.prototype.start.apply(this, arguments);
+			Server.super.start.apply(this, arguments);
 			console.log('Server started', Proto.keys(this));
 		},
 		listen:function(){
@@ -254,7 +254,7 @@ or
 			console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
 		},
 		stop:function(){
-			Server.super.prototype.stop.apply(this, arguments);
+			Server.super.stop.apply(this, arguments);
 			console.log('Server stopped');
 		},
 		startup:function(){
