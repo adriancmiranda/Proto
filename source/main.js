@@ -5,6 +5,9 @@ define([
 	'use strict';
 
 	var Proto = function(Fn){
+		if(typeof this.initialize === 'function'){
+			return this.initialize.apply(this, arguments);
+		}
 		if(this instanceof Proto){
 			if(typeof Fn === 'function'){
 				Fn.prototype.toString = this.toString;
