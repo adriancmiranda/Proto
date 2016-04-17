@@ -193,6 +193,99 @@ Usage
 
 ```
 
+or
+
+```javascript
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// SimpleHTTPServer
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var SimpleHTTPServer = Proto.extends({
+		initialize:function(){
+			console.log('SimpleHTTPServer created', arguments);
+		},
+		start:function(){
+			console.log('SimpleHTTPServer started', arguments);
+		},
+		stop:function(){
+			console.log('SimpleHTTPServer stopped', arguments);
+		}
+	});
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// HTTPServer
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var HTTPServer = SimpleHTTPServer.extends({
+		initialize:function(){
+			HTTPServer.super.apply(this, arguments);
+			Proto.bindAll(this);
+		},
+		start:function(){
+			HTTPServer.super.prototype.start.apply(this, arguments);
+			console.log('HTTPServer started');
+		},
+		stop:function(){
+			HTTPServer.super.prototype.stop.apply(this, arguments);
+			console.log('HTTPServer stopped');
+		}
+	});
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// Server
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var Server = HTTPServer.extends({
+		initialize:function(){
+			Server.super.apply(this, arguments);
+		},
+		start:function(){
+			Server.super.prototype.start.apply(this, arguments);
+			console.log('Server started', Proto.keys(this));
+		},
+		listen:function(){
+			console.log('listen http://%s:%i', '0.0.0.0', 3000);
+		},
+		listen:function(port){
+			console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
+		},
+		listen:function(host, port){
+			console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
+		},
+		stop:function(){
+			Server.super.prototype.stop.apply(this, arguments);
+			console.log('Server stopped');
+		},
+		startup:function(){
+			this.start('server 1');
+			this.start('server 2');
+			this.start('server 3');
+			console.log('Server up and running!');
+		}
+	});
+	
+	Server.killAll = function(){
+		console.log('Killed!');
+	};
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// Tests
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	var server = new Server('yourServerName');
+	server.startup();
+	Server.killAll();
+	
+	console.log(
+		server instanceof Server &&
+		server instanceof HTTPServer &&
+		server instanceof SimpleHTTPServer
+	)
+
+```
+
+
 ## License
 
 [MIT](https://github.com/adriancmiranda/class.js/blob/master/LICENSE.md)
