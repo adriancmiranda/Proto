@@ -1,7 +1,7 @@
 {
   "name": "Proto",
   "version": "0.0.1",
-  "main": "./dist/Proto.js",
+  "main": ["dist/Proto.js", "dist/Proto.min.js", "dist/Proto.min.map"],
   "license": "MIT",
   "private": true,
   "devDependencies": {},
