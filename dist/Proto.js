@@ -40,11 +40,11 @@
 	};
 
 	var uid = 0;
-	
+
 	var slice = ape(Array.prototype.slice);
-	
+
 	var hasProp = ape(Object.prototype.hasOwnProperty);
-	
+
 	var toString = ape(Object.prototype.toString);
 
 	var patterns = {
@@ -111,7 +111,7 @@
 		proxy.__originalFn__ = proxy.__originalFn__ || fn;
 		return proxy;
 	};
-	
+
 	var unbind = function(fn, context){
 		var originalFn = fn.__originalFn__;
 		delete(fn.__originalFn__);
@@ -140,13 +140,13 @@
 		return context;
 	};
 
-  var flush = function(obj){
-    for(var key in obj){
-      if(hasProp(obj, key)){
-        delete obj[key];
-      }
-    }
-  };
+	var flush = function(obj){
+		for(var key in obj){
+			if(hasProp(obj, key)){
+				delete obj[key];
+			}
+		}
+	};
 
 //|-----------------------------------------------------------------------------
 //| Proto
