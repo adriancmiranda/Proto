@@ -13,5 +13,6 @@ lint:
 dev:
   - requirejs
   - lint
+  - test
   - uglify
   - sourcemap

@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 	// @see https://www.npmjs.com/package/load-grunt-config
 	loadGruntConfig(grunt, {
 		data:pack,
-		configPath:path.join(process.cwd(), 'tasks'),
+		configPath:path.join(process.cwd(), pack.scaffold.tasks),
 		loadGruntTasks:{
 			config:pack,
 			scope:'devDependencies'

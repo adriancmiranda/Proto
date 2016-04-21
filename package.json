@@ -9,21 +9,22 @@
   "dependencies": {},
   "devDependencies": {
     "commitplease": "latest",
+    "connect-livereload": "0.5.4",
     "grunt": "latest",
-    "grunt-cli": "latest",
     "grunt-bower-task": "0.4.0",
+    "grunt-cli": "latest",
+    "grunt-compare-size": "latest",
+    "grunt-contrib-jshint": "latest",
     "grunt-contrib-requirejs": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-contrib-jshint": "latest",
     "grunt-contrib-watch": "latest",
-    "grunt-compare-size": "latest",
-    "grunt-jsonlint": "latest",
     "grunt-jscs": "latest",
-    "load-grunt-config": "latest",
-    "load-grunt-tasks": "latest",
-    "jshint-stylish": "latest",
+    "grunt-jsonlint": "latest",
     "grunt-mocha-cli": "latest",
     "gzip-js": "latest",
+    "jshint-stylish": "latest",
+    "load-grunt-config": "latest",
+    "load-grunt-tasks": "latest",
     "mocha": "latest"
   },
   "jsdomVersions": {
@@ -39,10 +40,10 @@
   "scaffold": {
     "source": "source",
     "static": "dist",
+    "tasks": "tasks",
     "test": "test"
   },
   "commitplease": {
-    "components": [
-    ]
+    "components": []
   }
 }

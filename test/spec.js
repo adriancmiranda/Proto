@@ -1,81 +1,84 @@
 describe('Proto', function(){
 	var Proto = require('../dist/Proto');
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // SimpleHTTPServer
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//|-----------------------------------------------------------------------------
+//| SimpleHTTPServer
+//'-----------------------------------------------------------------------------
 
-    var SimpleHTTPServer = new Proto(function SimpleHTTPServer(){
-        console.log('SimpleHTTPServer created', arguments);
-    });
+	var SimpleHTTPServer = new Proto(function SimpleHTTPServer(){
+		console.log('SimpleHTTPServer created', arguments);
+	});
 
-    SimpleHTTPServer.prototype.start = function(){
-        console.log('SimpleHTTPServer started', arguments);
-    };
+	SimpleHTTPServer.prototype.start = function(){
+		console.log('SimpleHTTPServer started', arguments);
+	};
 
-    SimpleHTTPServer.prototype.stop = function(){
-        console.log('SimpleHTTPServer stopped', arguments);
-    };
+	SimpleHTTPServer.prototype.stop = function(){
+		console.log('SimpleHTTPServer stopped', arguments);
+	};
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // HTTPServer
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    var HTTPServer = Proto(function HTTPServer(){
-        HTTPServer.super.apply(this, arguments);
-        Proto.bindAll(this);
-    }).extends(SimpleHTTPServer).public('start', function(){
-        HTTPServer.super.prototype.start.apply(this, arguments);
-        console.log('HTTPServer started');
-    }).public('stop', function(){
-        HTTPServer.super.prototype.stop.apply(this, arguments);
-        console.log('HTTPServer stopped');
-    });
+//|-----------------------------------------------------------------------------
+//| HTTPServer
+//'-----------------------------------------------------------------------------
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Server
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	var HTTPServer = new Proto(function HTTPServer(){
+		HTTPServer.super.apply(this, arguments);
+		Proto.bindAll(this);
+	}).extends(SimpleHTTPServer).public('start', function(){
+		HTTPServer.super.prototype.start.apply(this, arguments);
+		console.log('HTTPServer started');
+	}).public('stop', function(){
+		HTTPServer.super.prototype.stop.apply(this, arguments);
+		console.log('HTTPServer stopped');
+	});
 
-    var Server = Proto(function Server(){
-        Server.super.apply(this, arguments);
-    })
 
-    Server.extends(HTTPServer);
+//|-----------------------------------------------------------------------------
+//| Server
+//'-----------------------------------------------------------------------------
 
-    Server.public('start', function(){
-        Server.super.prototype.start.apply(this, arguments);
-        console.log('Server started', Proto.keys(this));
-    });
+	var Server = new Proto(function Server(){
+		Server.super.apply(this, arguments);
+	});
 
-    Server.charge('listen', function(){
-        console.log('listen http://%s:%i', '0.0.0.0', 3000);
-    });
+	Server.extends(HTTPServer);
 
-    Server.charge('listen', function(port){
-        console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
-    });
+	Server.public('start', function(){
+		Server.super.prototype.start.apply(this, arguments);
+		console.log('Server started', Proto.keys(this));
+	});
 
-    Server.charge('listen', function(host, port){
-        console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
-    });
+	Server.charge('listen', function(){
+		console.log('listen http://%s:%i', '0.0.0.0', 3000);
+	});
 
-    Server.public('stop', function(){
-        Server.super.prototype.stop.apply(this, arguments);
-        console.log('Server stopped');
-    });
+	Server.charge('listen', function(port){
+		console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
+	});
 
-    Server.public('startup', function(){
-        this.start('server 1');
-        this.start('server 2');
-        this.start('server 3');
-        console.log('Server up and running!');
-    }).static('killAll', function(){
-        console.log('Killed!');
-    });
+	Server.charge('listen', function(host, port){
+		console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
+	});
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// Tests
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Server.public('stop', function(){
+		Server.super.prototype.stop.apply(this, arguments);
+		console.log('Server stopped');
+	});
+
+	Server.public('startup', function(){
+		this.start('server 1');
+		this.start('server 2');
+		this.start('server 3');
+		console.log('Server up and running!');
+	}).static('killAll', function(){
+		console.log('Killed!');
+	});
+
+//|-----------------------------------------------------------------------------
+//| Tests
+//'-----------------------------------------------------------------------------
+
 	var server = new Server('custom');
 	server.startup();
 	Server.killAll();
@@ -86,12 +89,12 @@ describe('Proto', function(){
 		server instanceof SimpleHTTPServer
 	);
 
-	console.log('--')
+	console.log('--');
 
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// !SimpleHTTPServer
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//|-----------------------------------------------------------------------------
+//| !SimpleHTTPServer
+//'-----------------------------------------------------------------------------
 
 	SimpleHTTPServer = Proto.extends({
 		initialize:function(){
@@ -105,9 +108,10 @@ describe('Proto', function(){
 		}
 	});
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// !HTTPServer
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//|-----------------------------------------------------------------------------
+//| !HTTPServer
+//'-----------------------------------------------------------------------------
 
 	HTTPServer = SimpleHTTPServer.extends({
 		initialize:function(){
@@ -124,9 +128,10 @@ describe('Proto', function(){
 		}
 	});
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// !Server
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//|-----------------------------------------------------------------------------
+//| !Server
+//'-----------------------------------------------------------------------------
 
 	Server = HTTPServer.extends({
 		initialize:function(){
@@ -135,15 +140,6 @@ describe('Proto', function(){
 		start:function(){
 			Server.super.start.apply(this, arguments);
 			console.log('Server started', Proto.keys(this));
-		},
-		listen:function(){
-			console.log('listen http://%s:%i', '0.0.0.0', 3000);
-		},
-		listen:function(port){
-			console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
-		},
-		listen:function(host, port){
-			console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
 		},
 		stop:function(){
 			Server.super.stop.apply(this, arguments);
@@ -157,13 +153,26 @@ describe('Proto', function(){
 		}
 	});
 
+	Proto.overload(Server.prototype, 'listen', function(){
+		console.log('listen http://%s:%i', '0.0.0.0', 3000);
+	});
+
+	Proto.overload(Server.prototype, 'listen', function(port){
+		console.log('listen http://%s:%i', '0.0.0.0', port || 3000);
+	});
+
+	Proto.overload(Server.prototype, 'listen', function(host, port){
+		console.log('listen http://%s:%i', host || '0.0.0.0', port || 3000);
+	});
+
 	Server.killAll = function(){
 		console.log('Killed!');
 	};
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// !Tests
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	//|-----------------------------------------------------------------------------
+	//| Tests
+	//'-----------------------------------------------------------------------------
 
 	server = new Server('yourServerNameAgain');
 	server.startup();
@@ -175,5 +184,4 @@ describe('Proto', function(){
 		server instanceof SimpleHTTPServer &&
 		server instanceof Proto
 	);
-
 });

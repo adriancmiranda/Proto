@@ -34,11 +34,12 @@ module.exports = function(grunt, opts){
 						script = script.replace(/return\s*/, 'window.'+fileName+' = ');
 						script = script.replace(/\s\}\s*?\);*[^}\w]*$/, '');
 					}else{
+						script = script.replace(/\/\/ jshint ignore\:line/, '');
 						script = script.replace(/define\([^{]*?{/, '');
 						script = script.replace(/define\(\[[^\]]*\]\)[\W\n]+$/, '');
 						script = script.replace(/[^{]*(\'|\")use\sstrict(\'|\")\s*;*(\n|\r)/g, '');
 						script = script.replace(/\s*exports\.\w+\s*=\s*\w+;/g, '');
-						script = script.replace(/\/\*\s*ExcludeStart\s*\*\/[\w\W]*?\/\*\s*ExcludeEnd\s*\*\//ig, '')
+						script = script.replace(/\/\*\s*ExcludeStart\s*\*\/[\w\W]*?\/\*\s*ExcludeEnd\s*\*\//ig, '');
 						script = script.replace(/\/\/\s*BuildExclude\n\r?[\w\W]*?\n\r?/ig, '');
 						script = script.replace(/\s*return(\s+|\(+)[^\}]+(\}\s*?\);*[^\w\}]*)$/, '$2');
 						script = script.replace(/\}\s*?\);*[^}\w]*$/, '');

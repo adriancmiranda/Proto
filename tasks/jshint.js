@@ -9,8 +9,8 @@ module.exports = function(grunt, opts){
 	// @see https://github.com/gruntjs/grunt-contrib-jshint
 	return({
 		options:{
-			camelcase:true,
 			reporter:stylish,
+			camelcase:true,
 			quotmark:true,
 			trailing:true,
 			browser:true,
@@ -26,6 +26,7 @@ module.exports = function(grunt, opts){
 			noarg:true,
 			curly:true,
 			undef:true,
+			mocha:true,
 			node:true,
 			expr:true
 		},
@@ -34,7 +35,12 @@ module.exports = function(grunt, opts){
 				ignores:['<%= scaffold.source %>/wrap/opening.js', '<%= scaffold.source %>/wrap/closure.js'],
 				predef:['require', 'define']
 			},
-			src:['gruntfile.js', '<%= scaffold.source %>/**/*.js']
+			src:[
+				'gruntfile.js',
+				'<%= scaffold.tasks %>/{,*/}*.js',
+				'<%= scaffold.source %>/**/*.js',
+				'<%= scaffold.test %>/{,*/}*.js'
+			]
 		},
 		dist:{
 			src:'<%= scaffold.static %>/<%= name %>.js'

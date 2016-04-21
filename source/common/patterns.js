@@ -1,9 +1,8 @@
-
 define(function(){
 	'use strict';
 
-	return({
+	return {
 		objWrap:/^(\[object(\s|\uFEFF|\xA0))|(\])$/g,
 		fnDecl:/^.*function\s([^\s]*|[^\(]*)\([^\x00]+$/
-	});
+	};
 });

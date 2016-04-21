@@ -13,10 +13,10 @@ module.exports = function(grunt, opts){
 				sourceMap:true,
 				sourceMapName:'<%= scaffold.static %>/<%= name %>.min.map',
 				report:'min',
-				beautify:{ ascii_only:true },
+				beautify:{ ascii_only:true },// jshint ignore:line
 				banner:'// <%= name %>@v<%= version %>, <%= license %> licensed. <%= homepage %>',
 				compress:{
-					hoist_funs:false,
+					hoist_funs:false,// jshint ignore:line
 					loops:false,
 					unused:false
 				}

@@ -1,5 +1,5 @@
 module.exports = function mochacli(){
-	'use strict'
+	'use strict';
 
 	// Run Mocha server-side tests in Grunt
 	// @see https://www.npmjs.com/package/grunt-mocha-cli
@@ -11,5 +11,5 @@ module.exports = function mochacli(){
 			ui:'bdd'
 		},
 		client:['<%= scaffold.test %>/{,*/}*.js'],
-	})
+	});
 };

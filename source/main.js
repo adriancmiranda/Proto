@@ -1,11 +1,45 @@
-
 define([
-	'./common/patterns'
-], function(patterns){
+	'./common/ape',
+	'./common/uid',
+	'./common/slice',
+	'./common/hasProp',
+	'./common/toString',
+	'./common/patterns',
+	'./common/create',
+	'./common/overload',
+	'./common/merge',
+	'./common/keys',
+	'./common/bind',
+	'./common/unbind',
+	'./common/bindAll',
+	'./common/unbindAll',
+	'./common/flush'
+], function(
+	ape,
+	uid,
+	slice,
+	hasProp,
+	toString,
+	patterns,
+	create,
+	overload,
+	merge,
+	keys,
+	bind,
+	unbind,
+	bindAll,
+	unbindAll,
+	flush
+){
 	'use strict';
+
+//|-----------------------------------------------------------------------------
+//| Proto
+//'-----------------------------------------------------------------------------
 
 	var Proto = function(Fn){
 		if(typeof this.initialize === 'function'){
+			this.cid = ++uid;
 			return this.initialize.apply(this, arguments);
 		}
 		if(this instanceof Proto){
@@ -23,132 +57,42 @@ define([
 		return new Proto(Fn);
 	};
 
-	Proto.merge = function(target){
-		var params = Array.prototype.slice.call(arguments);
-		var id, source, property;
-		for(id = 1; id < params.length; id++){
-			source = params[id];
-			for(property in source){
-				if(Proto.hasProp(source, property)){
-					target[property] = source[property];
-				}
-			}
-		}
-		return target;
-	};
-
-	Proto.ape = function(fn){
-		return function(){
-			return Function.call.apply(fn, arguments);
-		};
-	};
+	Proto.overload = overload;
+	Proto.hasProp = hasProp;
+	Proto.create = create;
+	Proto.merge = merge;
+	Proto.flush = flush;
+	Proto.keys = keys;
+	Proto.bind = bind;
+	Proto.unbind = unbind;
+	Proto.bindAll = bindAll;
+	Proto.unbindAll = unbindAll;
+	Proto.ape = ape;
 
 	Proto.of = function(value, qualified){
-		if(value){
-			var type = Object.prototype.toString.call(value);
-			if(qualified && type === '[object Object]'){
-				return value.constructor.toString().replace(patterns.fnDecl, '$1') || 'Object';
-			}
-			return type.replace(patterns.objWrap, '');
+		var type = toString(value);
+		if(qualified && type === '[object Object]'){
+			return value.constructor.toString().replace(patterns.fnDecl, '$1') || 'Object';
 		}
-		return value;
-	};
-
-	Proto.create = (create || function(obj, props){// jshint ignore:line
-		var instance, prop;
-		function Proto(){}
-		Proto.prototype = obj;
-		instance = new Proto();
-		if(typeof props === 'object'){
-			for(prop in props){
-				if(props.hasOwnProperty((prop))){
-					instance[prop] = props[prop].value;
-				}
-			}
-		}
-		return instance;
-	});
-
-	Proto.keys = function keys(object, getEnum){
-		var properties = [];
-		for(var key in object){
-			if(getEnum || object.hasOwnProperty(key)){
-				properties.push(key);
-			}
-		}
-		return properties;
-	};
-
-	Proto.bind = function(fn, context){
-		var args = Array.prototype.slice.call(arguments, 2);
-		var proxy = function(){
-			return fn.apply(context, args.concat(Array.prototype.slice.call(arguments)));
-		};
-		proxy.__originalFn__ = proxy.__originalFn__ || fn;
-		return proxy;
-	};
-
-	Proto.unbind = function(fn){
-		var originalFn = fn.__originalFn__;
-		delete(fn.__originalFn__);
-		return originalFn;
-	};
-
-	Proto.bindAll = function(context, methods){
-		methods = Array.isArray(methods)? methods : Array.prototype.slice.call(arguments, 1);
-		methods = methods.length? methods : Proto.keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(typeof context[methods[id]] === 'function'){
-				context[methods[id]] = Proto.bind(context[methods[id]], context);
-			}
-		}
-		return context;
-	};
-
-	Proto.unbindAll = function(context, methods){
-		methods = Array.isArray(methods)? methods : Array.prototype.slice.call(arguments, 1);
-		methods = methods.length? methods : Proto.keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(typeof context[methods[id]] === 'function'){
-				context[methods[id]] = Proto.unbind(context[methods[id]], context);
-			}
-		}
-		return context;
-	};
-
-	Proto.overload = function(target, name, fn){
-		var cache = target[name];
-		target[name] = function(){
-			if(fn.length === arguments.length){
-				return fn.apply(this, arguments);
-			}else if(typeof(cache) === 'function'){
-				return cache.apply(this, arguments);
-			}
-		};
-	};
-
-	Proto.hasProp = Proto.ape(Object.prototype.hasOwnProperty);
-
-	Proto.prototype.hasProp = function(prop){
-		return Proto.hasProp(this, prop);
+		return type.replace(patterns.objWrap, '');
 	};
 
 	Proto.extends = function(proto, properties){
 		var parent = this;
-		var Prototype = function(){
+		var Proto = function(){
 			return parent.apply(this, arguments);
 		};
-		if(proto && Proto.hasProp(proto, 'constructor')){
-			Prototype = proto.constructor;
+		if(proto && hasProp(proto, 'constructor')){
+			Proto = proto.constructor;
 		}
-		Proto.merge(Prototype, parent, properties);
-		var Caste = function(){ this.constructor = Prototype; };
+		merge(Proto, parent, properties);
+		var Caste = function(){ this.constructor = Proto; };
 		Caste.prototype = parent.prototype;
-		Prototype.prototype = Proto.create(Caste.prototype);
-		proto && Proto.merge(Prototype.prototype, proto);
-		Prototype.super = parent.prototype;
-		parent.extends = Prototype.extends;
-		return Prototype;
+		Proto.prototype = create(Caste.prototype);
+		proto && merge(Proto.prototype, proto);
+		Proto.super = parent.prototype || function(){};
+		parent.extends = Proto.extends;
+		return Proto;
 	};
 
 	Proto.prototype.extends = function(superclass){
@@ -160,7 +104,7 @@ define([
 			require('util').inherits(this, superclass);
 			return this;
 		}
-		this.prototype = Proto.create(superclass.prototype, {
+		this.prototype = create(superclass.prototype, {
 			constructor:{
 				value:this,
 				enumerable:false,
@@ -171,12 +115,16 @@ define([
 		return this;
 	};
 
+	Proto.prototype.hasProp = function(prop){
+		return hasProp(this, prop);
+	};
+
 	Proto.prototype.public = function(name, definition){
 		if(typeof name === 'string'){
 			this.prototype[name] = definition;
 		}else if(Object(name) === name){
 			for(var key in name){
-				if(name.hasOwnProperty(key)){
+				if(hasProp(name, key)){
 					this.prototype[key] = name[key];
 				}
 			}
@@ -189,7 +137,7 @@ define([
 			this[name] = definition;
 		}else if(Object(name) === name){
 			for(var key in name){
-				if(name.hasOwnProperty(key)){
+				if(hasProp(name, key)){
 					this[key] = name[key];
 				}
 			}
@@ -198,21 +146,17 @@ define([
 	};
 
 	Proto.prototype.charge = function(name, fn){
-		Proto.overload(this.prototype, name, fn);
+		overload(this.prototype, name, fn);
 		return this;
 	};
 
 	Proto.prototype.outrun = function(name, fn){
-		Proto.overload(this, name, fn);
+		overload(this, name, fn);
 		return this;
 	};
 
 	Proto.prototype.flush = function(){
-		for(var key in this){
-			if(this.hasOwnProperty(key)){
-				delete(this[key]);
-			}
-		}
+		flush(this);
 	};
 
 	Proto.prototype.toString = function(){
