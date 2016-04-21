@@ -37,7 +37,7 @@ define([
 //| Proto
 //'-----------------------------------------------------------------------------
 
-	var Proto = function(Fn){
+	function Proto(Fn){
 		if(typeof this.initialize === 'function'){
 			this.cid = ++uid;
 			return this.initialize.apply(this, arguments);
@@ -55,7 +55,7 @@ define([
 			return Fn;
 		}
 		return new Proto(Fn);
-	};
+	}
 
 	Proto.overload = overload;
 	Proto.hasProp = hasProp;
