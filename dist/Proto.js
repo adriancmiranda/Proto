@@ -40,11 +40,11 @@
 	};
 
 	var uid = 0;
-
+	
 	var slice = ape(Array.prototype.slice);
-
+	
 	var hasProp = ape(Object.prototype.hasOwnProperty);
-
+	
 	var toString = ape(Object.prototype.toString);
 
 	var patterns = {
@@ -53,32 +53,32 @@
 	};
 
 	var create = (typeof Object.create === 'function' && Object.create ||
-    function(obj, props){
-      var instance, prop;
-      function Proto(){}
-      Proto.prototype = obj;
-      instance = new Proto();
-      if(typeof props === 'object'){
-        for(prop in props){
-          if(props.hasOwnProperty((prop))){
-            instance[prop] = props[prop].value;
-          }
-        }
-      }
-      return instance;
-    }
-  );
+		function(obj, props){
+			var instance, prop;
+			function Proto(){}
+			Proto.prototype = obj;
+			instance = new Proto();
+			if(typeof props === 'object'){
+				for(prop in props){
+					if(props.hasOwnProperty((prop))){
+						instance[prop] = props[prop].value;
+					}
+				}
+			}
+			return instance;
+		}
+	);
 
-  var overload = function(target, name, fn){
-    var cacheFn = target[name];
-    target[name] = function(){
-      if(fn.length === arguments.length){
-        return fn.apply(this, arguments);
-      }else if(typeof(cacheFn) === 'function'){
-        return cacheFn.apply(this, arguments);
-      }
-    };
-  };
+	var overload = function(target, name, fn){
+		var cacheFn = target[name];
+		target[name] = function(){
+			if(fn.length === arguments.length){
+				return fn.apply(this, arguments);
+			}else if(typeof(cacheFn) === 'function'){
+				return cacheFn.apply(this, arguments);
+			}
+		};
+	};
 
 	var merge = function(target){
 		var params = slice(arguments);
@@ -111,7 +111,7 @@
 		proxy.__originalFn__ = proxy.__originalFn__ || fn;
 		return proxy;
 	};
-
+	
 	var unbind = function(fn, context){
 		var originalFn = fn.__originalFn__;
 		delete(fn.__originalFn__);
