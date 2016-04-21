@@ -205,7 +205,7 @@
 		Caste.prototype = parent.prototype;
 		Proto.prototype = create(Caste.prototype);
 		proto && merge(Proto.prototype, proto);
-		Proto.super = parent.prototype || function(){};
+		Proto.super = parent.prototype;
 		parent.extends = Proto.extends;
 		return Proto;
 	};
