@@ -92,39 +92,37 @@ define([
     return type.replace(reObjectWrapper, '');
   };
 
-  Proto.extends = function(proto, staticProperties){
-    var Caste, Constructor, Implementations, Super = this;
+  Proto.extends = function(proto, properties){
+		var Caste, Constructor, Implementations, Super = this;
 
-    enableSuperMethods(Super, proto);
+		enableSuperMethods(Super, proto);
 
-    Constructor = function(){
-      return Super.apply(this, arguments);
-    };
+		Constructor = function(){
+			return Super.apply(this, arguments);
+		};
 
-    if(proto && proto.hasOwnProperty('constructor')){
-      Constructor = proto.constructor;
-    }
+		if(proto && proto.hasOwnProperty('constructor')){
+			Constructor = proto.constructor;
+		}
 
-    merge(Constructor, Super, staticProperties);
+		merge(Constructor, Super, properties);
 
-    Caste = function(){ this.constructor = Constructor; };
-    Caste.prototype = Super.prototype;
-    Constructor.prototype = Proto.create(Caste.prototype);
+		Caste = function(){ this.constructor = Constructor; };
+		Caste.prototype = Super.prototype;
+		Constructor.prototype = Constructor.create(Caste.prototype);
+		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
 
-    if(proto && proto.hasOwnProperty('implements')){
-      Implementations = implement(proto.implements);
-      merge(Constructor.prototype, Implementations);
-      delete proto.implements;
-    }
+		if(proto && proto.hasOwnProperty('implements')){
+			Implementations = implement(proto.implements);
+			merge(Constructor.prototype, Implementations);
+			delete Constructor.prototype.implements;
+			delete proto.implements;
+		}
 
-    proto && merge(Constructor.prototype, proto, {
-      $protoID:++uid
-    });
-
-    Constructor.super = Super.prototype;
-    Super.extends = Proto.extends;
-    return Constructor;
-  };
+		Constructor.super = Super.prototype;
+		Super.extends = Constructor.extends;
+		return Constructor;
+	};
 
   Proto.prototype.toImplement = function(list){
     return merge(this.prototype, implement(list));
