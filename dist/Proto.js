@@ -119,7 +119,7 @@
 			for(var property in source){
 				if(source.hasOwnProperty(property)){
 					if(isObject(source[property]) && isObject(target[property])){
-						target[property] = merge(target[property], source[property]);
+						merge(target[property], source[property]);
 					}else{
 						target[property] = source[property];
 					}
