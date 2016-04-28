@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Proto.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Proto.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <pre><code>Proto.js v0<span class="hljs-number">.0</span><span class="hljs-number">.6</span>-alpha
+</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <pre><code>(c) <span class="hljs-number">2015</span><span class="hljs-number">-2016</span> Adrian C. Miranda
+Proto may be freely distributed under the MIT license.
+For all details and documentation:
+http:<span class="hljs-comment">//ambox.github.io</span>
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">global, name, version, factory</span>)</span>{
+<span class="hljs-meta">	'use strict'</span>;
+
+	<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span>.exports === <span class="hljs-string">'object'</span>){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Set up for Node.js or CommonJS.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-built_in">module</span>.exports = factory(global, exports, name, version);
+
+	}<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd){<span class="hljs-comment">// jshint ignore:line</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Next for module appropriately for the environment. Start with AMD.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		define([<span class="hljs-string">'exports'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">exports</span>)</span>{<span class="hljs-comment">// jshint ignore:line</span>
+			<span class="hljs-keyword">return</span> factory(global, exports, name, version);
+		});
+
+	}<span class="hljs-keyword">else</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Finally, as a browser global.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		global[name] = factory(global, {}, name, version);
+
+	}
+
+})(<span class="hljs-keyword">this</span>, <span class="hljs-string">'Proto'</span>, <span class="hljs-string">'v0.0.6-alpha'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">global, exports, name, version</span>)</span>{
+<span class="hljs-meta">	'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+	<span class="hljs-keyword">var</span> uid = <span class="hljs-number">0</span>;
+
+	<span class="hljs-keyword">var</span> ctor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">noop</span>(<span class="hljs-params"></span>)</span>{};
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ape</span>(<span class="hljs-params">fn</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Function</span>.call.apply(fn, <span class="hljs-built_in">arguments</span>);
+		};
+	}
+
+	<span class="hljs-keyword">var</span> slice = ape(<span class="hljs-built_in">Array</span>.prototype.slice);
+
+	<span class="hljs-keyword">var</span> isArray = <span class="hljs-built_in">Array</span>.isArray;
+
+	<span class="hljs-keyword">var</span> toString = ape(<span class="hljs-built_in">Object</span>.prototype.toString);
+
+	<span class="hljs-keyword">var</span> reSuper = <span class="hljs-regexp">/\bsuper\b/</span>;
+
+	<span class="hljs-keyword">var</span> reObjectAssessor = <span class="hljs-regexp">/\[(["']?)([^\1]+?)\1?\]/g</span>;
+
+	<span class="hljs-keyword">var</span> reFnDeclaration = <span class="hljs-regexp">/^.*function\s([^\s]*|[^\(]*)\([^\x00]+$/</span>;
+
+	<span class="hljs-keyword">var</span> reObjectWrapper = <span class="hljs-regexp">/^(\[object(\s|\uFEFF|\xA0))|(\])$/g</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isUndefined</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'undefined'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isString</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'string'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isFunction</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'function'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isLikeObject</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> value === <span class="hljs-built_in">Object</span>(value);
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> toString(value) === <span class="hljs-string">'[object Object]'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copy</span>(<span class="hljs-params">proto</span>)</span>{
+		<span class="hljs-keyword">var</span> Proto = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{};
+		Proto.prototype = proto.prototype || proto;
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Proto();
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span>(<span class="hljs-params">proto, properties</span>)</span>{
+		proto = copy(proto);
+		<span class="hljs-keyword">if</span>(isLikeObject(properties)){
+			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> property <span class="hljs-keyword">in</span> properties){
+				<span class="hljs-keyword">if</span>(properties.hasOwnProperty((property))){
+					proto[property] = properties[property].value;
+				}
+			}
+		}
+		<span class="hljs-keyword">return</span> proto;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">merge</span>(<span class="hljs-params">target</span>)</span>{
+		<span class="hljs-keyword">var</span> params = slice(<span class="hljs-built_in">arguments</span>);
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">1</span>, source; id &lt; params.length; id++){
+			source = params[id];
+			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> property <span class="hljs-keyword">in</span> source){
+				<span class="hljs-keyword">if</span>(source.hasOwnProperty(property)){
+					<span class="hljs-keyword">if</span>(isObject(source[property]) &amp;&amp; isObject(target[property])){
+						target[property] = merge(target[property], source[property]);
+					}<span class="hljs-keyword">else</span>{
+						target[property] = source[property];
+					}
+				}
+			}
+		}
+		<span class="hljs-keyword">return</span> target;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">keys</span>(<span class="hljs-params">object, getEnum</span>)</span>{
+		<span class="hljs-keyword">var</span> properties = [];
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> object){
+			<span class="hljs-keyword">if</span>(getEnum || object.hasOwnProperty(key)){
+				properties.push(key);
+			}
+		}
+		<span class="hljs-keyword">return</span> properties;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">overload</span>(<span class="hljs-params">target, name, fn</span>)</span>{
+		<span class="hljs-keyword">var</span> cache = target[name];
+		target[name] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+			<span class="hljs-keyword">if</span>(fn.length === <span class="hljs-built_in">arguments</span>.length){
+				<span class="hljs-keyword">return</span> fn.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+			}<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(isFunction(cache)){
+				<span class="hljs-keyword">return</span> cache.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+			}
+		};
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">implement</span>(<span class="hljs-params">list</span>)</span>{
+		<span class="hljs-keyword">var</span> proto = {}, collection = {};
+		list = isArray(list)? list : [list];
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>, item; id &lt; list.length; id++){
+			item = list[id];
+			<span class="hljs-keyword">if</span>(isFunction(item)){
+				item = item.prototype;
+			}
+			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> item){
+				<span class="hljs-keyword">if</span>(key !== <span class="hljs-string">'constructor'</span>){
+					proto[key] = item[key];
+				}
+			}
+			<span class="hljs-keyword">if</span>(proto.implements){
+				collection = implement(proto.implements);
+			}<span class="hljs-keyword">else</span>{
+				collection = merge(collection, proto);
+			}
+		}
+		<span class="hljs-keyword">return</span> collection;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">flush</span>(<span class="hljs-params">object</span>)</span>{
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> object){
+			<span class="hljs-keyword">if</span>(object.hasOwnProperty(key)){
+				<span class="hljs-keyword">delete</span> object[key];
+			}
+		}
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bind</span>(<span class="hljs-params">fn, context</span>)</span>{
+		<span class="hljs-keyword">var</span> args = slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">2</span>);
+		<span class="hljs-keyword">var</span> proxy = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+			<span class="hljs-keyword">return</span> fn.apply(context, args.concat(slice(<span class="hljs-built_in">arguments</span>)));
+		};
+		proxy.__bind__ = proxy.__bind__ || fn;
+		<span class="hljs-keyword">return</span> proxy;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unbind</span>(<span class="hljs-params">fn</span>)</span>{
+		<span class="hljs-keyword">var</span> cache = fn.__bind__;
+		<span class="hljs-keyword">delete</span> fn.__bind__;
+		<span class="hljs-keyword">return</span> cache;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bindAll</span>(<span class="hljs-params">context, methods</span>)</span>{
+		methods = isArray(methods)? methods : slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);
+		methods = methods.length? methods : keys(context, <span class="hljs-literal">true</span>);
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>; id &lt; methods.length; id++){
+			<span class="hljs-keyword">if</span>(isFunction(context[methods[id]])){
+				context[methods[id]] = bind(context[methods[id]], context);
+			}
+		}
+		<span class="hljs-keyword">return</span> context;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unbindAll</span>(<span class="hljs-params">context, methods</span>)</span>{
+		methods = isArray(methods)? methods : slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);
+		methods = methods.length? methods : keys(context, <span class="hljs-literal">true</span>);
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>; id &lt; methods.length; id++){
+			<span class="hljs-keyword">if</span>(isFunction(context[methods[id]])){
+				context[methods[id]] = unbind(context[methods[id]], context);
+			}
+		}
+		<span class="hljs-keyword">return</span> context;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSuperMethod</span>(<span class="hljs-params">name, action, pointer</span>)</span>{
+		pointer = isFunction(pointer)? pointer : ctor;
+		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+			<span class="hljs-keyword">this</span>.super = pointer;
+			<span class="hljs-keyword">return</span> action.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+		};
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">enableSuperMethods</span>(<span class="hljs-params">parent, proto</span>)</span>{
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> proto){
+			<span class="hljs-keyword">if</span>(isFunction(proto[key]) &amp;&amp; reSuper.test(proto[key].toString())){
+				proto[key] = createSuperMethod(key, proto[key], parent.prototype[key]);
+			}
+		}
+		<span class="hljs-keyword">return</span> proto;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="overrides">Overrides</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+	<span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">context</span>)</span>{
+		<span class="hljs-keyword">return</span> bind(<span class="hljs-keyword">this</span>, context);
+	};
+
+	<span class="hljs-built_in">Function</span>.prototype.unbind = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+		<span class="hljs-keyword">return</span> unbind(<span class="hljs-keyword">this</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h2 id="proto">Proto</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Proto</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">if</span>(isFunction(<span class="hljs-keyword">this</span>.initialize)){
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+
+  Proto.create = <span class="hljs-built_in">Object</span>.create || create;
+  Proto.implements = implement;
+  Proto.unbindAll = unbindAll;
+  Proto.bindAll = bindAll;
+  Proto.unbind = unbind;
+  Proto.bind = bind;
+  Proto.overload = overload;
+  Proto.merge = merge;
+  Proto.flush = flush;
+  Proto.keys = keys;
+  Proto.copy = copy;
+  Proto.ape = ape;
+
+  Proto.of = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, qualified</span>)</span>{
+    <span class="hljs-keyword">var</span> type = toString(value);
+    <span class="hljs-keyword">if</span>(qualified &amp;&amp; type === <span class="hljs-string">'[object Object]'</span>){
+      <span class="hljs-keyword">return</span> value.constructor.toString().replace(reFnDeclaration, <span class="hljs-string">'$1'</span>) || <span class="hljs-string">'Object'</span>;
+    }
+    <span class="hljs-keyword">return</span> type.replace(reObjectWrapper, <span class="hljs-string">''</span>);
+  };
+
+  Proto.extends = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">proto, staticProperties</span>)</span>{
+    <span class="hljs-keyword">var</span> Caste, Constructor, Implementations, Super = <span class="hljs-keyword">this</span>;
+
+    enableSuperMethods(Super, proto);
+
+    Constructor = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-keyword">return</span> Super.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+    };
+
+    <span class="hljs-keyword">if</span>(proto &amp;&amp; proto.hasOwnProperty(<span class="hljs-string">'constructor'</span>)){
+      Constructor = proto.constructor;
+    }
+
+    merge(Constructor, Super, staticProperties);
+
+    Caste = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{ <span class="hljs-keyword">this</span>.constructor = Constructor; };
+    Caste.prototype = Super.prototype;
+    Constructor.prototype = Proto.create(Caste.prototype);
+
+    <span class="hljs-keyword">if</span>(proto &amp;&amp; proto.hasOwnProperty(<span class="hljs-string">'implements'</span>)){
+      Implementations = implement(proto.implements);
+      merge(Constructor.prototype, Implementations);
+      <span class="hljs-keyword">delete</span> proto.implements;
+    }
+
+    proto &amp;&amp; merge(Constructor.prototype, proto, {
+      $protoID:++uid
+    });
+
+    Constructor.super = Super.prototype;
+    Super.extends = Proto.extends;
+    <span class="hljs-keyword">return</span> Constructor;
+  };
+
+  Proto.prototype.toImplement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">list</span>)</span>{
+    <span class="hljs-keyword">return</span> merge(<span class="hljs-keyword">this</span>.prototype, implement(list));
+  };
+
+  Proto.prototype.overload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, fn</span>)</span>{
+    <span class="hljs-keyword">return</span> overload(<span class="hljs-keyword">this</span>.prototype, name, fn);
+  };
+
+  Proto.prototype.setOptions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">options</span>)</span>{
+  	<span class="hljs-keyword">this</span>.options = merge({}, <span class="hljs-keyword">this</span>.defaults, options);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options;
+  };
+
+  Proto.prototype.getOptions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> isLikeObject(<span class="hljs-keyword">this</span>.options)? <span class="hljs-keyword">this</span>.options : {};
+  };
+
+  Proto.prototype.unbindAll = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> unbindAll(<span class="hljs-keyword">this</span>, slice(<span class="hljs-built_in">arguments</span>));
+  };
+
+  Proto.prototype.bindAll = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> bindAll(<span class="hljs-keyword">this</span>, slice(<span class="hljs-built_in">arguments</span>));
+  };
+
+  Proto.prototype.flush = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    flush(<span class="hljs-keyword">this</span>);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h2 id="externalize">Externalize</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+	exports[name] = Proto;
+	exports[name].VERSION = version;
+
+	<span class="hljs-keyword">return</span> Proto;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
