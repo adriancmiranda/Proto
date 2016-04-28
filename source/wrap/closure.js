@@ -1,21 +1,10 @@
 
 
-//|-----------------------------------------------------------------------------
-//| Expose `Proto` identifier, even in AMD and CommonJS for browser emulators.
-//'-----------------------------------------------------------------------------
+	// Externalize
+	// -----------
 
-	if(!nodeEnv){
-		window.Proto = Proto;
-	}
-
-
-//|-----------------------------------------------------------------------------
-//| Expose `Proto` identifier, even in query plugins.
-//'-----------------------------------------------------------------------------
-
-	if($ && $.fn === Object($.fn)){
-		$.fn.Proto = Proto;
-	}
+	exports[name] = Proto;
+	exports[name].VERSION = version;
 
 	return Proto;
-}));
+});

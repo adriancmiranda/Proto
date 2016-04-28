@@ -1,34 +1,34 @@
-(function(global, factory){
+//     Proto.js 0.0.6
+
+//     (c) 2015-2016 Adrian C. Miranda
+//     Proto may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://ambox.github.io
+
+(function(global, name, version, factory){
 	'use strict';
 
-	var $ = global.jQuery || global.Zepto || global.ender || global.$;
 	if(typeof module === 'object' && typeof module.exports === 'object'){
-		module.exports = factory(global, $, true);
+
+		// Set up for Node.js or CommonJS.
+		module.exports = factory(global, exports, name, version);
+
+	}else if(typeof define === 'function' && define.amd){// jshint ignore:line
+
+		// Next for module appropriately for the environment. Start with AMD.
+		define(['exports'], function(exports){// jshint ignore:line
+			return factory(global, exports, name, version);
+		});
+
 	}else{
-		factory(global, $);
+
+		// Finally, as a browser global.
+		global[name] = factory(global, {}, name, version);
+
 	}
 
-}(typeof window !== 'undefined' ? window : this, function(window, $, nodeEnv){
+})(this, 'Proto', '0.0.6', function(global, exports, name, version){
+	'use strict';
 
-//|-----------------------------------------------------------------------------
-//|
-//| Adrian C. Miranda
-//|
-//| .-------------------------------------------------------------------.
-//| | NAMING CONVENTIONS:                                               |
-//| |-------------------------------------------------------------------|
-//| | Singleton-literals and prototype objects      | PascalCase        |
-//| |-------------------------------------------------------------------|
-//| | Functions and public variables                | camelCase         |
-//| |-------------------------------------------------------------------|
-//| | Global variables and constants                | UPPERCASE         |
-//| |-------------------------------------------------------------------|
-//| | Private variables                             | _underscorePrefix |
-//| '-------------------------------------------------------------------'
-//|
-//| Comment syntax for the entire project follows JSDoc:
-//| @see http://code.google.com/p/jsdoc-toolkit/wiki/TagReference
-//|
-//|-----------------------------------------------------------------------------
-//| Utilities
-//'-----------------------------------------------------------------------------
+	// Helpers
+	// -------

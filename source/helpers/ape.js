@@ -1,9 +1,11 @@
 define(function(){
 	'use strict';
 
-	return function(fn){
+	function ape(fn){
 		return function(){
 			return Function.call.apply(fn, arguments);
 		};
-	};
+	}
+
+	return ape;
 });

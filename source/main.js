@@ -1,167 +1,159 @@
 define([
-	'./common/ape',
-	'./common/uid',
-	'./common/slice',
-	'./common/hasProp',
-	'./common/toString',
-	'./common/patterns',
-	'./common/create',
-	'./common/overload',
-	'./common/merge',
-	'./common/keys',
-	'./common/bind',
-	'./common/unbind',
-	'./common/bindAll',
-	'./common/unbindAll',
-	'./common/flush'
+  './common/uid',
+  './common/ctor',
+  './common/slice',
+  './common/isArray',
+  './common/toString',
+  './common/reSuper',
+  './common/reObjectAssessor',
+  './common/reFnDeclaration',
+  './common/reObjectWrapper',
+  './helpers/ape',
+  './helpers/isUndefined',
+  './helpers/isString',
+  './helpers/isFunction',
+  './helpers/isLikeObject',
+  './helpers/isObject',
+  './helpers/copy',
+  './helpers/create',
+  './helpers/merge',
+  './helpers/keys',
+  './helpers/overload',
+  './helpers/implement',
+  './helpers/flush',
+  './helpers/bind',
+  './helpers/unbind',
+  './helpers/bindAll',
+  './helpers/unbindAll',
+  './helpers/createSuperMethod',
+  './helpers/enableSuperMethods',
+  './native/Function'
 ], function(
-	ape,
-	uid,
-	slice,
-	hasProp,
-	toString,
-	patterns,
-	create,
-	overload,
-	merge,
-	keys,
-	bind,
-	unbind,
-	bindAll,
-	unbindAll,
-	flush
+  uid,
+  ctor,
+  slice,
+  isArray,
+  toString,
+  reSuper,
+  reObjectAssessor,
+  reFnDeclaration,
+  reObjectWrapper,
+  ape,
+  isUndefined,
+  isString,
+  isFunction,
+  isLikeObject,
+  isObject,
+  copy,
+  create,
+  merge,
+  keys,
+  overload,
+  implement,
+  flush,
+  bind,
+  unbind,
+  bindAll,
+  unbindAll,
+  createSuperMethod,
+  enableSuperMethods
 ){
-	'use strict';
+  'use strict';
 
-//|-----------------------------------------------------------------------------
-//| Proto
-//'-----------------------------------------------------------------------------
 
-	function Proto(Fn){
-		if(typeof this.initialize === 'function'){
-			this.cid = ++uid;
-			return this.initialize.apply(this, arguments);
-		}
-		if(this instanceof Proto){
-			if(typeof Fn === 'function'){
-				Fn.prototype.toString = this.toString;
-				Fn.prototype.flush = this.flush;
-				Fn.extends = this.extends;
-				Fn.public = this.public;
-				Fn.static = this.static;
-				Fn.charge = this.charge;
-				Fn.outrun = this.outrun;
-			}
-			return Fn;
-		}
-		return new Proto(Fn);
-	}
+  // Proto
+  // -----
 
-	Proto.overload = overload;
-	Proto.hasProp = hasProp;
-	Proto.create = create;
-	Proto.merge = merge;
-	Proto.flush = flush;
-	Proto.keys = keys;
-	Proto.bind = bind;
-	Proto.unbind = unbind;
-	Proto.bindAll = bindAll;
-	Proto.unbindAll = unbindAll;
-	Proto.ape = ape;
+  function Proto(){
+    if(isFunction(this.initialize)){
+      return this.initialize.apply(this, arguments);
+    }
+    return this;
+  }
 
-	Proto.of = function(value, qualified){
-		var type = toString(value);
-		if(qualified && type === '[object Object]'){
-			return value.constructor.toString().replace(patterns.fnDecl, '$1') || 'Object';
-		}
-		return type.replace(patterns.objWrap, '');
-	};
+  Proto.create = Object.create || create;
+  Proto.implements = implement;
+  Proto.unbindAll = unbindAll;
+  Proto.bindAll = bindAll;
+  Proto.unbind = unbind;
+  Proto.bind = bind;
+  Proto.overload = overload;
+  Proto.merge = merge;
+  Proto.flush = flush;
+  Proto.keys = keys;
+  Proto.copy = copy;
+  Proto.ape = ape;
 
-	Proto.extends = function(proto, properties){
-		var parent = this;
-		var Proto = function(){
-			return parent.apply(this, arguments);
-		};
-		if(proto && hasProp(proto, 'constructor')){
-			Proto = proto.constructor;
-		}
-		merge(Proto, parent, properties);
-		var Caste = function(){ this.constructor = Proto; };
-		Caste.prototype = parent.prototype;
-		Proto.prototype = create(Caste.prototype);
-		proto && merge(Proto.prototype, proto);
-		Proto.super = parent.prototype;
-		parent.extends = Proto.extends;
-		return Proto;
-	};
+  Proto.of = function(value, qualified){
+    var type = toString(value);
+    if(qualified && type === '[object Object]'){
+      return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
+    }
+    return type.replace(reObjectWrapper, '');
+  };
 
-	Proto.prototype.extends = function(superclass){
-		if(typeof superclass !== 'function'){
-			return this;
-		}
-		this.super = superclass;
-		if(nodeEnv){// jshint ignore:line
-			require('util').inherits(this, superclass);
-			return this;
-		}
-		this.prototype = create(superclass.prototype, {
-			constructor:{
-				value:this,
-				enumerable:false,
-				writable:true,
-				configurable:true
-			}
-		});
-		return this;
-	};
+  Proto.extends = function(proto, staticProperties){
+    var Caste, Constructor, Implementations, Super = this;
 
-	Proto.prototype.hasProp = function(prop){
-		return hasProp(this, prop);
-	};
+    enableSuperMethods(Super, proto);
 
-	Proto.prototype.public = function(name, definition){
-		if(typeof name === 'string'){
-			this.prototype[name] = definition;
-		}else if(Object(name) === name){
-			for(var key in name){
-				if(hasProp(name, key)){
-					this.prototype[key] = name[key];
-				}
-			}
-		}
-		return this;
-	};
+    Constructor = function(){
+      return Super.apply(this, arguments);
+    };
 
-	Proto.prototype.static = function(name, definition){
-		if(typeof name === 'string'){
-			this[name] = definition;
-		}else if(Object(name) === name){
-			for(var key in name){
-				if(hasProp(name, key)){
-					this[key] = name[key];
-				}
-			}
-		}
-		return this;
-	};
+    if(proto && proto.hasOwnProperty('constructor')){
+      Constructor = proto.constructor;
+    }
 
-	Proto.prototype.charge = function(name, fn){
-		overload(this.prototype, name, fn);
-		return this;
-	};
+    merge(Constructor, Super, staticProperties);
 
-	Proto.prototype.outrun = function(name, fn){
-		overload(this, name, fn);
-		return this;
-	};
+    Caste = function(){ this.constructor = Constructor; };
+    Caste.prototype = Super.prototype;
+    Constructor.prototype = Proto.create(Caste.prototype);
 
-	Proto.prototype.flush = function(){
-		flush(this);
-	};
+    if(proto && proto.hasOwnProperty('implements')){
+      Implementations = implement(proto.implements);
+      merge(Constructor.prototype, Implementations);
+      delete proto.implements;
+    }
 
-	Proto.prototype.toString = function(){
-		return '[object '+ Proto.of(this, true) +']';
-	};
+    proto && merge(Constructor.prototype, proto, {
+      $protoID:++uid
+    });
 
-	return Proto;
+    Constructor.super = Super.prototype;
+    Super.extends = Proto.extends;
+    return Constructor;
+  };
+
+  Proto.prototype.toImplement = function(list){
+    return merge(this.prototype, implement(list));
+  };
+
+  Proto.prototype.overload = function(name, fn){
+    return overload(this.prototype, name, fn);
+  };
+
+  Proto.prototype.setOptions = function(options){
+  	this.options = merge({}, this.defaults, options);
+    return this.options;
+  };
+
+  Proto.prototype.getOptions = function(){
+    return isLikeObject(this.options)? this.options : {};
+  };
+
+  Proto.prototype.unbindAll = function(){
+    return unbindAll(this, slice(arguments));
+  };
+
+  Proto.prototype.bindAll = function(){
+    return bindAll(this, slice(arguments));
+  };
+
+  Proto.prototype.flush = function(){
+    flush(this);
+  };
+
+  return Proto;
 });

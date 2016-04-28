@@ -1,12 +1,14 @@
-define(['./slice'], function(slice){
+define(['../common/slice'], function(slice){
 	'use strict';
 
-	return function(fn, context){
+	function bind(fn, context){
 		var args = slice(arguments, 2);
 		var proxy = function(){
 			return fn.apply(context, args.concat(slice(arguments)));
 		};
-		proxy.__originalFn__ = proxy.__originalFn__ || fn;
+		proxy.__bind__ = proxy.__bind__ || fn;
 		return proxy;
-	};
+	}
+
+	return bind;
 });
