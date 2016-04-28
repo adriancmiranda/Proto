@@ -105,33 +105,33 @@ Usage
 
 ```javascript
 
-	var Ninja = Proto.extends({
-		kill:function(flush){
-			console.log('kill '+ flush);
-		}
-	});
+var Ninja = Proto.extends({
+	kill:function(flush){
+		console.log('kill '+ flush);
+	}
+});
 
-	var Human = Proto.extends({
-		constructor:function(){
-			console.log('i r human');
-		}
-	});
+var Human = Proto.extends({
+	constructor:function(){
+		console.log('i r human');
+	}
+});
 
-	var ChuckNorris = Human.extends({
-		implements:[Ninja],
-		constructor:function(){
-			console.log('i r badass and.. ');
-			this.super();
-			this.kill('with thumb');
-		}
-	});
+var ChuckNorris = Human.extends({
+	implements:[Ninja],
+	constructor:function(){
+		console.log('i r badass and.. ');
+		this.super();
+		this.kill('with thumb');
+	}
+});
 
-	var chuck = new ChuckNorris();
-	chuck.kill('again!');
-	console.log(chuck instanceof Proto); // true
-	console.log(chuck instanceof Ninja); // false
-	console.log(chuck instanceof Human); // true
-	console.log(chuck instanceof ChuckNorris); // true
+var chuck = new ChuckNorris();
+chuck.kill('again!');
+console.log(chuck instanceof Proto); // true
+console.log(chuck instanceof Ninja); // false
+console.log(chuck instanceof Human); // true
+console.log(chuck instanceof ChuckNorris); // true
 
 ```
 
