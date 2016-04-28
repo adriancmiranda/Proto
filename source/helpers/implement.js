@@ -1,8 +1,8 @@
 define([
-	'./merge',
+	'./extend',
 	'./isFunction',
 	'../common/isArray'
-], function(merge, isFunction, isArray){
+], function(extend, isFunction, isArray){
 	'use strict';
 
 	function implement(list){
@@ -21,7 +21,7 @@ define([
 			if(proto.implements){
 				collection = implement(proto.implements);
 			}else{
-				collection = merge(collection, proto);
+				collection = extend(collection, proto);
 			}
 		}
 		return collection;

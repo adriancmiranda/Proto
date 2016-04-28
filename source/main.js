@@ -16,6 +16,7 @@ define([
   './helpers/isObject',
   './helpers/copy',
   './helpers/create',
+  './helpers/extend',
   './helpers/merge',
   './helpers/keys',
   './helpers/overload',
@@ -46,6 +47,7 @@ define([
   isObject,
   copy,
   create,
+  extend,
   merge,
   keys,
   overload,
@@ -93,7 +95,7 @@ define([
   };
 
   Proto.extends = function(proto, properties){
-		var Caste, Constructor, Implementations, Super = this;
+		var Caste, Constructor, Impl, Super = this;
 
 		enableSuperMethods(Super, proto);
 
@@ -113,9 +115,8 @@ define([
 		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
 
 		if(proto && proto.hasOwnProperty('implements')){
-			Implementations = implement(proto.implements);
-			merge(Constructor.prototype, Implementations);
-			delete Constructor.prototype.implements;
+			Impl = implement(proto.implements);
+			Constructor.prototype = extend(Constructor.prototype, Impl);
 			delete proto.implements;
 		}
 
@@ -125,7 +126,7 @@ define([
 	};
 
   Proto.prototype.toImplement = function(list){
-    return merge(this.prototype, implement(list));
+    return extend(this.prototype, implement(list));
   };
 
   Proto.prototype.overload = function(name, fn){

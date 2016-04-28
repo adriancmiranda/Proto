@@ -95,6 +95,23 @@
 		return proto;
 	}
 
+
+	function extend(proto, parent){
+		if(proto && parent){
+			proto = copy(proto);
+			parent = copy(parent);
+			for(var key in parent){
+				if(isObject(parent[key])){
+					extend(proto[key], parent[key]);
+				}else{
+					proto[key] = parent[key];
+				}
+			}
+			return proto;
+		}
+		return proto || parent || {};
+	}
+
 	function merge(target){
 		var params = slice(arguments);
 		for(var id = 1, source; id < params.length; id++){
@@ -149,7 +166,7 @@
 			if(proto.implements){
 				collection = implement(proto.implements);
 			}else{
-				collection = merge(collection, proto);
+				collection = extend(collection, proto);
 			}
 		}
 		return collection;
@@ -262,7 +279,7 @@
   };
 
   Proto.extends = function(proto, properties){
-		var Caste, Constructor, Implementations, Super = this;
+		var Caste, Constructor, Impl, Super = this;
 
 		enableSuperMethods(Super, proto);
 
@@ -282,9 +299,8 @@
 		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
 
 		if(proto && proto.hasOwnProperty('implements')){
-			Implementations = implement(proto.implements);
-			merge(Constructor.prototype, Implementations);
-			delete Constructor.prototype.implements;
+			Impl = implement(proto.implements);
+			Constructor.prototype = extend(Constructor.prototype, Impl);
 			delete proto.implements;
 		}
 
@@ -294,7 +310,7 @@
 	};
 
   Proto.prototype.toImplement = function(list){
-    return merge(this.prototype, implement(list));
+    return extend(this.prototype, implement(list));
   };
 
   Proto.prototype.overload = function(name, fn){
