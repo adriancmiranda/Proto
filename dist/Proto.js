@@ -293,7 +293,10 @@
 
 		merge(Constructor, Super, properties);
 
-		Caste = function(){ this.constructor = Constructor; };
+		Caste = function(){
+			this.constructor = Constructor;
+		};
+
 		Caste.prototype = Super.prototype;
 		Constructor.prototype = Constructor.create(Caste.prototype);
 		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
