@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "chai": "3.5.0",
     "commitplease": "latest",
     "connect-livereload": "0.5.4",
     "grunt": "latest",
