@@ -26,8 +26,9 @@
 [shields_license_url]: https://github.com/adriancmiranda/Proto/blob/master/LICENSE.md
 
 <!-- codacy -->
-[codacy_status_image]: https://api.codacy.com/project/badge/e40950d046e7483c994400cfe2c5e7a5
-[codacy_status_url]: https://www.codacy.com/app/adriancmiranda/Proto
+[codacy_status_image]: https://api.codacy.com/project/badge/Grade/75cc315f21fa4f3fa51b8fb0dfc36c67
+[codacy_status_url]: https://www.codacy.com/app/adriancmiranda/Proto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=adriancmiranda/Proto&amp;utm_campaign=Badge_Grade
+
 
 What you need to build your own Proto
 -----------------------------------------
