@@ -26,8 +26,7 @@ define([
 	'./helpers/bindAll',
 	'./helpers/unbindAll',
 	'./helpers/createSuperMethod',
-	'./helpers/enableSuperMethods',
-	'./native/Function'
+	'./helpers/enableSuperMethods'
 ], function(
 	uid,
 	ctor,
@@ -156,6 +155,14 @@ define([
 
 	Proto.prototype.bindAll = function(){
 		return bindAll(this, slice(arguments));
+	};
+
+	Proto.prototype.unbind = function(fn){
+		return unbind(fn);
+	};
+
+	Proto.prototype.bind = function(fn, context){
+		return bind(fn, context || this);
 	};
 
 	Proto.prototype.flush = function(){

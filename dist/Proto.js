@@ -85,7 +85,6 @@
 		return proto;
 	}
 
-
 	function extend(proto, parent){
 		if(proto && parent){
 			proto = copy(proto);
@@ -119,7 +118,6 @@
 		return target;
 	}
 
-
 	function shallowMerge(target){
 		var params = slice(arguments, 1);
 		for(var id = 0; id < params.length; id++){
@@ -132,7 +130,6 @@
 		}
 		return target;
 	}
-
 
 	function copyShallowObjectsFrom(proto){
 		var copy = {};
@@ -250,18 +247,6 @@
 	}
 
 
-	// Overrides
-	// ---------
-
-	Function.prototype.bind = function(context){
-		return bind(this, context);
-	};
-
-	Function.prototype.unbind = function(){
-		return unbind(this);
-	};
-
-
 	// Proto
 	// -----
 
@@ -357,6 +342,14 @@
 
 	Proto.prototype.bindAll = function(){
 		return bindAll(this, slice(arguments));
+	};
+
+	Proto.prototype.unbind = function(fn){
+		return unbind(fn);
+	};
+
+	Proto.prototype.bind = function(fn, context){
+		return bind(fn, context || this);
 	};
 
 	Proto.prototype.flush = function(){
