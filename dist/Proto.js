@@ -47,7 +47,7 @@
 
 	var isArray = Array.isArray;
 
-	var toString = ape(Object.prototype.toString);
+	var toStr = ape(Object.prototype.toString);
 
 	var reSuper = /\bsuper\b/;
 
@@ -64,7 +64,7 @@
 	}
 
 	function isObject(value){
-		return toString(value) === '[object Object]';
+		return toStr(value) === '[object Object]';
 	}
 
 	function copy(proto){
@@ -273,7 +273,7 @@
 	Proto.ape = ape;
 
 	Proto.of = function(value, qualified){
-		var type = toString(value);
+		var type = toStr(value);
 		if(qualified && type === '[object Object]'){
 			return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
 		}

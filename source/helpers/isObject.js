@@ -1,8 +1,8 @@
-define(['../common/toString'], function(toString){
+define(['../common/toStr'], function(toStr){
 	'use strict';
 
 	function isObject(value){
-		return toString(value) === '[object Object]';
+		return toStr(value) === '[object Object]';
 	}
 
 	return isObject;

@@ -3,7 +3,7 @@ define([
 	'./common/ctor',
 	'./common/slice',
 	'./common/isArray',
-	'./common/toString',
+	'./common/toStr',
 	'./common/reSuper',
 	'./common/reFnDeclaration',
 	'./common/reObjectWrapper',
@@ -32,7 +32,7 @@ define([
 	ctor,
 	slice,
 	isArray,
-	toString,
+	toStr,
 	reSuper,
 	reFnDeclaration,
 	reObjectWrapper,
@@ -86,7 +86,7 @@ define([
 	Proto.ape = ape;
 
 	Proto.of = function(value, qualified){
-		var type = toString(value);
+		var type = toStr(value);
 		if(qualified && type === '[object Object]'){
 			return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
 		}
