@@ -15,6 +15,8 @@ define([
 	'./helpers/create',
 	'./helpers/extend',
 	'./helpers/merge',
+	'./helpers/shallowMerge',
+	'./helpers/copyShallowObjectsFrom',
 	'./helpers/keys',
 	'./helpers/overload',
 	'./helpers/implement',
@@ -43,6 +45,8 @@ define([
 	create,
 	extend,
 	merge,
+	shallowMerge,
+	copyShallowObjectsFrom,
 	keys,
 	overload,
 	implement,
@@ -74,6 +78,8 @@ define([
 	Proto.unbind = unbind;
 	Proto.bind = bind;
 	Proto.overload = overload;
+	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
+	Proto.shallowMerge = shallowMerge;
 	Proto.merge = merge;
 	Proto.flush = flush;
 	Proto.keys = keys;
@@ -89,7 +95,7 @@ define([
 	};
 
 	Proto.extends = function(proto, properties){
-		var Caste, Constructor, Impl, Super = this;
+		var Caste, Constructor, Objs, Impl, Super = this;
 
 		enableSuperMethods(Super, proto);
 
@@ -101,7 +107,7 @@ define([
 			Constructor = proto.constructor;
 		}
 
-		merge(Constructor, Super, properties);
+		shallowMerge(Constructor, Super, properties);
 
 		Caste = function(){
 			this.constructor = Constructor;
@@ -109,7 +115,12 @@ define([
 
 		Caste.prototype = Super.prototype;
 		Constructor.prototype = Constructor.create(Caste.prototype);
-		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
+
+		if(proto){
+			Objs = copyShallowObjectsFrom(Constructor.prototype);
+			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
+			merge(Constructor.prototype, Objs);
+		}
 
 		if(proto && proto.hasOwnProperty('implements')){
 			Impl = implement(proto.implements);
@@ -131,7 +142,7 @@ define([
 	};
 
 	Proto.prototype.setOptions = function(options){
-		this.options = merge({}, this.defaults, options);
+		this.options = shallowMerge({}, this.defaults, options);
 		return this.options;
 	};
 

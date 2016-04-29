@@ -85,6 +85,7 @@
 		return proto;
 	}
 
+
 	function extend(proto, parent){
 		if(proto && parent){
 			proto = copy(proto);
@@ -116,6 +117,31 @@
 			}
 		}
 		return target;
+	}
+
+
+	function shallowMerge(target){
+		var params = slice(arguments, 1);
+		for(var id = 0; id < params.length; id++){
+			var source = params[id];
+			if(source){
+				for(var prop in source){
+					target[prop] = source[prop];
+				}
+			}
+		}
+		return target;
+	}
+
+
+	function copyShallowObjectsFrom(proto){
+		var copy = {};
+		for(var key in proto){
+			if(isObject(proto[key])){
+				copy[key] = proto[key];
+			}
+		}
+		return copy;
 	}
 
 	function keys(object, getEnum){
@@ -253,6 +279,8 @@
 	Proto.unbind = unbind;
 	Proto.bind = bind;
 	Proto.overload = overload;
+	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
+	Proto.shallowMerge = shallowMerge;
 	Proto.merge = merge;
 	Proto.flush = flush;
 	Proto.keys = keys;
@@ -268,7 +296,7 @@
 	};
 
 	Proto.extends = function(proto, properties){
-		var Caste, Constructor, Impl, Super = this;
+		var Caste, Constructor, Objs, Impl, Super = this;
 
 		enableSuperMethods(Super, proto);
 
@@ -280,7 +308,7 @@
 			Constructor = proto.constructor;
 		}
 
-		merge(Constructor, Super, properties);
+		shallowMerge(Constructor, Super, properties);
 
 		Caste = function(){
 			this.constructor = Constructor;
@@ -288,7 +316,12 @@
 
 		Caste.prototype = Super.prototype;
 		Constructor.prototype = Constructor.create(Caste.prototype);
-		proto && merge(Constructor.prototype, proto, { $protoID:++uid });
+
+		if(proto){
+			Objs = copyShallowObjectsFrom(Constructor.prototype);
+			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
+			merge(Constructor.prototype, Objs);
+		}
 
 		if(proto && proto.hasOwnProperty('implements')){
 			Impl = implement(proto.implements);
@@ -310,7 +343,7 @@
 	};
 
 	Proto.prototype.setOptions = function(options){
-		this.options = merge({}, this.defaults, options);
+		this.options = shallowMerge({}, this.defaults, options);
 		return this.options;
 	};
 
