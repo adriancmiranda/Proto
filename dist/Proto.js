@@ -51,19 +51,9 @@
 
 	var reSuper = /\bsuper\b/;
 
-	var reObjectAssessor = /\[(["']?)([^\1]+?)\1?\]/g;
-
 	var reFnDeclaration = /^.*function\s([^\s]*|[^\(]*)\([^\x00]+$/;
 
 	var reObjectWrapper = /^(\[object(\s|\uFEFF|\xA0))|(\])$/g;
-
-	function isUndefined(value){
-		return typeof value === 'undefined';
-	}
-
-	function isString(value){
-		return typeof value === 'string';
-	}
 
 	function isFunction(value){
 		return typeof value === 'function';
@@ -94,7 +84,6 @@
 		}
 		return proto;
 	}
-
 
 	function extend(proto, parent){
 		if(proto && parent){
