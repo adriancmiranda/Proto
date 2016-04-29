@@ -7,4 +7,4 @@
 	exports[name].VERSION = version;
 
 	return Proto;
-});
+}));

@@ -27,7 +27,7 @@
 
 	}
 
-})(this, 'Proto', 'v0.0.6-alpha', function(global, exports, name, version){
+}(this, 'Proto', 'v0.0.6-alpha', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
@@ -338,4 +338,4 @@
 	exports[name].VERSION = version;
 
 	return Proto;
-});
+}));
