@@ -342,7 +342,7 @@
 		}
 	};
 
-	Proto.prototype.getOwn = function(optionName){
+	Proto.prototype.get = function(optionName){
 		return this.getOption(optionName) || this[optionName];
 	};
 
