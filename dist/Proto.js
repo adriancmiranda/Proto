@@ -302,16 +302,16 @@
 		Caste.prototype = Super.prototype;
 		Constructor.prototype = Constructor.create(Caste.prototype);
 
-		if(proto){
-			Objs = copyShallowObjectsFrom(Constructor.prototype);
-			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
-			merge(Constructor.prototype, Objs);
-		}
-
 		if(proto && proto.hasOwnProperty('implements')){
 			Impl = implement(proto.implements);
 			Constructor.prototype = extend(Constructor.prototype, Impl);
 			delete proto.implements;
+		}
+
+		if(proto){
+			Objs = copyShallowObjectsFrom(Constructor.prototype);
+			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
+			merge(Constructor.prototype, Objs);
 		}
 
 		Constructor.super = Super.prototype;
