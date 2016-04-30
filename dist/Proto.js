@@ -336,6 +336,16 @@
 		return isLikeObject(this.options)? this.options : {};
 	};
 
+	Proto.prototype.getOption = function(optionName){
+		if(optionName && isLikeObject(this.options)){
+			return this.options[optionName];
+		}
+	};
+
+	Proto.prototype.getOwn = function(optionName){
+		return this.getOption(optionName) || this[optionName];
+	};
+
 	Proto.prototype.unbindAll = function(){
 		return unbindAll(this, slice(arguments));
 	};
