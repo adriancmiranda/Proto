@@ -139,7 +139,7 @@ var Goku = ChuckNorris.extends({
 		this.super();
 	},
 	gokuMethod:function(){},
-	rise:function rise(){ // override rise property
+	rise:function(){ // override rise property
 		console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
 		return this.super();
 	}
