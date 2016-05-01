@@ -1,6 +1,5 @@
 define([
 	'./common/uid',
-	'./common/ctor',
 	'./common/slice',
 	'./common/isArray',
 	'./common/toStr',
@@ -29,7 +28,6 @@ define([
 	'./helpers/enableSuperMethods'
 ], function(
 	uid,
-	ctor,
 	slice,
 	isArray,
 	toStr,
@@ -122,6 +120,7 @@ define([
 		var Surrogate = function(){ this.constructor = child; };
 		Surrogate.prototype = parent.prototype || null;
 		child.prototype = Proto.create(Surrogate.prototype);
+		Proto.instances++;
 
 		// Adds implementations to the `__proto__` itself before inherit.
 		if(protoProps && protoProps.hasOwnProperty('implements')){
@@ -129,8 +128,7 @@ define([
 			child.prototype = extend(child.prototype, implementations);
 			delete protoProps.implements;
 			Proto.implementations++;
-		}else{
-			Proto.instances++;
+			Proto.instances--;
 		}
 
 		// Proto extends length.

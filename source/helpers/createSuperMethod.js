@@ -1,4 +1,4 @@
-define(['./isFunction', '../common/ctor'], function(isFunction, ctor){
+define(['./isFunction'], function(isFunction){
 	'use strict';
 
 	function createSuperMethod(name, action, value){

@@ -35,8 +35,6 @@
 
 	var uid = 0;
 
-	var ctor = function noop(){};
-
 	function ape(fn){
 		return function(){
 			return Function.call.apply(fn, arguments);
@@ -311,6 +309,7 @@
 		var Surrogate = function(){ this.constructor = child; };
 		Surrogate.prototype = parent.prototype || null;
 		child.prototype = Proto.create(Surrogate.prototype);
+		Proto.instances++;
 
 		// Adds implementations to the `__proto__` itself before inherit.
 		if(protoProps && protoProps.hasOwnProperty('implements')){
@@ -318,8 +317,7 @@
 			child.prototype = extend(child.prototype, implementations);
 			delete protoProps.implements;
 			Proto.implementations++;
-		}else{
-			Proto.instances++;
+			Proto.instances--;
 		}
 
 		// Proto extends length.
