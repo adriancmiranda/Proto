@@ -1,5 +1,4 @@
 define([
-	'./common/uid',
 	'./common/slice',
 	'./common/isArray',
 	'./common/toStr',
@@ -27,7 +26,6 @@ define([
 	'./helpers/createSuperMethod',
 	'./helpers/enableSuperMethods'
 ], function(
-	uid,
 	slice,
 	isArray,
 	toStr,

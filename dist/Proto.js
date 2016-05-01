@@ -33,8 +33,6 @@
 	// Helpers
 	// -------
 
-	var uid = 0;
-
 	function ape(fn){
 		return function(){
 			return Function.call.apply(fn, arguments);
