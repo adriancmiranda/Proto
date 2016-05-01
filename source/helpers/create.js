@@ -1,16 +1,18 @@
-define(['./copy', './isLikeObject'], function(copy, isLikeObject){
+define(['./isLikeObject'], function(isLikeObject){
 	'use strict';
 
 	function create(proto, properties){
-		proto = copy(proto);
+		var instance, property, Proto = function(){};
+		Proto.prototype = proto;
+		instance = new Proto();
 		if(isLikeObject(properties)){
-			for(var property in properties){
-				if(properties.hasOwnProperty((property))){
-					proto[property] = properties[property].value;
+			for(property in properties){
+				if(properties.hasOwnProperty(property)){
+					instance[property] = properties[property].value;
 				}
 			}
 		}
-		return proto;
+		return instance;
 	}
 
 	return create;

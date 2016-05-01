@@ -33,10 +33,6 @@
 	// Helpers
 	// -------
 
-	var uid = 0;
-
-	var ctor = function noop(){};
-
 	function ape(fn){
 		return function(){
 			return Function.call.apply(fn, arguments);
@@ -45,9 +41,13 @@
 
 	var slice = ape(Array.prototype.slice);
 
-	var isArray = Array.isArray;
-
 	var toStr = ape(Object.prototype.toString);
+
+	var uid = 0;
+
+	var ctor = function noop(){};
+
+	var isArray = Array.isArray;
 
 	var reSuper = /\bsuper\b/;
 
@@ -55,16 +55,22 @@
 
 	var reObjectWrapper = /^(\[object(\s|\uFEFF|\xA0))|(\])$/g;
 
-	function isFunction(value){
-		return typeof value === 'function';
-	}
-
 	function isLikeObject(value){
 		return value === Object(value);
 	}
 
-	function isObject(value){
-		return toStr(value) === '[object Object]';
+	function create(proto, properties){
+		var instance, property, Proto = function(){};
+		Proto.prototype = proto;
+		instance = new Proto();
+		if(isLikeObject(properties)){
+			for(property in properties){
+				if(properties.hasOwnProperty(property)){
+					instance[property] = properties[property].value;
+				}
+			}
+		}
+		return instance;
 	}
 
 	function copy(proto){
@@ -73,16 +79,8 @@
 		return new Proto();
 	}
 
-	function create(proto, properties){
-		proto = copy(proto);
-		if(isLikeObject(properties)){
-			for(var property in properties){
-				if(properties.hasOwnProperty((property))){
-					proto[property] = properties[property].value;
-				}
-			}
-		}
-		return proto;
+	function isObject(value){
+		return toStr(value) === '[object Object]';
 	}
 
 	function extend(proto, parent){
@@ -141,14 +139,8 @@
 		return copy;
 	}
 
-	function keys(object, getEnum){
-		var properties = [];
-		for(var key in object){
-			if(getEnum || object.hasOwnProperty(key)){
-				properties.push(key);
-			}
-		}
-		return properties;
+	function isFunction(value){
+		return typeof value === 'function';
 	}
 
 	function overload(target, name, fn){
@@ -184,51 +176,6 @@
 		return collection;
 	}
 
-	function flush(object){
-		for(var key in object){
-			if(object.hasOwnProperty(key)){
-				delete object[key];
-			}
-		}
-	}
-
-	function bind(fn, context){
-		var args = slice(arguments, 2);
-		var proxy = function(){
-			return fn.apply(context, args.concat(slice(arguments)));
-		};
-		proxy.__bind__ = proxy.__bind__ || fn;
-		return proxy;
-	}
-
-	function unbind(fn){
-		var cache = fn.__bind__;
-		delete fn.__bind__;
-		return cache;
-	}
-
-	function bindAll(context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
-		methods = methods.length? methods : keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(isFunction(context[methods[id]])){
-				context[methods[id]] = bind(context[methods[id]], context);
-			}
-		}
-		return context;
-	}
-
-	function unbindAll(context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
-		methods = methods.length? methods : keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(isFunction(context[methods[id]])){
-				context[methods[id]] = unbind(context[methods[id]], context);
-			}
-		}
-		return context;
-	}
-
 	function createSuperMethod(name, action, pointer){
 		pointer = isFunction(pointer)? pointer : ctor;
 		return function(){
@@ -250,121 +197,72 @@
 	// Proto
 	// -----
 
-	function Proto(){
-		if(isFunction(this.initialize)){
-			return this.initialize.apply(this, arguments);
-		}
-		return this;
-	}
+	var Proto = {
+		// Proto version
+    VERSION:version,
 
-	Proto.create = Object.create || create;
-	Proto.implements = implement;
-	Proto.unbindAll = unbindAll;
-	Proto.bindAll = bindAll;
-	Proto.unbind = unbind;
-	Proto.bind = bind;
-	Proto.overload = overload;
-	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
-	Proto.shallowMerge = shallowMerge;
-	Proto.merge = merge;
-	Proto.flush = flush;
-	Proto.keys = keys;
-	Proto.copy = copy;
-	Proto.ape = ape;
+    // Utility to merge deep objects.
+    merge:merge,
 
-	Proto.of = function(value, qualified){
-		var type = toStr(value);
-		if(qualified && type === '[object Object]'){
-			return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
-		}
-		return type.replace(reObjectWrapper, '');
-	};
+    // Object.create with fallback for ancient browsers.
+    create:Object.create || create,
 
-	Proto.extends = function(proto, properties){
-		var Caste, Constructor, Objs, Impl, Super = this;
+    // Improved Backbone.js's extend
+    extends:function(protoProps, staticProps){
+      // Wrap calls to `super` on object methods.
+      enableSuperMethods(this, protoProps);
 
-		enableSuperMethods(Super, proto);
+      // Create a default constructor.
+      var parent = this;
+      var child = function(){ return parent.apply(this, arguments); };
+      var childObjects, implementations;
 
-		Constructor = function(){
-			return Super.apply(this, arguments);
-		};
+      // The constructor function for the new subclass is either defined by you
+      // (the "constructor" property in your `extend` definition), or defaulted
+      // by us to simply call the parent's constructor.
+      if(protoProps && protoProps.hasOwnProperty('constructor')){
+        child = protoProps.constructor;
+      }
 
-		if(proto && proto.hasOwnProperty('constructor')){
-			Constructor = proto.constructor;
-		}
+      // Add static properties to the constructor function, if supplied.
+      shallowMerge(child, parent, staticProps);
 
-		shallowMerge(Constructor, Super, properties);
+      // Set the prototype chain to inherit from `parent`, without calling
+      // `parent`'s constructor function.
+      var Surrogate = function(){ this.constructor = child; };
+      Surrogate.prototype = parent.prototype || null;
+      child.prototype = Proto.create(Surrogate.prototype);
 
-		Caste = function(){
-			this.constructor = Constructor;
-		};
+      // Adds implementations to the `__proto__` itself before inherit.
+      if(protoProps && protoProps.hasOwnProperty('implements')){
+        implementations = implement(protoProps.implements);
+        child.prototype = extend(child.prototype, implementations);
+        delete protoProps.implements;
+      }
 
-		Caste.prototype = Super.prototype;
-		Constructor.prototype = Constructor.create(Caste.prototype);
+      // Add prototype properties (instance properties) to the subclass,
+      // if supplied. Extends the objects too.
+      if(protoProps){
+        childObjects = copyShallowObjectsFrom(child.prototype);
+        shallowMerge(child.prototype, protoProps, { $protoID:++uid });
+        merge(child.prototype, childObjects);
+      }
 
-		if(proto && proto.hasOwnProperty('implements')){
-			Impl = implement(proto.implements);
-			Constructor.prototype = extend(Constructor.prototype, Impl);
-			delete proto.implements;
-		}
+      // Set a convenience property in case the parent's prototype is needed
+      // later.
+      child.super = parent.prototype;
 
-		if(proto){
-			Objs = copyShallowObjectsFrom(Constructor.prototype);
-			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
-			merge(Constructor.prototype, Objs);
-		}
+      return child;
+    },
 
-		Constructor.super = Super.prototype;
-		Super.extends = Constructor.extends;
-		return Constructor;
-	};
-
-	Proto.prototype.toImplement = function(list){
-		return extend(this.prototype, implement(list));
-	};
-
-	Proto.prototype.overload = function(name, fn){
-		return overload(this.prototype, name, fn);
-	};
-
-	Proto.prototype.setOptions = function(options){
-		this.options = shallowMerge({}, this.defaults, options);
-		return this.options;
-	};
-
-	Proto.prototype.getOptions = function(){
-		return isLikeObject(this.options)? this.options : {};
-	};
-
-	Proto.prototype.getOption = function(optionName){
-		if(optionName && isLikeObject(this.options)){
-			return this.options[optionName];
-		}
-	};
-
-	Proto.prototype.get = function(optionName){
-		return this.getOption(optionName) || this[optionName];
-	};
-
-	Proto.prototype.unbindAll = function(){
-		return unbindAll(this, slice(arguments));
-	};
-
-	Proto.prototype.bindAll = function(){
-		return bindAll(this, slice(arguments));
-	};
-
-	Proto.prototype.unbind = function(fn){
-		return unbind(fn);
-	};
-
-	Proto.prototype.bind = function(fn, context){
-		return bind(fn, context || this);
-	};
-
-	Proto.prototype.flush = function(){
-		flush(this);
-	};
+    of:function(value, qualified){
+      var type = toStr(value);
+      if(qualified && type === '[object Object]'){
+        return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
+      }
+      return type.replace(reObjectWrapper, '');
+    }
+  };
 
 
 	// Externalize
