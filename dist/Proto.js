@@ -312,7 +312,10 @@
 		if(protoProps && protoProps.hasOwnProperty('implements')){
 			implementations = implement(protoProps.implements);
 			child.prototype = extend(child.prototype, implementations);
+			Proto.implementations = (Proto.implementations || 0) + 1;
 			delete protoProps.implements;
+		}else{
+			Proto.instances = (Proto.instances || 0) + 1;
 		}
 
 		// Add prototype properties (instance properties) to the subclass,
@@ -327,8 +330,8 @@
 		// later.
 		child.super = parent.prototype;
 
-		// Proto instances length.
-		Proto.instances = (Proto.instances || 0) + 1;
+		// Proto extends length.
+		Proto.size = Proto.instances + Proto.implementations;
 
 		return child;
 	};
