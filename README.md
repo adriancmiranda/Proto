@@ -30,8 +30,8 @@
 [codacy_status_url]: https://www.codacy.com/app/adriancmiranda/Proto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=adriancmiranda/Proto&amp;utm_campaign=Badge_Grade
 
 <!-- samples -->
-[sample_img]: http://i.imgur.com/CiS2XzX.png
-[sample_url]: http://i.imgur.com/CiS2XzX.png
+[sample_img]: http://i.imgur.com/OXKG9od.png
+[sample_url]: http://i.imgur.com/OXKG9od.png
 
 What you need to build your own Proto
 -----------------------------------------
