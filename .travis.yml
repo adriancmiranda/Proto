@@ -11,3 +11,4 @@ install:
 - bower install
 before_script:
 - phantomjs --version
+script: grunt
