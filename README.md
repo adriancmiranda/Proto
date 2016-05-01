@@ -162,6 +162,8 @@ console.log('goku:', goku);
 
 ```
 
+See this usage [here](http://output.jsbin.com/kehate "You'll need open the browser console to see him in action") You'll need open the browser console to see him in action
+
 [![Sample][sample_img]][sample_url]
 
 # A real world sample
