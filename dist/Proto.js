@@ -39,39 +39,19 @@
 		};
 	}
 
-	var slice = ape(Array.prototype.slice);
-
-	var toStr = ape(Object.prototype.toString);
-
-	var uid = 0;
-
 	var ctor = function noop(){};
 
 	var isArray = Array.isArray;
 
 	var reSuper = /\bsuper\b/;
 
-	var reFnDeclaration = /^.*function\s([^\s]*|[^\(]*)\([^\x00]+$/;
-
 	var reObjectWrapper = /^(\[object(\s|\uFEFF|\xA0))|(\])$/g;
 
-	function isLikeObject(value){
-		return value === Object(value);
-	}
+	var reFnDeclaration = /^.*function\s([^\s]*|[^\(]*)\([^\x00]+$/;
 
-	function create(proto, properties){
-		var instance, property, Proto = function(){};
-		Proto.prototype = proto;
-		instance = new Proto();
-		if(isLikeObject(properties)){
-			for(property in properties){
-				if(properties.hasOwnProperty(property)){
-					instance[property] = properties[property].value;
-				}
-			}
-		}
-		return instance;
-	}
+	var slice = ape(Array.prototype.slice);
+
+	var toStr = ape(Object.prototype.toString);
 
 	function copy(proto){
 		var Proto = function(){};
@@ -116,6 +96,24 @@
 		return target;
 	}
 
+	function isLikeObject(value){
+		return value === Object(value);
+	}
+
+	function create(proto, properties){
+		var instance, property, Proto = function(){};
+		Proto.prototype = proto;
+		instance = new Proto();
+		if(isLikeObject(properties)){
+			for(property in properties){
+				if(properties.hasOwnProperty(property)){
+					instance[property] = properties[property].value;
+				}
+			}
+		}
+		return instance;
+	}
+
 	function shallowMerge(target){
 		var params = slice(arguments);
 		for(var id = 1, source; id < params.length; id++){
@@ -143,17 +141,6 @@
 		return typeof value === 'function';
 	}
 
-	function overload(target, name, fn){
-		var cache = target[name];
-		target[name] = function(){
-			if(fn.length === arguments.length){
-				return fn.apply(this, arguments);
-			}else if(isFunction(cache)){
-				return cache.apply(this, arguments);
-			}
-		};
-	}
-
 	function implement(list){
 		var proto = {}, collection = {};
 		list = isArray(list)? list : [list];
@@ -176,8 +163,10 @@
 		return collection;
 	}
 
-	function createSuperMethod(name, action, pointer){
-		pointer = isFunction(pointer)? pointer : ctor;
+	function createSuperMethod(name, action, value){
+		var pointer = isFunction(value)? value : function $super(){
+			return value;
+		};
 		return function(){
 			this.super = pointer;
 			return action.apply(this, arguments);
@@ -197,79 +186,68 @@
 	// Proto
 	// -----
 
-	var Proto = {
+	exports = {
 		// Proto version
-    VERSION:version,
+		VERSION:version,
 
-    // Utility to merge deep objects.
-    merge:merge,
+		create:Object.create || create,
 
-    // Object.create with fallback for ancient browsers.
-    create:Object.create || create,
+		// Improved Backbone.js's extend
+		extends:function(protoProps, staticProps){
+			// Wrap calls to `super` on object methods.
+			enableSuperMethods(this, protoProps);
 
-    // Improved Backbone.js's extend
-    extends:function(protoProps, staticProps){
-      // Wrap calls to `super` on object methods.
-      enableSuperMethods(this, protoProps);
+			// Create a default constructor.
+			var parent = this;
+			var child = function(){ return parent.apply(this, arguments); };
+			var childObjects, implementations;
 
-      // Create a default constructor.
-      var parent = this;
-      var child = function(){ return parent.apply(this, arguments); };
-      var childObjects, implementations;
+			// The constructor function for the new subclass is either defined by you
+			// (the "constructor" property in your `extend` definition), or defaulted
+			// by us to simply call the parent's constructor.
+			if(protoProps && protoProps.hasOwnProperty('constructor')){
+				child = protoProps.constructor;
+			}
 
-      // The constructor function for the new subclass is either defined by you
-      // (the "constructor" property in your `extend` definition), or defaulted
-      // by us to simply call the parent's constructor.
-      if(protoProps && protoProps.hasOwnProperty('constructor')){
-        child = protoProps.constructor;
-      }
+			// Add static properties to the constructor function, if supplied.
+			shallowMerge(child, parent, staticProps);
 
-      // Add static properties to the constructor function, if supplied.
-      shallowMerge(child, parent, staticProps);
+			// Set the prototype chain to inherit from `parent`, without calling
+			// `parent`'s constructor function.
+			var Surrogate = function(){ this.constructor = child; };
+			Surrogate.prototype = parent.prototype || null;
+			child.prototype = new Surrogate();
+			// child.prototype = exports.create(Surrogate.prototype);
 
-      // Set the prototype chain to inherit from `parent`, without calling
-      // `parent`'s constructor function.
-      var Surrogate = function(){ this.constructor = child; };
-      Surrogate.prototype = parent.prototype || null;
-      child.prototype = Proto.create(Surrogate.prototype);
+			// Adds implementations to the `__proto__` itself before inherit.
+			if(protoProps && protoProps.hasOwnProperty('implements')){
+				implementations = implement(protoProps.implements);
+				child.prototype = extend(child.prototype, implementations);
+				delete protoProps.implements;
+			}
 
-      // Adds implementations to the `__proto__` itself before inherit.
-      if(protoProps && protoProps.hasOwnProperty('implements')){
-        implementations = implement(protoProps.implements);
-        child.prototype = extend(child.prototype, implementations);
-        delete protoProps.implements;
-      }
+			// Add prototype properties (instance properties) to the subclass,
+			// if supplied. Extends the objects too.
+			if(protoProps){
+				childObjects = copyShallowObjectsFrom(child.prototype);
+				shallowMerge(child.prototype, protoProps);
+				merge(child.prototype, childObjects);
+			}
 
-      // Add prototype properties (instance properties) to the subclass,
-      // if supplied. Extends the objects too.
-      if(protoProps){
-        childObjects = copyShallowObjectsFrom(child.prototype);
-        shallowMerge(child.prototype, protoProps, { $protoID:++uid });
-        merge(child.prototype, childObjects);
-      }
+			// Set a convenience property in case the parent's prototype is needed
+			// later.
+			child.super = parent.prototype;
 
-      // Set a convenience property in case the parent's prototype is needed
-      // later.
-      child.super = parent.prototype;
+			// Proto instances length.
+			exports.size = (exports.size || 0) + 1;
 
-      return child;
-    },
-
-    of:function(value, qualified){
-      var type = toStr(value);
-      if(qualified && type === '[object Object]'){
-        return value.constructor.toString().replace(reFnDeclaration, '$1') || 'Object';
-      }
-      return type.replace(reObjectWrapper, '');
-    }
-  };
+			return child;
+		}
+	};
 
 
 	// Externalize
 	// -----------
 
-	exports[name] = Proto;
-	exports[name].VERSION = version;
-
-	return Proto;
+	return exports;
 }));
