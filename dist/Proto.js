@@ -163,8 +163,8 @@
 	}
 
 	function implement(list){
+		list = [].concat(list);
 		var proto = {}, collection = {};
-		list = isArray(list)? list : [list];
 		for(var id = 0, item; id < list.length; id++){
 			item = list[id];
 			if(isFunction(item)){
