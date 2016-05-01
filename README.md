@@ -164,7 +164,7 @@ console.log('goku:', goku);
 
 [![Sample][sample_img]][sample_url]
 
-# A real world - sample
+# A real world sample
 
 [plnkr](https://plnkr.co/edit/94qIJj?p=preview)
 
