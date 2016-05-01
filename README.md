@@ -107,15 +107,15 @@ Usage
 ```javascript
 
 var Ninja = Proto.extends({
-	options:{ ninjateste:'**' },
-	ninjaMethod:function(){},
-	kill:function kill(flush){
+	options:{ ninjateste:'**' }, // don't do any implements of objects, only methods.
+	kill:function(flush){
 		console.log('kill '+ flush);
+		flush && this.flush();
 	}
 });
 
 var Human = Proto.extends({
-	constructor:function Human(){
+	constructor:function(){
 		console.log('i r human', this.$protoID);
 		this.super();
 	}
@@ -124,7 +124,7 @@ var Human = Proto.extends({
 var ChuckNorris = Human.extends({
 	options:{ skills:'ninja' },
 	implements:[Ninja],
-	constructor:function ChuckNorris(){
+	constructor:function(){
 		console.log('i r badass and.. ', this.$protoID);
 		this.super();
 		this.kill('with thumb');
@@ -134,13 +134,13 @@ var ChuckNorris = Human.extends({
 
 var Goku = ChuckNorris.extends({
 	options:{ superpowers:['unknown'] },
-	constructor:function Goku(){
+	constructor:function(){
 		console.log('Hello! I\'m goku and.. ', this.$protoID);
 		this.super();
 	},
 	gokuMethod:function(){},
-	rise:function rise(){
-		console.log('wait for', this.super(), 'days...');
+	rise:function rise(){ // override rise property
+		console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
 		return this.super();
 	}
 });
