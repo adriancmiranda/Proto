@@ -29,6 +29,9 @@
 [codacy_status_image]: https://api.codacy.com/project/badge/Grade/75cc315f21fa4f3fa51b8fb0dfc36c67
 [codacy_status_url]: https://www.codacy.com/app/adriancmiranda/Proto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=adriancmiranda/Proto&amp;utm_campaign=Badge_Grade
 
+<!-- samples -->
+[sample_img]: http://i.imgur.com/CiS2XzX.png
+[sample_url]: http://i.imgur.com/CiS2XzX.png
 
 What you need to build your own Proto
 -----------------------------------------
@@ -158,6 +161,8 @@ goku.rise();
 console.log('goku:', goku);
 
 ```
+
+[![Sample][sample_img]][sample_url]
 
 ## License
 
