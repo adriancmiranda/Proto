@@ -116,10 +116,8 @@ var Ninja = Proto.extends({
 
 var Human = Proto.extends({
 	constructor:function Human(){
-		this.super();
 		console.log('i r human', this.$protoID);
-	},
-	humanMethod:function(){
+		this.super();
 	}
 });
 
@@ -127,19 +125,18 @@ var ChuckNorris = Human.extends({
 	options:{ skills:'ninja' },
 	implements:[Ninja],
 	constructor:function ChuckNorris(){
-		this.super();
 		console.log('i r badass and.. ', this.$protoID);
+		this.super();
 		this.kill('with thumb');
 	},
-	chuckNorrisMethod:function(){},
 	rise:3
 });
 
 var Goku = ChuckNorris.extends({
 	options:{ superpowers:['unknown'] },
 	constructor:function Goku(){
-		this.super();
 		console.log('Hello! I\'m goku and.. ', this.$protoID);
+		this.super();
 	},
 	gokuMethod:function(){},
 	rise:function rise(){
@@ -154,7 +151,8 @@ console.log('chuck:', chuck instanceof Proto); // true
 console.log('chuck:', chuck instanceof Ninja); // false
 console.log('chuck:', chuck instanceof Human); // true
 console.log('chuck:', chuck instanceof ChuckNorris); // true
-console.log('chuck:', chuck.options);
+console.log('chuck.options:', chuck.options);
+console.log('chuck:', chuck);
 
 var goku = new Goku();
 goku.rise();
