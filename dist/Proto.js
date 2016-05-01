@@ -162,21 +162,21 @@
 		};
 	}
 
-	function implement(list){
-		list = [].concat(list);
+	function implement(root, list){
 		var proto = {}, collection = {};
+		list = isArray(list)? list : [list];
 		for(var id = 0, item; id < list.length; id++){
 			item = list[id];
 			if(isFunction(item)){
 				item = item.prototype;
 			}
 			for(var key in item){
-				if(key !== 'constructor'){
+				if(!root[key]){
 					proto[key] = item[key];
 				}
 			}
 			if(proto.implements){
-				collection = implement(proto.implements);
+				collection = implement(root, proto.implements);
 			}else{
 				collection = extend(collection, proto);
 			}
@@ -310,7 +310,7 @@
 
 		// Adds implementations to the `__proto__` itself before inherit.
 		if(protoProps && protoProps.hasOwnProperty('implements')){
-			implementations = implement(protoProps.implements);
+			implementations = implement(Proto.prototype, protoProps.implements);
 			child.prototype = extend(child.prototype, implementations);
 			Proto.implementations = (Proto.implementations || 0) + 1;
 			delete protoProps.implements;
@@ -337,7 +337,7 @@
 	};
 
 	Proto.prototype.toImplement = function(list){
-		return extend(this.prototype, implement(list));
+		return extend(this, implement(this, list));
 	};
 
 	Proto.prototype.overload = function(name, fn){

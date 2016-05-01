@@ -121,7 +121,7 @@ define([
 
 		// Adds implementations to the `__proto__` itself before inherit.
 		if(protoProps && protoProps.hasOwnProperty('implements')){
-			implementations = implement(protoProps.implements);
+			implementations = implement(Proto.prototype, protoProps.implements);
 			child.prototype = extend(child.prototype, implementations);
 			Proto.implementations = (Proto.implementations || 0) + 1;
 			delete protoProps.implements;
@@ -148,7 +148,7 @@ define([
 	};
 
 	Proto.prototype.toImplement = function(list){
-		return extend(this.prototype, implement(list));
+		return extend(this, implement(this, list));
 	};
 
 	Proto.prototype.overload = function(name, fn){
