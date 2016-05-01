@@ -107,32 +107,58 @@ Usage
 ```javascript
 
 var Ninja = Proto.extends({
-	kill:function(flush){
+	options:{ ninjateste:'**' },
+	ninjaMethod:function(){},
+	kill:function kill(flush){
 		console.log('kill '+ flush);
 	}
 });
 
 var Human = Proto.extends({
-	constructor:function(){
-		console.log('i r human');
+	constructor:function Human(){
+		this.super();
+		console.log('i r human', this.$protoID);
+	},
+	humanMethod:function(){
 	}
 });
 
 var ChuckNorris = Human.extends({
+	options:{ skills:'ninja' },
 	implements:[Ninja],
-	constructor:function(){
-		console.log('i r badass and.. ');
+	constructor:function ChuckNorris(){
 		this.super();
+		console.log('i r badass and.. ', this.$protoID);
 		this.kill('with thumb');
+	},
+	chuckNorrisMethod:function(){},
+	rise:3
+});
+
+var Goku = ChuckNorris.extends({
+	options:{ superpowers:['unknown'] },
+	constructor:function Goku(){
+		this.super();
+		console.log('Hello! I\'m goku and.. ', this.$protoID);
+	},
+	gokuMethod:function(){},
+	rise:function rise(){
+		console.log('wait for', this.super(), 'days...');
+		return this.super();
 	}
 });
 
 var chuck = new ChuckNorris();
-chuck.kill('again!');
-console.log(chuck instanceof Proto); // true
-console.log(chuck instanceof Ninja); // false
-console.log(chuck instanceof Human); // true
-console.log(chuck instanceof ChuckNorris); // true
+// chuck.kill('again!');
+console.log('chuck:', chuck instanceof Proto); // true
+console.log('chuck:', chuck instanceof Ninja); // false
+console.log('chuck:', chuck instanceof Human); // true
+console.log('chuck:', chuck instanceof ChuckNorris); // true
+console.log('chuck:', chuck.options);
+
+var goku = new Goku();
+goku.rise();
+console.log('goku:', goku);
 
 ```
 
