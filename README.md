@@ -76,13 +76,13 @@ Get Started
 Use this URL for dev/testing
 
 ```html
-<script src="https://rawgit.com/adriancmiranda/class.js/master/dist/Proto.js"></script>
+<script src="https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js"></script>
 ```
 
 Use this URL in production
 
 ```html
-<script src="https://cdn.rawgit.com/adriancmiranda/class.js/master/dist/Proto.min.js"></script>
+<script src="https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.js"></script>
 ```
 
 ### via JSPM
@@ -110,41 +110,41 @@ Usage
 ```javascript
 
 var Ninja = Proto.extends({
-	options:{ ninjateste:'**' }, // Objects doesn't affect implementations.
-	kill:function(flush){
-		console.log('kill '+ flush);
-		flush && this.flush();
-	}
+  options:{ ninjateste:'**' }, // Objects doesn't affect implementations.
+  kill:function(flush){
+    console.log('kill '+ flush);
+    flush && this.flush();
+  }
 });
 
 var Human = Proto.extends({
-	constructor:function(){
-		console.log('i r human', this.$protoID);
-		this.super();
-	}
+  constructor:function(){
+    console.log('i r human', this.$protoID);
+    this.super();
+  }
 });
 
 var ChuckNorris = Human.extends({
-	options:{ skills:'ninja' },
-	implements:[Ninja],
-	constructor:function(){
-		console.log('i r badass and.. ', this.$protoID);
-		this.super();
-		this.kill('with thumb');
-	},
-	rise:3
+  options:{ skills:'ninja' },
+  implements:[Ninja],
+  constructor:function(){
+    console.log('i r badass and.. ', this.$protoID);
+    this.super();
+    this.kill('with thumb');
+  },
+  rise:3
 });
 
 var Goku = ChuckNorris.extends({
-	options:{ superpowers:['unknown'] },
-	constructor:function(){
-		console.log('Hello! I\'m goku and.. ', this.$protoID);
-		this.super();
-	},
-	rise:function(){ // override rise property
-		console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
-		return this.super();
-	}
+  options:{ superpowers:['unknown'] },
+  constructor:function(){
+    console.log('Hello! I\'m goku and.. ', this.$protoID);
+    this.super();
+  },
+  rise:function(){ // override rise property
+    console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
+    return this.super();
+  }
 });
 
 var chuck = new ChuckNorris();
@@ -166,4 +166,4 @@ console.log('goku:', goku);
 
 ## License
 
-[MIT](https://github.com/adriancmiranda/class.js/blob/master/LICENSE.md)
+[MIT](https://github.com/adriancmiranda/Proto/blob/master/LICENSE.md)
