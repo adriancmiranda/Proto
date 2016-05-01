@@ -70,6 +70,10 @@ define([
 		return this;
 	}
 
+	Proto.implementations = 0;
+	Proto.instances = 0;
+	Proto.size = 0;
+
 	Proto.create = Object.create || create;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
@@ -123,26 +127,26 @@ define([
 		if(protoProps && protoProps.hasOwnProperty('implements')){
 			implementations = implement(Proto.prototype, protoProps.implements);
 			child.prototype = extend(child.prototype, implementations);
-			Proto.implementations = (Proto.implementations || 0) + 1;
 			delete protoProps.implements;
+			Proto.implementations++;
 		}else{
-			Proto.instances = (Proto.instances || 0) + 1;
+			Proto.instances++;
 		}
+
+		// Proto extends length.
+		Proto.size = Proto.instances + Proto.implementations;
 
 		// Add prototype properties (instance properties) to the subclass,
 		// if supplied. Extends the objects too.
 		if(protoProps){
 			childObjects = copyShallowObjectsFrom(child.prototype);
-			shallowMerge(child.prototype, protoProps);
+			shallowMerge(child.prototype, protoProps, { $protoID:Proto.size });
 			merge(child.prototype, childObjects);
 		}
 
 		// Set a convenience property in case the parent's prototype is needed
 		// later.
 		child.super = parent.prototype;
-
-		// Proto extends length.
-		Proto.size = Proto.instances + Proto.implementations;
 
 		return child;
 	};
