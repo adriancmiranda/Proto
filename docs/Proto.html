@@ -11,29 +11,6 @@
   <div id="container">
     <div id="background"></div>
     
-      <ul id="jump_to">
-        <li>
-          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
-          <a class="small" href="javascript:void(0);">+</a>
-          <div id="jump_wrapper">
-          <div id="jump_page_wrapper">
-            <div id="jump_page">
-              
-                
-                <a class="source" href="Proto.html">
-                  Proto.js
-                </a>
-              
-                
-                <a class="source" href="Proto.min.html">
-                  Proto.min.js
-                </a>
-              
-            </div>
-          </div>
-        </li>
-      </ul>
-    
     <ul class="sections">
         
           <li id="title">
@@ -50,7 +27,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code>Proto.js v0<span class="hljs-number">.0</span><span class="hljs-number">.6</span>-alpha
+              <pre><code>Proto.js v0<span class="hljs-number">.0</span><span class="hljs-number">.7</span>-beta
 </code></pre>
             </div>
             
@@ -129,7 +106,7 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 
 	}
 
-}(<span class="hljs-keyword">this</span>, <span class="hljs-string">'Proto'</span>, <span class="hljs-string">'v0.0.6-alpha'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">global, exports, name, version</span>)</span>{
+}(<span class="hljs-keyword">this</span>, <span class="hljs-string">'Proto'</span>, <span class="hljs-string">'v0.0.7-beta'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">global, exports, name, version</span>)</span>{
 <span class="hljs-meta">	'use strict'</span>;</pre></div></div>
             
         </li>
@@ -158,10 +135,6 @@ http:<span class="hljs-comment">//ambox.github.io</span>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-	<span class="hljs-keyword">var</span> uid = <span class="hljs-number">0</span>;
-
-	<span class="hljs-keyword">var</span> ctor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">noop</span>(<span class="hljs-params"></span>)</span>{};
-
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ape</span>(<span class="hljs-params">fn</span>)</span>{
 		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Function</span>.call.apply(fn, <span class="hljs-built_in">arguments</span>);
@@ -172,7 +145,7 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 
 	<span class="hljs-keyword">var</span> isArray = <span class="hljs-built_in">Array</span>.isArray;
 
-	<span class="hljs-keyword">var</span> toString = ape(<span class="hljs-built_in">Object</span>.prototype.toString);
+	<span class="hljs-keyword">var</span> toStr = ape(<span class="hljs-built_in">Object</span>.prototype.toString);
 
 	<span class="hljs-keyword">var</span> reSuper = <span class="hljs-regexp">/\bsuper\b/</span>;
 
@@ -189,7 +162,7 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">value</span>)</span>{
-		<span class="hljs-keyword">return</span> toString(value) === <span class="hljs-string">'[object Object]'</span>;
+		<span class="hljs-keyword">return</span> toStr(value) === <span class="hljs-string">'[object Object]'</span>;
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copy</span>(<span class="hljs-params">proto</span>)</span>{
@@ -287,7 +260,7 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 		};
 	}
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">implement</span>(<span class="hljs-params">list</span>)</span>{
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">implement</span>(<span class="hljs-params">root, list</span>)</span>{
 		<span class="hljs-keyword">var</span> proto = {}, collection = {};
 		list = isArray(list)? list : [list];
 		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>, item; id &lt; list.length; id++){
@@ -296,12 +269,12 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 				item = item.prototype;
 			}
 			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> item){
-				<span class="hljs-keyword">if</span>(key !== <span class="hljs-string">'constructor'</span>){
+				<span class="hljs-keyword">if</span>(!root[key]){
 					proto[key] = item[key];
 				}
 			}
 			<span class="hljs-keyword">if</span>(proto.implements){
-				collection = implement(proto.implements);
+				collection = implement(root, proto.implements);
 			}<span class="hljs-keyword">else</span>{
 				collection = extend(collection, proto);
 			}
@@ -354,8 +327,10 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 		<span class="hljs-keyword">return</span> context;
 	}
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSuperMethod</span>(<span class="hljs-params">name, action, pointer</span>)</span>{
-		pointer = isFunction(pointer)? pointer : ctor;
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSuperMethod</span>(<span class="hljs-params">name, action, value</span>)</span>{
+		<span class="hljs-keyword">var</span> pointer = isFunction(value)? value : <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">$super</span>(<span class="hljs-params"></span>)</span>{
+			<span class="hljs-keyword">return</span> value;
+		};
 		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 			<span class="hljs-keyword">this</span>.super = pointer;
 			<span class="hljs-keyword">return</span> action.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
@@ -404,6 +379,10 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 	}
 
+	Proto.implementations = <span class="hljs-number">0</span>;
+	Proto.instances = <span class="hljs-number">0</span>;
+	Proto.size = <span class="hljs-number">0</span>;
+
 	Proto.create = <span class="hljs-built_in">Object</span>.create || create;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
@@ -420,54 +399,190 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 	Proto.ape = ape;
 
 	Proto.of = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, qualified</span>)</span>{
-		<span class="hljs-keyword">var</span> type = toString(value);
+		<span class="hljs-keyword">var</span> type = toStr(value);
 		<span class="hljs-keyword">if</span>(qualified &amp;&amp; type === <span class="hljs-string">'[object Object]'</span>){
 			<span class="hljs-keyword">return</span> value.constructor.toString().replace(reFnDeclaration, <span class="hljs-string">'$1'</span>) || <span class="hljs-string">'Object'</span>;
 		}
 		<span class="hljs-keyword">return</span> type.replace(reObjectWrapper, <span class="hljs-string">''</span>);
-	};
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Improved Backbone.js’s extend</p>
 
-	Proto.extends = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">proto, properties</span>)</span>{
-		<span class="hljs-keyword">var</span> Caste, Constructor, Objs, Impl, Super = <span class="hljs-keyword">this</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	Proto.extends = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">protoProps, staticProps</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Wrap calls to <code>super</code> on object methods.</p>
 
-		enableSuperMethods(Super, proto);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		enableSuperMethods(<span class="hljs-keyword">this</span>, protoProps);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Create a default constructor.</p>
 
-		Constructor = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
-			<span class="hljs-keyword">return</span> Super.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-		};
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> parent = <span class="hljs-keyword">this</span>;
+		<span class="hljs-keyword">var</span> child = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{ <span class="hljs-keyword">return</span> parent.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>); };
+		<span class="hljs-keyword">var</span> childObjects, implementations;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>The constructor function for the new subclass is either defined by you
+(the “constructor” property in your <code>extend</code> definition), or defaulted
+by us to simply call the parent’s constructor.</p>
 
-		<span class="hljs-keyword">if</span>(proto &amp;&amp; proto.hasOwnProperty(<span class="hljs-string">'constructor'</span>)){
-			Constructor = proto.constructor;
-		}
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span>(protoProps &amp;&amp; protoProps.hasOwnProperty(<span class="hljs-string">'constructor'</span>)){
+			child = protoProps.constructor;
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Add static properties to the constructor function, if supplied.</p>
 
-		shallowMerge(Constructor, Super, properties);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		shallowMerge(child, parent, staticProps);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Set the prototype chain to inherit from <code>parent</code>, without calling
+<code>parent</code>‘s constructor function.</p>
 
-		Caste = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
-			<span class="hljs-keyword">this</span>.constructor = Constructor;
-		};
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> Surrogate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{ <span class="hljs-keyword">this</span>.constructor = child; };
+		Surrogate.prototype = parent.prototype || <span class="hljs-literal">null</span>;
+		child.prototype = Proto.create(Surrogate.prototype);
+		Proto.instances++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Adds implementations to the <code>__proto__</code> itself before inherit.</p>
 
-		Caste.prototype = Super.prototype;
-		Constructor.prototype = Constructor.create(Caste.prototype);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span>(protoProps &amp;&amp; protoProps.hasOwnProperty(<span class="hljs-string">'implements'</span>)){
+			implementations = implement(Proto.prototype, protoProps.implements);
+			child.prototype = extend(child.prototype, implementations);
+			<span class="hljs-keyword">delete</span> protoProps.implements;
+			Proto.implementations++;
+			Proto.instances--;
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Proto extends length.</p>
 
-		<span class="hljs-keyword">if</span>(proto){
-			Objs = copyShallowObjectsFrom(Constructor.prototype);
-			shallowMerge(Constructor.prototype, proto, { $protoID:++uid });
-			merge(Constructor.prototype, Objs);
-		}
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		Proto.size = Proto.instances + Proto.implementations;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Add prototype properties (instance properties) to the subclass,
+if supplied. Extends the objects too.</p>
 
-		<span class="hljs-keyword">if</span>(proto &amp;&amp; proto.hasOwnProperty(<span class="hljs-string">'implements'</span>)){
-			Impl = implement(proto.implements);
-			Constructor.prototype = extend(Constructor.prototype, Impl);
-			<span class="hljs-keyword">delete</span> proto.implements;
-		}
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span>(protoProps){
+			childObjects = copyShallowObjectsFrom(child.prototype);
+			shallowMerge(child.prototype, protoProps, { $protoID:Proto.size });
+			merge(child.prototype, childObjects);
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Set a convenience property in case the parent’s prototype is needed
+later.</p>
 
-		Constructor.super = Super.prototype;
-		Super.extends = Constructor.extends;
-		<span class="hljs-keyword">return</span> Constructor;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		child.super = parent.prototype;
+
+		<span class="hljs-keyword">return</span> child;
 	};
 
 	Proto.prototype.toImplement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">list</span>)</span>{
-		<span class="hljs-keyword">return</span> extend(<span class="hljs-keyword">this</span>.prototype, implement(list));
+		<span class="hljs-keyword">return</span> extend(<span class="hljs-keyword">this</span>, implement(<span class="hljs-keyword">this</span>, list));
 	};
 
 	Proto.prototype.overload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, fn</span>)</span>{
@@ -481,6 +596,16 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 
 	Proto.prototype.getOptions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 		<span class="hljs-keyword">return</span> isLikeObject(<span class="hljs-keyword">this</span>.options)? <span class="hljs-keyword">this</span>.options : {};
+	};
+
+	Proto.prototype.getOption = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">optionName</span>)</span>{
+		<span class="hljs-keyword">if</span>(optionName &amp;&amp; isLikeObject(<span class="hljs-keyword">this</span>.options)){
+			<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options[optionName];
+		}
+	};
+
+	Proto.prototype.get = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">optionName</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getOption(optionName) || <span class="hljs-keyword">this</span>[optionName];
 	};
 
 	Proto.prototype.unbindAll = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
@@ -506,11 +631,11 @@ http:<span class="hljs-comment">//ambox.github.io</span>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="externalize">Externalize</h2>
 
@@ -519,11 +644,11 @@ http:<span class="hljs-comment">//ambox.github.io</span>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               
             </div>
