@@ -107,7 +107,7 @@ Usage
 ```javascript
 
 var Ninja = Proto.extends({
-	options:{ ninjateste:'**' }, // Don't affect implementations.
+	options:{ ninjateste:'**' }, // Objects doesn't affect implementations.
 	kill:function(flush){
 		console.log('kill '+ flush);
 		flush && this.flush();
