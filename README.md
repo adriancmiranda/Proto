@@ -149,7 +149,7 @@ var Goku = ChuckNorris.extends({
 });
 
 var chuck = new ChuckNorris();
-// chuck.kill('again!');
+chuck.kill('again!');
 console.log('chuck:', chuck instanceof Proto); // true
 console.log('chuck:', chuck instanceof Ninja); // false
 console.log('chuck:', chuck instanceof Human); // true
