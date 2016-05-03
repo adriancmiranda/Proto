@@ -79,11 +79,14 @@ define([
 	Proto.overload = overload;
 	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
 	Proto.shallowMerge = shallowMerge;
-	Proto.merge = merge;
 	Proto.flush = flush;
 	Proto.keys = keys;
 	Proto.copy = copy;
 	Proto.ape = ape;
+
+	Proto.merge = function(target){
+		return merge.apply(merge, [true, target].concat(slice(arguments)));
+	};
 
 	Proto.of = function(value, qualified){
 		var type = toStr(value);
@@ -156,7 +159,7 @@ define([
 	};
 
 	Proto.prototype.setOptions = function(options){
-		this.options = shallowMerge({}, this.defaults, options);
+		this.options = merge({}, this.defaults, options);
 		return this.options;
 	};
 
