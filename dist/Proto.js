@@ -329,7 +329,7 @@
 		if(protoProps){
 			childObjects = copyShallowObjectsFrom(child.prototype);
 			shallowMerge(child.prototype, protoProps, { $protoID:Proto.size });
-			merge(child.prototype, childObjects);
+			merge(false, child.prototype, childObjects);
 		}
 
 		// Set a convenience property in case the parent's prototype is needed
