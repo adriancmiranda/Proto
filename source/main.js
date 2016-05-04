@@ -159,7 +159,7 @@ define([
 	};
 
 	Proto.prototype.setOptions = function(options){
-		this.options = merge({}, this.defaults, options);
+		this.options = merge(true, {}, this.defaults, options);
 		return this.options;
 	};
 
