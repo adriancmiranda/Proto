@@ -1,19 +1,19 @@
 {
-  "name": "Proto",
-  "version": "v0.0.7",
-  "main": "./dist/Proto.js",
-  "description": "An extensible program-code-template for creating objects",
-  "repo": "adriancmiranda/Proto",
-  "license": "MIT",
-  "keywords": [
-    "class",
-    "superclass",
-    "inheritance",
-    "inherits"
-  ],
-  "scripts": [
-    "./dist/Proto.js",
-    "./dist/Proto.min.js",
-    "./dist/Proto.min.map"
-  ]
+	"name": "Proto",
+	"version": "v0.0.9",
+	"main": "./dist/Proto.js",
+	"description": "An extensible program-code-template for creating objects",
+	"repo": "adriancmiranda/Proto",
+	"license": "MIT",
+	"keywords": [
+		"class",
+		"superclass",
+		"inheritance",
+		"inherits"
+	],
+	"scripts": [
+		"./dist/Proto.js",
+		"./dist/Proto.min.js",
+		"./dist/Proto.min.map"
+	]
 }
