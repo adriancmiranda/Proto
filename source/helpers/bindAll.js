@@ -12,7 +12,7 @@ define([
 	function bindAll(context, methods){
 		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
-		each(methods, function(method, key){
+		each(methods, function(method){
 			if(isFunction(context[method])){
 				context[method] = bind(context[method], context);
 			}
