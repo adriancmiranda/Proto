@@ -10,6 +10,8 @@ module.exports = function jshint(grunt, opts){
 	return({
 		options:{
 			reporter:stylish,
+			maxparams:5,
+			maxcomplexity:4,
 			camelcase:true,
 			quotmark:true,
 			trailing:true,
