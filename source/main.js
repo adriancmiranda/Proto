@@ -1,3 +1,4 @@
+/* global define */
 define([
 	'./common/slice',
 	'./common/isArray',

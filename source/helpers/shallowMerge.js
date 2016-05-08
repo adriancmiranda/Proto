@@ -1,3 +1,4 @@
+/* global define */
 define(['../common/slice'], function(slice){
 	'use strict';
 

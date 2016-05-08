@@ -1,3 +1,4 @@
+/* global define */
 define(['../helpers/ape'], function(ape){
 	'use strict';
 

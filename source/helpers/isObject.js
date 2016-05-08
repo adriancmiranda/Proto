@@ -1,3 +1,4 @@
+/* global define */
 define(['../common/toStr'], function(toStr){
 	'use strict';
 

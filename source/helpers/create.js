@@ -1,3 +1,4 @@
+/* global define */
 define(['./copy', './isLikeObject'], function(copy, isLikeObject){
 	'use strict';
 

@@ -1,3 +1,4 @@
+/* global define */
 define(['./isObject'], function(isObject){
 	'use strict';
 

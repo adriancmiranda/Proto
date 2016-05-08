@@ -1,4 +1,5 @@
-define(function(){
+/* global define */
+define(['./isFunction'], function(isFunction){
 	'use strict';
 
 	function each(value, fn, ctx, getEnum){
