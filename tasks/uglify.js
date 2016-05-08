@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function uglify(grunt, opts){
 	'use strict';
 
 	// Minify files with UglifyJS

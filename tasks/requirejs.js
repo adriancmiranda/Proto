@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function requirejs(grunt, opts){
 	'use strict';
 
 	// Optimize RequireJS projects using r.js

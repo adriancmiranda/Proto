@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function compareSize(grunt, opts){
 	'use strict';
 
 	// GZIP in pure JavaScript (works in the browser)

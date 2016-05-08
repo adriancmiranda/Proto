@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function sourcemap(grunt, opts){
 	'use strict';
 
 	// Remove the source map comment; it causes way too many problems.

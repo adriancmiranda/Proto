@@ -1,4 +1,4 @@
-module.exports = function concurrent(grunt, opts){
+module.exports = function bower(grunt, opts){
 	'use strict';
 
 	// Install Bower packages. Smartly.

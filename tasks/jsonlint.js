@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function jsonlint(grunt, opts){
 	'use strict';
 
 	// Validate JSON

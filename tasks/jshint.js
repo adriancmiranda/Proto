@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function jshint(grunt, opts){
 	'use strict';
 
 	// Stylish reporter for JSHint.

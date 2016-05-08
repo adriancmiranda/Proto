@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function jscs(grunt, opts){
 	'use strict';
 
 	// Grunt task for checking JavaScript Code Style with jscs.

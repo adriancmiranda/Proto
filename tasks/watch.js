@@ -1,4 +1,4 @@
-module.exports = function(grunt, opts){
+module.exports = function watch(grunt, opts){
 	'use strict';
 
 	// Connect middleware for adding the livereload script to the response.
