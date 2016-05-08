@@ -351,51 +351,53 @@
 		return child;
 	};
 
-	Proto.prototype.toImplement = function(list){
-		return extend(this, implement(this, list));
-	};
+	Proto.prototype = {
+		toImplement:function(list){
+			return extend(this, implement(this, list));
+		},
 
-	Proto.prototype.overload = function(name, fn){
-		return overload(this.prototype, name, fn);
-	};
+		overload:function(name, fn){
+			return overload(this.prototype, name, fn);
+		},
 
-	Proto.prototype.setOptions = function(options){
-		this.options = merge(true, {}, this.defaults, options);
-		return this.options;
-	};
+		setOptions:function(options){
+			this.options = merge(true, {}, this.defaults, options);
+			return this.options;
+		},
 
-	Proto.prototype.getOptions = function(){
-		return isLikeObject(this.options)? this.options : {};
-	};
+		getOptions:function(){
+			return isLikeObject(this.options)? this.options : {};
+		},
 
-	Proto.prototype.getOption = function(optionName){
-		if(optionName && isLikeObject(this.options)){
-			return this.options[optionName];
+		getOption:function(optionName){
+			if(optionName && isLikeObject(this.options)){
+				return this.options[optionName];
+			}
+		},
+
+		get:function(optionName){
+			return this.getOption(optionName) || this[optionName];
+		},
+
+		unbindAll:function(){
+			return unbindAll(this, slice(arguments));
+		},
+
+		bindAll:function(){
+			return bindAll(this, slice(arguments));
+		},
+
+		unbind:function(fn){
+			return unbind(fn);
+		},
+
+		bind:function(fn, context){
+			return bind(fn, context || this);
+		},
+
+		flush:function(){
+			flush(this);
 		}
-	};
-
-	Proto.prototype.get = function(optionName){
-		return this.getOption(optionName) || this[optionName];
-	};
-
-	Proto.prototype.unbindAll = function(){
-		return unbindAll(this, slice(arguments));
-	};
-
-	Proto.prototype.bindAll = function(){
-		return bindAll(this, slice(arguments));
-	};
-
-	Proto.prototype.unbind = function(fn){
-		return unbind(fn);
-	};
-
-	Proto.prototype.bind = function(fn, context){
-		return bind(fn, context || this);
-	};
-
-	Proto.prototype.flush = function(){
-		flush(this);
 	};
 
 
