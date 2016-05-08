@@ -1,4 +1,4 @@
-//     Proto.js v0.0.9
+//     Proto.js v0.1.0
 
 //     (c) 2015-2016 Adrian C. Miranda
 //     Proto may be freely distributed under the MIT license.
@@ -27,7 +27,7 @@
 
 	}
 
-}(this, 'Proto', 'v0.0.9', function(global, exports, name, version){
+}(this, 'Proto', '0.1.0', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
