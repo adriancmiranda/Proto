@@ -153,16 +153,32 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 
 	<span class="hljs-keyword">var</span> reObjectWrapper = <span class="hljs-regexp">/^(\[object(\s|\uFEFF|\xA0))|(\])$/g</span>;
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isFunction</span>(<span class="hljs-params">value</span>)</span>{
-		<span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'function'</span>;
-	}
-
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isLikeObject</span>(<span class="hljs-params">value</span>)</span>{
 		<span class="hljs-keyword">return</span> value === <span class="hljs-built_in">Object</span>(value);
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">value</span>)</span>{
 		<span class="hljs-keyword">return</span> toStr(value) === <span class="hljs-string">'[object Object]'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isFunction</span>(<span class="hljs-params">value</span>)</span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">'function'</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">iteraction</span>(<span class="hljs-params">ctx, key, value, index, getEnum, fn</span>)</span>{
+		<span class="hljs-keyword">if</span>(getEnum || value.hasOwnProperty(key)){
+			<span class="hljs-keyword">return</span> fn.call(ctx||value[key], value[key], key, index, value);
+		}
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">each</span>(<span class="hljs-params">value, fn, ctx, getEnum</span>)</span>{
+		<span class="hljs-keyword">var</span> ctr, index = <span class="hljs-number">0</span>, isFn = isFunction(value);
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> value){
+			ctr = isFn? key !== <span class="hljs-string">'prototype'</span> &amp;&amp; key !== <span class="hljs-string">'length'</span> &amp;&amp; key !== <span class="hljs-string">'name'</span> : <span class="hljs-literal">true</span>;
+			<span class="hljs-keyword">if</span>(ctr &amp;&amp; iteraction(ctx, key, value, index++, getEnum, fn) === <span class="hljs-literal">false</span>){
+				<span class="hljs-keyword">break</span>;
+			}
+		}
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copy</span>(<span class="hljs-params">proto</span>)</span>{
@@ -187,32 +203,29 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 		<span class="hljs-keyword">if</span>(proto &amp;&amp; parent){
 			proto = copy(proto);
 			parent = copy(parent);
-			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> parent){
-				<span class="hljs-keyword">if</span>(isObject(parent[key])){
-					extend(proto[key], parent[key]);
+			each(parent, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, key</span>)</span>{
+				<span class="hljs-keyword">if</span>(isObject(value)){
+					extend(proto[key], value);
 				}<span class="hljs-keyword">else</span>{
-					proto[key] = parent[key];
+					proto[key] = value;
 				}
-			}
+			}, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);
 			<span class="hljs-keyword">return</span> proto;
 		}
 		<span class="hljs-keyword">return</span> proto || parent || {};
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">merge</span>(<span class="hljs-params">overwrite, target</span>)</span>{
-		<span class="hljs-keyword">var</span> params = slice(<span class="hljs-built_in">arguments</span>);
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">2</span>, source; id &lt; params.length; id++){
-			source = params[id];
-			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> property <span class="hljs-keyword">in</span> source){
-				<span class="hljs-keyword">if</span>(source.hasOwnProperty(property)){
-					<span class="hljs-keyword">if</span>(isObject(source[property]) &amp;&amp; isObject(target[property])){
-						merge(overwrite, target[property], source[property]);
-					}<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(overwrite || !target[property]){
-						target[property] = source[property];
-					}
+		<span class="hljs-keyword">var</span> args = slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">2</span>);
+		each(args, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">parameter</span>)</span>{
+			each(parameter, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, key</span>)</span>{
+				<span class="hljs-keyword">if</span>(isObject(value) &amp;&amp; isObject(target[key])){
+					merge(overwrite, target[key], value);
+				}<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(overwrite || !target[key]){
+					target[key] = value;
 				}
-			}
-		}
+			}, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);
+		});
 		<span class="hljs-keyword">return</span> target;
 	}
 
@@ -262,23 +275,21 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">implement</span>(<span class="hljs-params">root, list</span>)</span>{
 		<span class="hljs-keyword">var</span> proto = {}, collection = {};
-		list = isArray(list)? list : [list];
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>, item; id &lt; list.length; id++){
-			item = list[id];
+		each(isArray(list)? list : [list], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>)</span>{
 			<span class="hljs-keyword">if</span>(isFunction(item)){
 				item = item.prototype;
 			}
-			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> item){
+			each(item, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, key</span>)</span>{
 				<span class="hljs-keyword">if</span>(!root[key]){
-					proto[key] = item[key];
+					proto[key] = value;
 				}
-			}
+			}, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);
 			<span class="hljs-keyword">if</span>(proto.implements){
 				collection = implement(root, proto.implements);
 			}<span class="hljs-keyword">else</span>{
 				collection = extend(collection, proto);
 			}
-		}
+		});
 		<span class="hljs-keyword">return</span> collection;
 	}
 
@@ -308,22 +319,22 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bindAll</span>(<span class="hljs-params">context, methods</span>)</span>{
 		methods = isArray(methods)? methods : slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);
 		methods = methods.length? methods : keys(context, <span class="hljs-literal">true</span>);
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>; id &lt; methods.length; id++){
-			<span class="hljs-keyword">if</span>(isFunction(context[methods[id]])){
-				context[methods[id]] = bind(context[methods[id]], context);
+		each(methods, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">method</span>)</span>{
+			<span class="hljs-keyword">if</span>(isFunction(context[method])){
+				context[method] = bind(context[method], context);
 			}
-		}
+		});
 		<span class="hljs-keyword">return</span> context;
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unbindAll</span>(<span class="hljs-params">context, methods</span>)</span>{
 		methods = isArray(methods)? methods : slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);
 		methods = methods.length? methods : keys(context, <span class="hljs-literal">true</span>);
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> id = <span class="hljs-number">0</span>; id &lt; methods.length; id++){
-			<span class="hljs-keyword">if</span>(isFunction(context[methods[id]])){
-				context[methods[id]] = unbind(context[methods[id]], context);
+		each(methods, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">method</span>)</span>{
+			<span class="hljs-keyword">if</span>(isFunction(context[method])){
+				context[method] = unbind(context[method], context);
 			}
-		}
+		});
 		<span class="hljs-keyword">return</span> context;
 	}
 
@@ -384,6 +395,7 @@ http:<span class="hljs-comment">//ambox.github.io</span>
 	Proto.size = <span class="hljs-number">0</span>;
 
 	Proto.create = <span class="hljs-built_in">Object</span>.create || create;
+	Proto.iterate = each;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
 	Proto.bindAll = bindAll;
