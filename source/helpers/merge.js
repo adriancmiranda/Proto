@@ -1,21 +1,18 @@
 /* global define */
-define(['./isObject', '../common/slice'], function(isObject, slice){
+define(['./each', './isObject', '../common/slice'], function(each, isObject, slice){
 	'use strict';
 
 	function merge(overwrite, target){
-		var params = slice(arguments);
-		for(var id = 2, source; id < params.length; id++){
-			source = params[id];
-			for(var property in source){
-				if(source.hasOwnProperty(property)){
-					if(isObject(source[property]) && isObject(target[property])){
-						merge(overwrite, target[property], source[property]);
-					}else if(overwrite || !target[property]){
-						target[property] = source[property];
-					}
+		var args = slice(arguments, 2);
+		each(args, function(parameter){
+			each(parameter, function(value, key){
+				if(isObject(value) && isObject(target[key])){
+					merge(overwrite, target[key], value);
+				}else if(overwrite || !target[key]){
+					target[key] = value;
 				}
-			}
-		}
+			}, null, true);
+		});
 		return target;
 	}
 

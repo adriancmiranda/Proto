@@ -1,18 +1,18 @@
 /* global define */
-define(['./copy', './isObject'], function(copy, isObject){
+define(['./each', './copy', './isObject'], function(each, copy, isObject){
 	'use strict';
 
 	function extend(proto, parent){
 		if(proto && parent){
 			proto = copy(proto);
 			parent = copy(parent);
-			for(var key in parent){
-				if(isObject(parent[key])){
-					extend(proto[key], parent[key]);
+			each(parent, function(value, key){
+				if(isObject(value)){
+					extend(proto[key], value);
 				}else{
-					proto[key] = parent[key];
+					proto[key] = value;
 				}
-			}
+			}, null, true);
 			return proto;
 		}
 		return proto || parent || {};

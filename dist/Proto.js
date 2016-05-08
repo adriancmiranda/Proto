@@ -51,16 +51,32 @@
 
 	var reObjectWrapper = /^(\[object(\s|\uFEFF|\xA0))|(\])$/g;
 
-	function isFunction(value){
-		return typeof value === 'function';
-	}
-
 	function isLikeObject(value){
 		return value === Object(value);
 	}
 
 	function isObject(value){
 		return toStr(value) === '[object Object]';
+	}
+
+	function isFunction(value){
+		return typeof value === 'function';
+	}
+
+	function iteraction(ctx, key, value, index, getEnum, fn){
+		if(getEnum || value.hasOwnProperty(key)){
+			return fn.call(ctx||value[key], value[key], key, index, value);
+		}
+	}
+
+	function each(value, fn, ctx, getEnum){
+		var ctr, index = 0, isFn = isFunction(value);
+		for(var key in value){
+			ctr = isFn? key !== 'prototype' && key !== 'length' && key !== 'name' : true;
+			if(ctr && iteraction(ctx, key, value, index++, getEnum, fn) === false){
+				break;
+			}
+		}
 	}
 
 	function copy(proto){
@@ -85,32 +101,29 @@
 		if(proto && parent){
 			proto = copy(proto);
 			parent = copy(parent);
-			for(var key in parent){
-				if(isObject(parent[key])){
-					extend(proto[key], parent[key]);
+			each(parent, function(value, key){
+				if(isObject(value)){
+					extend(proto[key], value);
 				}else{
-					proto[key] = parent[key];
+					proto[key] = value;
 				}
-			}
+			}, null, true);
 			return proto;
 		}
 		return proto || parent || {};
 	}
 
 	function merge(overwrite, target){
-		var params = slice(arguments);
-		for(var id = 2, source; id < params.length; id++){
-			source = params[id];
-			for(var property in source){
-				if(source.hasOwnProperty(property)){
-					if(isObject(source[property]) && isObject(target[property])){
-						merge(overwrite, target[property], source[property]);
-					}else if(overwrite || !target[property]){
-						target[property] = source[property];
-					}
+		var args = slice(arguments, 2);
+		each(args, function(parameter){
+			each(parameter, function(value, key){
+				if(isObject(value) && isObject(target[key])){
+					merge(overwrite, target[key], value);
+				}else if(overwrite || !target[key]){
+					target[key] = value;
 				}
-			}
-		}
+			}, null, true);
+		});
 		return target;
 	}
 
@@ -160,23 +173,21 @@
 
 	function implement(root, list){
 		var proto = {}, collection = {};
-		list = isArray(list)? list : [list];
-		for(var id = 0, item; id < list.length; id++){
-			item = list[id];
+		each(isArray(list)? list : [list], function(item){
 			if(isFunction(item)){
 				item = item.prototype;
 			}
-			for(var key in item){
+			each(item, function(value, key){
 				if(!root[key]){
-					proto[key] = item[key];
+					proto[key] = value;
 				}
-			}
+			}, null, true);
 			if(proto.implements){
 				collection = implement(root, proto.implements);
 			}else{
 				collection = extend(collection, proto);
 			}
-		}
+		});
 		return collection;
 	}
 
@@ -206,22 +217,22 @@
 	function bindAll(context, methods){
 		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(isFunction(context[methods[id]])){
-				context[methods[id]] = bind(context[methods[id]], context);
+		each(methods, function(method, key){
+			if(isFunction(context[method])){
+				context[method] = bind(context[method], context);
 			}
-		}
+		});
 		return context;
 	}
 
 	function unbindAll(context, methods){
 		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
-		for(var id = 0; id < methods.length; id++){
-			if(isFunction(context[methods[id]])){
-				context[methods[id]] = unbind(context[methods[id]], context);
+		each(methods, function(method, key){
+			if(isFunction(context[method])){
+				context[method] = unbind(context[method], context);
 			}
-		}
+		});
 		return context;
 	}
 
@@ -260,6 +271,7 @@
 	Proto.size = 0;
 
 	Proto.create = Object.create || create;
+	Proto.iterate = each;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
 	Proto.bindAll = bindAll;

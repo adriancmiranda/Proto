@@ -1,3 +1,4 @@
+/* jshint maxcomplexity:6 */
 /* global define */
 define([
 	'./common/slice',
@@ -7,9 +8,10 @@ define([
 	'./common/reFnDeclaration',
 	'./common/reObjectWrapper',
 	'./helpers/ape',
-	'./helpers/isFunction',
 	'./helpers/isLikeObject',
 	'./helpers/isObject',
+	'./helpers/isFunction',
+	'./helpers/each',
 	'./helpers/copy',
 	'./helpers/create',
 	'./helpers/extend',
@@ -34,9 +36,10 @@ define([
 	reFnDeclaration,
 	reObjectWrapper,
 	ape,
-	isFunction,
 	isLikeObject,
 	isObject,
+	isFunction,
+	each,
 	copy,
 	create,
 	extend,
@@ -72,6 +75,7 @@ define([
 	Proto.size = 0;
 
 	Proto.create = Object.create || create;
+	Proto.iterate = each;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
 	Proto.bindAll = bindAll;
