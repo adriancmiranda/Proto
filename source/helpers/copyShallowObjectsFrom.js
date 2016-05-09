@@ -1,14 +1,14 @@
 /* global define */
-define(['./isObject'], function(isObject){
+define(['./each', './isObject'], function(each, isObject){
 	'use strict';
 
 	function copyShallowObjectsFrom(proto){
 		var copy = {};
-		for(var key in proto){
-			if(isObject(proto[key])){
-				copy[key] = proto[key];
+		each(proto, function(value, key){
+			if(isObject(value)){
+				copy[key] = value;
 			}
-		}
+		}, null, true);
 		return copy;
 	}
 

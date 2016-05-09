@@ -87,13 +87,9 @@
 
 	function create(proto, properties){
 		proto = copy(proto);
-		if(isLikeObject(properties)){
-			for(var property in properties){
-				if(properties.hasOwnProperty((property))){
-					proto[property] = properties[property].value;
-				}
-			}
-		}
+		each(properties, function(value, property){
+			proto[property] = value.value;
+		});
 		return proto;
 	}
 
@@ -128,35 +124,30 @@
 	}
 
 	function shallowMerge(target){
-		var params = slice(arguments);
-		for(var id = 1, source; id < params.length; id++){
-			source = params[id];
-			for(var property in source){
-				if(source.hasOwnProperty(property)){
-					target[property] = source[property];
-				}
-			}
-		}
+		var args = slice(arguments, 1);
+		each(args, function(parameter){
+			each(parameter, function(value, key){
+				target[key] = value;
+			});
+		});
 		return target;
 	}
 
 	function copyShallowObjectsFrom(proto){
 		var copy = {};
-		for(var key in proto){
-			if(isObject(proto[key])){
-				copy[key] = proto[key];
+		each(proto, function(value, key){
+			if(isObject(value)){
+				copy[key] = value;
 			}
-		}
+		}, null, true);
 		return copy;
 	}
 
 	function keys(object, getEnum){
 		var properties = [];
-		for(var key in object){
-			if(getEnum || object.hasOwnProperty(key)){
-				properties.push(key);
-			}
-		}
+		each(object, function(value, key){
+			properties.push(key);
+		}, null, getEnum);
 		return properties;
 	}
 
@@ -247,11 +238,11 @@
 	}
 
 	function enableSuperMethods(parent, proto){
-		for(var key in proto){
-			if(isFunction(proto[key]) && reSuper.test(proto[key].toString())){
-				proto[key] = createSuperMethod(key, proto[key], parent.prototype[key]);
+		each(proto, function(value, key){
+			if(isFunction(value) && reSuper.test(value.toString())){
+				proto[key] = createSuperMethod(key, value, parent.prototype[key]);
 			}
-		}
+		});
 		return proto;
 	}
 

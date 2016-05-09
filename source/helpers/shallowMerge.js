@@ -1,17 +1,14 @@
 /* global define */
-define(['../common/slice'], function(slice){
+define(['./each', '../common/slice'], function(each, slice){
 	'use strict';
 
 	function shallowMerge(target){
-		var params = slice(arguments);
-		for(var id = 1, source; id < params.length; id++){
-			source = params[id];
-			for(var property in source){
-				if(source.hasOwnProperty(property)){
-					target[property] = source[property];
-				}
-			}
-		}
+		var args = slice(arguments, 1);
+		each(args, function(parameter){
+			each(parameter, function(value, key){
+				target[key] = value;
+			});
+		});
 		return target;
 	}
 

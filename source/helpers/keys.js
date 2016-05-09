@@ -1,14 +1,12 @@
 /* global define */
-define(function(){
+define(['./each'], function(each){
 	'use strict';
 
 	function keys(object, getEnum){
 		var properties = [];
-		for(var key in object){
-			if(getEnum || object.hasOwnProperty(key)){
-				properties.push(key);
-			}
-		}
+		each(object, function(value, key){
+			properties.push(key);
+		}, null, getEnum);
 		return properties;
 	}
 

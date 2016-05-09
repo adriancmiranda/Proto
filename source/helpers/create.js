@@ -1,16 +1,12 @@
 /* global define */
-define(['./copy', './isLikeObject'], function(copy, isLikeObject){
+define(['./each', './copy', './isLikeObject'], function(each, copy, isLikeObject){
 	'use strict';
 
 	function create(proto, properties){
 		proto = copy(proto);
-		if(isLikeObject(properties)){
-			for(var property in properties){
-				if(properties.hasOwnProperty((property))){
-					proto[property] = properties[property].value;
-				}
-			}
-		}
+		each(properties, function(value, property){
+			proto[property] = value.value;
+		});
 		return proto;
 	}
 

@@ -1,17 +1,18 @@
 /* global define */
 define([
+	'./each',
 	'./isFunction',
 	'./createSuperMethod',
 	'../common/reSuper'
-], function(isFunction, createSuperMethod, reSuper){
+], function(each, isFunction, createSuperMethod, reSuper){
 	'use strict';
 
 	function enableSuperMethods(parent, proto){
-		for(var key in proto){
-			if(isFunction(proto[key]) && reSuper.test(proto[key].toString())){
-				proto[key] = createSuperMethod(key, proto[key], parent.prototype[key]);
+		each(proto, function(value, key){
+			if(isFunction(value) && reSuper.test(value.toString())){
+				proto[key] = createSuperMethod(key, value, parent.prototype[key]);
 			}
-		}
+		});
 		return proto;
 	}
 
