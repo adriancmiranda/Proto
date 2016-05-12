@@ -250,11 +250,19 @@
 	// Proto
 	// -----
 
-	function Proto(){
-		if(isFunction(this.initialize)){
-			return this.initialize.apply(this, arguments);
+	function Proto(parent){
+		var args = slice(arguments);
+		var hasParent = isFunction(args[0]);
+		var staticProps = hasParent? args[2] : args[1];
+		var child = function(){ return parent.apply(this, arguments); };
+		shallowMerge(child, Proto);
+		if(hasParent){
+			parent = args.shift();
+			var Surrogate = function(){ this.constructor = child; };
+			Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
+			child.prototype = Proto.create(Surrogate.prototype);
 		}
-		return this;
+		return child.extends(args[0], args[1]);
 	}
 
 	Proto.implementations = 0;
@@ -311,7 +319,7 @@
 		// Set the prototype chain to inherit from `parent`, without calling
 		// `parent`'s constructor function.
 		var Surrogate = function(){ this.constructor = child; };
-		Surrogate.prototype = parent.prototype || null;
+		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
 		child.prototype = Proto.create(Surrogate.prototype);
 		Proto.instances++;
 
