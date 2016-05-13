@@ -69,7 +69,7 @@ Get Started
 ## Installation
 
 ### Links to CDN
-* [Proto.js](https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js) (10kb)
+* [Proto.js](https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js) (9kb)
 * [Proto.min.js](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.js) (4kb)
 * [Proto.min.map](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.map) (7kb)
 
