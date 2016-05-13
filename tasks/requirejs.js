@@ -34,7 +34,7 @@ module.exports = function requirejs(grunt, opts){
 						script = script.replace(/return\s*/, 'window.'+fileName+' = ');
 						script = script.replace(/\s\}\s*?\);*[^}\w]*$/, '');
 					}else{
-						script = script.replace(/\/\/ jshint ignore\:line/, '');
+						script = script.replace(/\/\/ jshint ignore\:line/gm, '');
 						script = script.replace(/define\([^{]*?{/, '');
 						script = script.replace(/define\(\[[^\]]*\]\)[\W\n]+$/, '');
 						script = script.replace(/[^{]*(\'|\")use\sstrict(\'|\")\s*;*(\n|\r)/g, '');

@@ -7,6 +7,10 @@ define([
 	'./common/reSuper',
 	'./common/reFnDeclaration',
 	'./common/reObjectWrapper',
+	'./common/numProtoImplementations',
+	'./common/numProtoExtensions',
+	'./common/numProtoInstances',
+	'./common/numProto',
 	'./helpers/ape',
 	'./helpers/isLikeObject',
 	'./helpers/isObject',
@@ -35,6 +39,10 @@ define([
 	reSuper,
 	reFnDeclaration,
 	reObjectWrapper,
+	numProtoImplementations,
+	numProtoExtensions,
+	numProtoInstances,
+	numProto,
 	ape,
 	isLikeObject,
 	isObject,
@@ -59,28 +67,56 @@ define([
 ){
 	'use strict';
 
+	function inherit(parent, protoProps, staticProps){
+		enableSuperMethods(parent, protoProps);
+
+		var child = function(){ return parent.apply(this, arguments); };
+		var childObjects, implementations;
+
+		if(protoProps && protoProps.hasOwnProperty('constructor')){
+			child = protoProps.constructor;
+		}
+
+		shallowMerge(child, parent, staticProps);
+
+		var Surrogate = function(){ this.constructor = child; };
+		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;// jshint ignore:line
+		child.prototype = Proto.create(Surrogate.prototype);// jshint ignore:line
+		numProtoInstances++;
+
+		if(protoProps && protoProps.hasOwnProperty('implements')){
+			implementations = implement(Proto.prototype, protoProps.implements);// jshint ignore:line
+			child.prototype = extend(child.prototype, implementations);
+			delete protoProps.implements;
+			numProtoImplementations++;
+			numProtoInstances--;
+		}
+
+		numProto = numProtoInstances + numProtoImplementations;
+
+		if(protoProps){
+			childObjects = copyShallowObjectsFrom(child.prototype);
+			shallowMerge(child.prototype, protoProps, { $protoID:numProto });
+			merge(false, child.prototype, childObjects);
+		}
+
+		child.super = parent.prototype;
+
+		return child;
+	}
+
 
 	// Proto
 	// -----
 
-	function Proto(parent){
+	function Proto(parent){// jshint ignore:line
 		var args = slice(arguments);
 		var hasParent = isFunction(args[0]);
+		var protoProps = hasParent? args[1] : args[0];
 		var staticProps = hasParent? args[2] : args[1];
-		var child = function(){ return parent.apply(this, arguments); };
-		shallowMerge(child, Proto);
-		if(hasParent){
-			parent = args.shift();
-			var Surrogate = function(){ this.constructor = child; };
-			Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
-			child.prototype = Proto.create(Surrogate.prototype);
-		}
-		return child.extends(args[0], args[1]);
+		parent = hasParent? args.shift() : Proto;
+		return inherit(parent, protoProps, staticProps);
 	}
-
-	Proto.implementations = 0;
-	Proto.instances = 0;
-	Proto.size = 0;
 
 	Proto.create = Object.create || create;
 	Proto.iterate = each;
@@ -109,58 +145,10 @@ define([
 		return type.replace(reObjectWrapper, '');
 	};
 
-	// Improved Backbone.js's extend
 	Proto.extends = function(protoProps, staticProps){
-		// Wrap calls to `super` on object methods.
-		enableSuperMethods(this, protoProps);
-
-		// Create a default constructor.
-		var parent = this;
-		var child = function(){ return parent.apply(this, arguments); };
-		var childObjects, implementations;
-
-		// The constructor function for the new subclass is either defined by you
-		// (the "constructor" property in your `extend` definition), or defaulted
-		// by us to simply call the parent's constructor.
-		if(protoProps && protoProps.hasOwnProperty('constructor')){
-			child = protoProps.constructor;
-		}
-
-		// Add static properties to the constructor function, if supplied.
-		shallowMerge(child, parent, staticProps);
-
-		// Set the prototype chain to inherit from `parent`, without calling
-		// `parent`'s constructor function.
-		var Surrogate = function(){ this.constructor = child; };
-		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
-		child.prototype = Proto.create(Surrogate.prototype);
-		Proto.instances++;
-
-		// Adds implementations to the `__proto__` itself before inherit.
-		if(protoProps && protoProps.hasOwnProperty('implements')){
-			implementations = implement(Proto.prototype, protoProps.implements);
-			child.prototype = extend(child.prototype, implementations);
-			delete protoProps.implements;
-			Proto.implementations++;
-			Proto.instances--;
-		}
-
-		// Proto extends length.
-		Proto.size = Proto.instances + Proto.implementations;
-
-		// Add prototype properties (instance properties) to the subclass,
-		// if supplied. Extends the objects too.
-		if(protoProps){
-			childObjects = copyShallowObjectsFrom(child.prototype);
-			shallowMerge(child.prototype, protoProps, { $protoID:Proto.size });
-			merge(false, child.prototype, childObjects);
-		}
-
-		// Set a convenience property in case the parent's prototype is needed
-		// later.
-		child.super = parent.prototype;
-
-		return child;
+		var extension = inherit(this, protoProps, staticProps);
+		numProtoExtensions++;
+		return extension;
 	};
 
 	Proto.prototype = {
