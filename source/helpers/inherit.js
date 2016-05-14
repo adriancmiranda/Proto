@@ -2,22 +2,14 @@
 define([
 	'./merge',
 	'./extend',
+	'./getChild',
 	'./implement',
 	'./shallowMerge',
 	'./enableSuperMethods',
 	'./copyShallowObjectsFrom',
 	'../common/numInstances'
-], function(merge, extend, implement, shallowMerge, enableSuperMethods, copyShallowObjectsFrom, numInstances){
+], function(merge, extend, getChild, implement, shallowMerge, enableSuperMethods, copyShallowObjectsFrom, numInstances){
 	'use strict';
-
-	function getChild(parent, protoProps){
-		if(protoProps && protoProps.hasOwnProperty('constructor')){
-			return protoProps.constructor;
-		}
-		return function(){
-			return parent.apply(this, arguments);
-		};
-	}
 
 	function inherit(Proto, parent, protoProps, staticProps){
 		var child = getChild(parent, protoProps),
