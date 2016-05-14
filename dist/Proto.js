@@ -51,13 +51,7 @@
 
 	var reObjectWrapper = /^(\[object(\s|\uFEFF|\xA0))|(\])$/g;
 
-	var numProtoImplementations = 0;
-
-	var numProtoExtensions = 0;
-
-	var numProtoInstances = 0;
-
-	var numProto = 0;
+	var numInstances = 0;
 
 	function isLikeObject(value){
 		return value === Object(value);
@@ -73,7 +67,7 @@
 
 	function iteraction(ctx, key, value, index, getEnum, fn){
 		if(getEnum || value.hasOwnProperty(key)){
-			return fn.call(ctx||value[key], value[key], key, index, value);
+			return fn.call(ctx || value[key], value[key], key, index, value);
 		}
 	}
 
@@ -254,36 +248,35 @@
 		return proto;
 	}
 
-	function inherit(parent, protoProps, staticProps){
-		enableSuperMethods(parent, protoProps);
-
-		var child = function(){ return parent.apply(this, arguments); };
-		var childObjects, implementations;
-
+	function getChild(parent, protoProps){
 		if(protoProps && protoProps.hasOwnProperty('constructor')){
-			child = protoProps.constructor;
+			return protoProps.constructor;
 		}
+		return function(){
+			return parent.apply(this, arguments);
+		};
+	}
+
+	function inherit(Proto, parent, protoProps, staticProps){
+		var child = getChild(parent, protoProps),
+		Surrogate, childObjects, implementations;
 
 		shallowMerge(child, parent, staticProps);
 
-		var Surrogate = function(){ this.constructor = child; };
+		Surrogate = function(){ this.constructor = child; };
 		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
 		child.prototype = Proto.create(Surrogate.prototype);
-		numProtoInstances++;
+		Proto.size = numInstances++;
 
 		if(protoProps && protoProps.hasOwnProperty('implements')){
 			implementations = implement(Proto.prototype, protoProps.implements);
 			child.prototype = extend(child.prototype, implementations);
 			delete protoProps.implements;
-			numProtoImplementations++;
-			numProtoInstances--;
 		}
-
-		numProto = numProtoInstances + numProtoImplementations;
 
 		if(protoProps){
 			childObjects = copyShallowObjectsFrom(child.prototype);
-			shallowMerge(child.prototype, protoProps, { $protoID:numProto });
+			shallowMerge(child.prototype, protoProps, { $protoID:Proto.size });
 			merge(false, child.prototype, childObjects);
 		}
 
@@ -296,15 +289,11 @@
 	// Proto
 	// -----
 
-	function Proto(parent){
-		var args = slice(arguments);
-		var hasParent = isFunction(args[0]);
-		var protoProps = hasParent? args[1] : args[0];
-		var staticProps = hasParent? args[2] : args[1];
-		parent = hasParent? args.shift() : Proto;
-		return inherit(parent, protoProps, staticProps);
+	function Proto(parent, protoProps, staticProps){
+		return Proto.extends(parent, protoProps, staticProps);
 	}
 
+	Proto.size = 0;
 	Proto.create = Object.create || create;
 	Proto.iterate = each;
 	Proto.implements = implement;
@@ -320,6 +309,16 @@
 	Proto.copy = copy;
 	Proto.ape = ape;
 
+	Proto.extends = function(){
+		var args = slice(arguments),
+		hasParent = arguments.length > 2,
+		parent = isFunction(args[0])? args[0] : this,
+		protoProps = hasParent? args[1] : args[0],
+		staticProps = hasParent? args[2] : args[1];
+		enableSuperMethods(parent, protoProps);
+		return inherit(Proto, parent, protoProps, staticProps);
+	};
+
 	Proto.merge = function(target){
 		return merge.apply(merge, [true, target].concat(slice(arguments)));
 	};
@@ -332,13 +331,8 @@
 		return type.replace(reObjectWrapper, '');
 	};
 
-	Proto.extends = function(protoProps, staticProps){
-		var extension = inherit(this, protoProps, staticProps);
-		numProtoExtensions++;
-		return extension;
-	};
-
 	Proto.prototype = {
+
 		toImplement:function(list){
 			return extend(this, implement(this, list));
 		},
