@@ -11,11 +11,14 @@
     "source",
     "tasks",
     "test",
+    "docs",
     "**/.*",
     "bower.json",
     "component.json",
     "composer.json",
     "gruntfile.js",
-    "package.json"
+    "package.json",
+    "build.command",
+    "README.md"
   ]
 }
