@@ -233,7 +233,7 @@
 		var pointer = isFunction(value)? value : function $super(){
 			return value;
 		};
-		return function(){
+		return function __super__(){
 			this.super = pointer;
 			return action.apply(this, arguments);
 		};
