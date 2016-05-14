@@ -311,8 +311,8 @@
 
 	Proto.extends = function(){
 		var args = slice(arguments),
-		hasParent = arguments.length > 2,
-		parent = isFunction(args[0])? args[0] : this,
+		hasParent = isFunction(args[0]),
+		parent = hasParent? args[0] : this,
 		protoProps = hasParent? args[1] : args[0],
 		staticProps = hasParent? args[2] : args[1];
 		enableSuperMethods(parent, protoProps);
