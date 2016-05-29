@@ -2,7 +2,7 @@
   "name": "Proto",
   "title": "Proto",
   "description": "An extensible program-code-template for creating objects",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/Proto.js",
   "homepage": "https://github.com/adriancmiranda/Proto",
   "license": "MIT",
@@ -23,14 +23,14 @@
     "grunt-jsonlint": "latest",
     "grunt-mocha-cli": "latest",
     "gzip-js": "latest",
-    "istanbul": "0.4.3",
+    "istanbul": "latest",
     "jshint-stylish": "latest",
     "load-grunt-config": "latest",
     "load-grunt-tasks": "latest",
     "mocha": "latest"
   },
   "jsdomVersions": {
-    "node": "3.1.2",
+    "node": "5.10.0",
     "iojs": "5.3.0"
   },
   "scripts": {
