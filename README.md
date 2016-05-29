@@ -92,7 +92,7 @@ Use this URL in production
 `bower install adriancmiranda/Proto`
 
 ### via NPM
-`npm install adriancmiranda/Proto`
+`npm i -D Proto`
 
 ### via Component
 `component install adriancmiranda/Proto`
