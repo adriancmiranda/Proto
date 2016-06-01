@@ -208,7 +208,6 @@
 	}
 
 	function mapContext(fn, context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
 		each(methods, function(method){
 			if(isFunction(context[method])){
@@ -219,10 +218,12 @@
 	}
 
 	function bindAll(context, methods){
+		methods = isArray(methods)? methods : slice(arguments, 1);
 		return mapContext(bind, context, methods);
 	}
 
 	function unbindAll(context, methods){
+		methods = isArray(methods)? methods : slice(arguments, 1);
 		return mapContext(unbind, context, methods);
 	}
 

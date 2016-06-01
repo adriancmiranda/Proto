@@ -2,14 +2,11 @@
 define([
 	'./each',
 	'./keys',
-	'./isFunction',
-	'../common/slice',
-	'../common/isArray'
-], function(each, keys, isFunction, slice, isArray){
+	'./isFunction'
+], function(each, keys, isFunction){
 	'use strict';
 
 	function mapContext(fn, context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
 		each(methods, function(method){
 			if(isFunction(context[method])){
