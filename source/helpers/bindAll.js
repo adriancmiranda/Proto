@@ -1,7 +1,7 @@
 /* global define */
 define([
 	'./bind',
-	'./mapContext
+	'./mapContext'
 ], function(bind, mapContext){
 	'use strict';
 
