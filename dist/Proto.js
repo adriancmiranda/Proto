@@ -1,4 +1,4 @@
-//     Proto.js v0.1.0
+//     Proto.js v1.0.1
 
 //     (c) 2015-2016 Adrian C. Miranda
 //     Proto may be freely distributed under the MIT license.
@@ -27,7 +27,7 @@
 
 	}
 
-}(this, 'Proto', '0.1.0', function(global, exports, name, version){
+}(this, 'Proto', '1.0.1', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
@@ -207,26 +207,23 @@
 		return cache;
 	}
 
-	function bindAll(context, methods){
+	function mapContext(fn, context, methods){
 		methods = isArray(methods)? methods : slice(arguments, 1);
 		methods = methods.length? methods : keys(context, true);
 		each(methods, function(method){
 			if(isFunction(context[method])){
-				context[method] = bind(context[method], context);
+				context[method] = fn(context[method], context);
 			}
 		});
 		return context;
 	}
 
+	function bindAll(context, methods){
+		return mapContext(bind, context, methods);
+	}
+
 	function unbindAll(context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
-		methods = methods.length? methods : keys(context, true);
-		each(methods, function(method){
-			if(isFunction(context[method])){
-				context[method] = unbind(context[method], context);
-			}
-		});
-		return context;
+		return mapContext(unbind, context, methods);
 	}
 
 	function createSuperMethod(name, action, value){

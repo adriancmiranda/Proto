@@ -19,5 +19,5 @@ define([
 		return context;
 	}
 
-	return bindAll;
+	return mapContext;
 });
