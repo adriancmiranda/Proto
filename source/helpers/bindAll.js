@@ -1,23 +1,12 @@
 /* global define */
 define([
-	'./each',
-	'./keys',
 	'./bind',
-	'./isFunction',
-	'../common/slice',
-	'../common/isArray'
-], function(each, keys, bind, isFunction, slice, isArray){
+	'./mapContext
+], function(bind, mapContext){
 	'use strict';
 
 	function bindAll(context, methods){
-		methods = isArray(methods)? methods : slice(arguments, 1);
-		methods = methods.length? methods : keys(context, true);
-		each(methods, function(method){
-			if(isFunction(context[method])){
-				context[method] = bind(context[method], context);
-			}
-		});
-		return context;
+		return mapContext(bind, context, methods);
 	}
 
 	return bindAll;
