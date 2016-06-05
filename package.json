@@ -34,6 +34,8 @@
     "iojs": "5.3.0"
   },
   "scripts": {
+    "prepublish": "",
+    "postpublish": "",
     "grunt": "./node_modules/grunt-cli/bin/grunt",
     "build": "npm run grunt",
     "start": "npm run grunt watch",
