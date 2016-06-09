@@ -9,6 +9,8 @@
 [![Codacy Badge][codacy_status_image]][codacy_status_url]
 [![License][shields_license_image]][shields_license_url]
 
+[![NPM][nodei_status_image]][nodei_status_url]
+
 <!-- travis -->
 [travis_build_status_image]: https://travis-ci.org/adriancmiranda/Proto.svg?branch=master
 [travis_build_status_url]: https://travis-ci.org/adriancmiranda/Proto "build status"
@@ -28,6 +30,10 @@
 <!-- codacy -->
 [codacy_status_image]: https://api.codacy.com/project/badge/Grade/75cc315f21fa4f3fa51b8fb0dfc36c67
 [codacy_status_url]: https://www.codacy.com/app/adriancmiranda/Proto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=adriancmiranda/Proto&amp;utm_campaign=Badge_Grade
+
+<!-- nodei -->
+[nodei_status_image]: https://nodei.co/npm/Proto.png?downloads=true&downloadRank=true&stars=true
+[nodei_status_url]: https://nodei.co/npm/Proto/
 
 <!-- samples -->
 [sample_img]: http://i.imgur.com/OXKG9od.png
