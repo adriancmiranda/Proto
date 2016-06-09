@@ -49,5 +49,12 @@
   },
   "commitplease": {
     "components": []
-  }
+  },
+  "keywords":[
+    "inheritance",
+    "prototype",
+    "object",
+    "class",
+    "oop"
+  ]
 }
