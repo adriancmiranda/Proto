@@ -19,7 +19,7 @@ define([
 
 		Surrogate = function(){ this.constructor = child; };
 		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
-		child.prototype = Proto.create(Surrogate.prototype);
+		child.prototype = Object.create(Surrogate.prototype);
 		Proto.size = numInstances++;
 
 		if(protoProps && protoProps.hasOwnProperty('implements')){

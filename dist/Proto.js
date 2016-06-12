@@ -83,7 +83,7 @@
 
 	function copy(proto){
 		var Proto = function(){};
-		Proto.prototype = proto.prototype || proto;
+		Proto.prototype = proto && proto.prototype || proto;
 		return new Proto();
 	}
 
@@ -94,6 +94,10 @@
 		});
 		return proto;
 	}
+
+	if(!isFunction(Object.create)){
+    Object.create = create;
+  }
 
 	function extend(proto, parent){
 		if(proto && parent){
@@ -263,7 +267,7 @@
 
 		Surrogate = function(){ this.constructor = child; };
 		Surrogate.prototype = parent instanceof Proto? null : parent.prototype;
-		child.prototype = Proto.create(Surrogate.prototype);
+		child.prototype = Object.create(Surrogate.prototype);
 		Proto.size = numInstances++;
 
 		if(protoProps && protoProps.hasOwnProperty('implements')){
@@ -292,7 +296,7 @@
 	}
 
 	Proto.size = 0;
-	Proto.create = Object.create || create;
+	Proto.create = Object.create;
 	Proto.iterate = each;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
@@ -331,7 +335,7 @@
 
 	Proto.prototype = {
 
-		toImplement:function(list){
+		implement:function(list){
 			return extend(this, implement(this, list));
 		},
 

@@ -4,7 +4,7 @@ define(function(){
 
 	function copy(proto){
 		var Proto = function(){};
-		Proto.prototype = proto.prototype || proto;
+		Proto.prototype = proto && proto.prototype || proto;
 		return new Proto();
 	}
 

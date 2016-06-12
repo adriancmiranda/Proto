@@ -72,7 +72,7 @@ define([
 	}
 
 	Proto.size = 0;
-	Proto.create = Object.create || create;
+	Proto.create = Object.create;
 	Proto.iterate = each;
 	Proto.implements = implement;
 	Proto.unbindAll = unbindAll;
@@ -111,7 +111,7 @@ define([
 
 	Proto.prototype = {
 
-		toImplement:function(list){
+		implement:function(list){
 			return extend(this, implement(this, list));
 		},
 
