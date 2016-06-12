@@ -116,7 +116,10 @@ Usage
 ```javascript
 
 var Ninja = Proto.extends({
-  options:{ ninjateste:'**' }, // Objects doesn't affect implementations.
+	// Objects doesn't affect implementations.
+  defaults:{
+  	ninjateste:'**'
+  },
   kill:function(flush){
     console.log('kill '+ flush);
     flush && this.flush();
@@ -127,11 +130,14 @@ var Human = Proto.extends({
   constructor:function(){
     console.log('i r human', this.$protoID);
     this.super();
+    this.option();
   }
 });
 
 var ChuckNorris = Human.extends({
-  options:{ skills:'ninja' },
+  defaults:{
+  	skills:'ninja'
+  },
   implements:[Ninja],
   constructor:function(){
     console.log('i r badass and.. ', this.$protoID);
@@ -142,7 +148,9 @@ var ChuckNorris = Human.extends({
 });
 
 var Goku = ChuckNorris.extends({
-  options:{ superpowers:['unknown'] },
+  defaults:{
+  	superpowers:['unknown']
+  },
   constructor:function(){
     console.log('Hello! I\'m goku and.. ', this.$protoID);
     this.super();
