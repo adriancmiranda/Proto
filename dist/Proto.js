@@ -310,7 +310,7 @@
 	Proto.unproxy = unbind;
 	Proto.proxy = bind;
 	Proto.overload = overload;
-	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
+	Proto.copyShallowObjects = copyShallowObjectsFrom;
 	Proto.shallowMerge = shallowMerge;
 	Proto.flush = flush;
 	Proto.keys = keys;
@@ -341,14 +341,6 @@
 
 	Proto.prototype = {
 
-		implement:function(list){
-			return extend(this, implement(this, list));
-		},
-
-		overload:function(name, fn){
-			return overload(this.prototype, name, fn);
-		},
-
 		option:function(options){
 			if(isLikeObject(options)){
 				this.options = merge(true, {}, this.defaults, options);
@@ -356,6 +348,14 @@
 				return this.options[options];
 			}
 			return this.options;
+		},
+
+		implement:function(list){
+			return extend(this, implement(this, list));
+		},
+
+		overload:function(name, fn){
+			return overload(this.prototype, name, fn);
 		},
 
 		unproxyAll:function(){
