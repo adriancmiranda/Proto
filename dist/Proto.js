@@ -1,4 +1,4 @@
-//     Proto.js v1.0.1
+//     Proto.js v1.0.2
 
 //     (c) 2015-2016 Adrian C. Miranda
 //     Proto may be freely distributed under the MIT license.
@@ -27,7 +27,7 @@
 
 	}
 
-}(this, 'Proto', '1.0.1', function(global, exports, name, version){
+}(this, 'Proto', '1.0.2', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
@@ -65,6 +65,10 @@
 		return typeof value === 'function';
 	}
 
+	function isString(value){
+		return typeof value === 'string';
+	}
+
 	function iteraction(ctx, key, value, index, getEnum, fn){
 		if(getEnum || value.hasOwnProperty(key)){
 			return fn.call(ctx || value[key], value[key], key, index, value);
@@ -88,7 +92,9 @@
 	}
 
 	function create(proto, properties){
-		proto = copy(proto);
+		var Proto = function(){};
+		Proto.prototype = proto;
+		proto = new Proto();
 		each(properties, function(value, property){
 			proto[property] = value.value;
 		});
@@ -96,8 +102,8 @@
 	}
 
 	if(!isFunction(Object.create)){
-    Object.create = create;
-  }
+		Object.create = create;
+	}
 
 	function extend(proto, parent){
 		if(proto && parent){
@@ -297,12 +303,12 @@
 
 	Proto.size = 0;
 	Proto.create = Object.create;
-	Proto.iterate = each;
+	Proto.each = each;
 	Proto.implements = implement;
-	Proto.unbindAll = unbindAll;
-	Proto.bindAll = bindAll;
-	Proto.unbind = unbind;
-	Proto.bind = bind;
+	Proto.unproxyAll = unbindAll;
+	Proto.proxyAll = bindAll;
+	Proto.unproxy = unbind;
+	Proto.proxy = bind;
 	Proto.overload = overload;
 	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
 	Proto.shallowMerge = shallowMerge;
@@ -343,38 +349,28 @@
 			return overload(this.prototype, name, fn);
 		},
 
-		setOptions:function(options){
-			this.options = merge(true, {}, this.defaults, options);
+		option:function(options){
+			if(isLikeObject(options)){
+				this.options = merge(true, {}, this.defaults, options);
+			}else if(isString(options) && this.options){
+				return this.options[options];
+			}
 			return this.options;
 		},
 
-		getOptions:function(){
-			return isLikeObject(this.options)? this.options : {};
-		},
-
-		getOption:function(optionName){
-			if(optionName && isLikeObject(this.options)){
-				return this.options[optionName];
-			}
-		},
-
-		get:function(optionName){
-			return this.getOption(optionName) || this[optionName];
-		},
-
-		unbindAll:function(){
+		unproxyAll:function(){
 			return unbindAll(this, slice(arguments));
 		},
 
-		bindAll:function(){
+		proxyAll:function(){
 			return bindAll(this, slice(arguments));
 		},
 
-		unbind:function(fn){
+		unproxy:function(fn){
 			return unbind(fn);
 		},
 
-		bind:function(fn, context){
+		proxy:function(fn, context){
 			return bind(fn, context || this);
 		},
 

@@ -12,6 +12,7 @@ define([
 	'./helpers/isLikeObject',
 	'./helpers/isObject',
 	'./helpers/isFunction',
+	'./helpers/isString',
 	'./helpers/each',
 	'./helpers/copy',
 	'./helpers/create',
@@ -42,6 +43,7 @@ define([
 	isLikeObject,
 	isObject,
 	isFunction,
+	isString,
 	each,
 	copy,
 	create,
@@ -73,12 +75,12 @@ define([
 
 	Proto.size = 0;
 	Proto.create = Object.create;
-	Proto.iterate = each;
+	Proto.each = each;
 	Proto.implements = implement;
-	Proto.unbindAll = unbindAll;
-	Proto.bindAll = bindAll;
-	Proto.unbind = unbind;
-	Proto.bind = bind;
+	Proto.unproxyAll = unbindAll;
+	Proto.proxyAll = bindAll;
+	Proto.unproxy = unbind;
+	Proto.proxy = bind;
 	Proto.overload = overload;
 	Proto.copyShallowObjectsFrom = copyShallowObjectsFrom;
 	Proto.shallowMerge = shallowMerge;
@@ -119,38 +121,28 @@ define([
 			return overload(this.prototype, name, fn);
 		},
 
-		setOptions:function(options){
-			this.options = merge(true, {}, this.defaults, options);
+		option:function(options){
+			if(isLikeObject(options)){
+				this.options = merge(true, {}, this.defaults, options);
+			}else if(isString(options) && this.options){
+				return this.options[options];
+			}
 			return this.options;
 		},
 
-		getOptions:function(){
-			return isLikeObject(this.options)? this.options : {};
-		},
-
-		getOption:function(optionName){
-			if(optionName && isLikeObject(this.options)){
-				return this.options[optionName];
-			}
-		},
-
-		get:function(optionName){
-			return this.getOption(optionName) || this[optionName];
-		},
-
-		unbindAll:function(){
+		unproxyAll:function(){
 			return unbindAll(this, slice(arguments));
 		},
 
-		bindAll:function(){
+		proxyAll:function(){
 			return bindAll(this, slice(arguments));
 		},
 
-		unbind:function(fn){
+		unproxy:function(fn){
 			return unbind(fn);
 		},
 
-		bind:function(fn, context){
+		proxy:function(fn, context){
 			return bind(fn, context || this);
 		},
 

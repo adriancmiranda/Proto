@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('chai').assert;
 var Proto = require('../dist/Proto');
 
@@ -38,27 +40,27 @@ describe('Proto.implements', function(){
 	});
 });
 
-describe('Proto.unbindAll', function(){
+describe('Proto.unproxyAll', function(){
 	it('is available to be called', function(){
-		assert.equal('function', typeof(Proto.unbindAll));
+		assert.equal('function', typeof(Proto.unproxyAll));
 	});
 });
 
-describe('Proto.bindAll', function(){
+describe('Proto.proxyAll', function(){
 	it('is available to be called', function(){
-		assert.equal('function', typeof(Proto.bindAll));
+		assert.equal('function', typeof(Proto.proxyAll));
 	});
 });
 
-describe('Proto.unbind', function(){
+describe('Proto.unproxy', function(){
 	it('is available to be called', function(){
-		assert.equal('function', typeof(Proto.unbind));
+		assert.equal('function', typeof(Proto.unproxy));
 	});
 });
 
-describe('Proto.bind', function(){
+describe('Proto.proxy', function(){
 	it('is available to be called', function(){
-		assert.equal('function', typeof(Proto.bind));
+		assert.equal('function', typeof(Proto.proxy));
 	});
 });
 
@@ -130,12 +132,12 @@ describe('Proto.prototype.getOptions', function(){
 	});
 });
 
-describe('Proto.prototype.unbindAll', function(){
+describe('Proto.prototype.unproxyAll', function(){
 	it('is available to be called', function(){
 	});
 });
 
-describe('Proto.prototype.bindAll', function(){
+describe('Proto.prototype.proxyAll', function(){
 	it('is available to be called', function(){
 	});
 });

@@ -1,9 +1,11 @@
 /* global define */
-define(['./each', './copy', './isFunction', './isLikeObject'], function(each, copy, isFunction, isLikeObject){
+define(['./each', './isFunction', './isLikeObject'], function(each, isFunction, isLikeObject){
 	'use strict';
 
 	function create(proto, properties){
-		proto = copy(proto);
+		var Proto = function(){};
+		Proto.prototype = proto;
+		proto = new Proto();
 		each(properties, function(value, property){
 			proto[property] = value.value;
 		});
@@ -11,8 +13,8 @@ define(['./each', './copy', './isFunction', './isLikeObject'], function(each, co
 	}
 
 	if(!isFunction(Object.create)){
-    Object.create = create;
-  }
+		Object.create = create;
+	}
 
 	return create;
 });
