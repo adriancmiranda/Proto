@@ -117,48 +117,48 @@ Usage
 
 var Ninja = Proto.extends({
 	// Objects doesn't affect implementations.
-  defaults:{
-  	ninjateste:'**'
-  },
-  kill:function(flush){
-    console.log('kill '+ flush);
-    flush && this.flush();
-  }
+	defaults:{
+		ninjateste:'**'
+	},
+	kill:function(flush){
+		console.log('kill '+ flush);
+		flush && this.flush();
+	}
 });
 
 var Human = Proto.extends({
-  constructor:function(){
-    console.log('i r human', this.$protoID);
-    this.super();
-    this.option();
-  }
+	constructor:function(){
+		console.log('i r human', this.$protoID);
+		this.super();
+		this.option();
+	}
 });
 
 var ChuckNorris = Human.extends({
-  defaults:{
-  	skills:'ninja'
-  },
-  implements:[Ninja],
-  constructor:function(){
-    console.log('i r badass and.. ', this.$protoID);
-    this.super();
-    this.kill('with thumb');
-  },
-  rise:3
+	defaults:{
+		skills:'ninja'
+	},
+	implements:[Ninja],
+	constructor:function(){
+		console.log('i r badass and.. ', this.$protoID);
+		this.super();
+		this.kill('with thumb');
+	},
+	rise:3
 });
 
 var Goku = ChuckNorris.extends({
-  defaults:{
-  	superpowers:['unknown']
-  },
-  constructor:function(){
-    console.log('Hello! I\'m goku and.. ', this.$protoID);
-    this.super();
-  },
-  rise:function(){ // override rise property
-    console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
-    return this.super();
-  }
+	defaults:{
+		superpowers:['unknown']
+	},
+	constructor:function(){
+		console.log('Hello! I\'m goku and.. ', this.$protoID);
+		this.super();
+	},
+	rise:function(){ // override rise property
+		console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
+		return this.super();
+	}
 });
 
 var chuck = new ChuckNorris();
