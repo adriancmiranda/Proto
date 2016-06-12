@@ -342,12 +342,12 @@
 	Proto.prototype = {
 
 		option:function(options){
-			if(isLikeObject(options)){
-				this.options = merge(true, {}, this.defaults, options);
-			}else if(isString(options) && this.options){
+			if(isString(options) && this.options){
 				return this.options[options];
+			}else if(isLikeObject(options)){
+				this.options = merge(true, {}, this.defaults, options);
 			}
-			return this.options;
+			return isLikeObject(this.options)? this.options : {};
 		},
 
 		implement:function(list){
