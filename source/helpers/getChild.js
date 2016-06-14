@@ -6,7 +6,7 @@ define(function(){
 		if(protoProps && protoProps.hasOwnProperty('constructor')){
 			return protoProps.constructor;
 		}
-		return function(){
+		return function Proto(){
 			return parent.apply(this, arguments);
 		};
 	}
