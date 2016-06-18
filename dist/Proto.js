@@ -317,6 +317,11 @@
 	Proto.keys = keys;
 	Proto.copy = copy;
 	Proto.ape = ape;
+	Proto.isArray = isArray;
+	Proto.isLikeObject = isLikeObject;
+	Proto.isObject = isObject;
+	Proto.isFunction = isFunction;
+	Proto.isString = isString;
 
 	Proto.extends = function(){
 		var args = slice(arguments),
