@@ -92,6 +92,7 @@
 	}
 
 	function create(proto, properties){
+		if(proto === null){return {};}
 		var Proto = function(){};
 		Proto.prototype = proto;
 		proto = new Proto();
@@ -260,7 +261,7 @@
 		if(protoProps && protoProps.hasOwnProperty('constructor')){
 			return protoProps.constructor;
 		}
-		return function(){
+		return function Proto(){
 			return parent.apply(this, arguments);
 		};
 	}

@@ -3,6 +3,7 @@ define(['./each', './isFunction', './isLikeObject'], function(each, isFunction, 
 	'use strict';
 
 	function create(proto, properties){
+		if(proto === null){return {};}
 		var Proto = function(){};
 		Proto.prototype = proto;
 		proto = new Proto();
