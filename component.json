@@ -1,6 +1,6 @@
 {
 	"name": "Proto",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"main": "./dist/Proto.js",
 	"description": "An extensible program-code-template for creating objects",
 	"repo": "adriancmiranda/Proto",

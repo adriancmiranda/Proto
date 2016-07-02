@@ -1,4 +1,4 @@
-//     Proto.js v1.0.2
+//     Proto.js v1.0.3
 
 //     (c) 2015-2016 Adrian C. Miranda
 //     Proto may be freely distributed under the MIT license.
@@ -27,7 +27,7 @@
 
 	}
 
-}(this, 'Proto', '1.0.2', function(global, exports, name, version){
+}(this, 'Proto', '1.0.3', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
@@ -249,6 +249,9 @@
 	}
 
 	function enableSuperMethods(parent, proto){
+		if(proto && !proto.hasOwnProperty('constructor')){
+      proto.constructor = function Proto(){};
+    }
 		each(proto, function(value, key){
 			if(isFunction(value) && reSuper.test(value.toString())){
 				proto[key] = createSuperMethod(key, value, parent.prototype[key]);

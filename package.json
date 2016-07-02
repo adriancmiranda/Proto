@@ -2,7 +2,7 @@
   "name": "Proto",
   "title": "Proto",
   "description": "An extensible program-code-template for creating objects",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/Proto.js",
   "homepage": "https://github.com/adriancmiranda/Proto",
   "license": "MIT",
