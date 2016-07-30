@@ -11,7 +11,7 @@
 	if(typeof module === 'object' && typeof module.exports === 'object'){
 
 		// Set up for Node.js or CommonJS.
-		module.exports = factory(global, exports, name, version);
+		global[name] = module.exports = factory(global, exports, name, version);
 
 	}else if(typeof define === 'function' && define.amd){
 
