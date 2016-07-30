@@ -29,6 +29,7 @@ define([
 	'./helpers/bindAll',
 	'./helpers/unbindAll',
 	'./helpers/createSuperMethod',
+	'./helpers/hasSuperCall',
 	'./helpers/enableSuperMethods',
 	'./helpers/inherit'
 ], function(
@@ -60,6 +61,7 @@ define([
 	bindAll,
 	unbindAll,
 	createSuperMethod,
+	hasSuperCall,
 	enableSuperMethods,
 	inherit
 ){
