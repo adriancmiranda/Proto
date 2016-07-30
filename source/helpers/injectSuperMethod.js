@@ -1,8 +1,9 @@
 /* global define */
 define([
 	'./isFunction',
-	'./hasSuperCall'
-], function(isFunction, hasSuperCall){
+	'./hasSuperCall',
+	'./createSuperMethod'
+], function(isFunction, hasSuperCall, createSuperMethod){
 	'use strict';
 
 	function injectSuperMethod(parent, proto, fn, key){
