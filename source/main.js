@@ -30,6 +30,7 @@ define([
 	'./helpers/unbindAll',
 	'./helpers/createSuperMethod',
 	'./helpers/hasSuperCall',
+	'./helpers/injectSuperMethod',
 	'./helpers/enableSuperMethods',
 	'./helpers/inherit'
 ], function(
@@ -62,6 +63,7 @@ define([
 	unbindAll,
 	createSuperMethod,
 	hasSuperCall,
+	injectSuperMethod,
 	enableSuperMethods,
 	inherit
 ){
@@ -95,6 +97,7 @@ define([
 	Proto.isObject = isObject;
 	Proto.isFunction = isFunction;
 	Proto.isString = isString;
+	Proto.merge = bind(merge, null, true);
 
 	Proto.extends = function(){
 		var args = slice(arguments),
@@ -104,10 +107,6 @@ define([
 		staticProps = hasParent? args[2] : args[1];
 		enableSuperMethods(parent, protoProps);
 		return inherit(Proto, parent, protoProps, staticProps);
-	};
-
-	Proto.merge = function(target){
-		return merge.apply(merge, [true, target].concat(slice(arguments)));
 	};
 
 	Proto.of = function(value, qualified){

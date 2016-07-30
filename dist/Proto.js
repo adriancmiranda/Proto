@@ -252,15 +252,17 @@
 		return isFunction(fn) && reSuper.test(fn.toString());
 	}
 
+	function injectSuperMethod(parent, proto, fn, key){
+		if(hasSuperCall(fn)){
+			proto[key] = createSuperMethod(key, fn, parent[key]);
+		}
+	}
+
 	function enableSuperMethods(parent, proto){
 		if(proto && !proto.hasOwnProperty('constructor')){
 			proto.constructor = function Proto(){};
 		}
-		each(proto, function(value, key){
-			if(hasSuperCall(value)){
-				proto[key] = createSuperMethod(key, value, parent.prototype[key]);
-			}
-		});
+		each(proto, bind(injectSuperMethod, null, parent.prototype, proto));
 		return proto;
 	}
 
@@ -329,6 +331,7 @@
 	Proto.isObject = isObject;
 	Proto.isFunction = isFunction;
 	Proto.isString = isString;
+	Proto.merge = bind(merge, null, true);
 
 	Proto.extends = function(){
 		var args = slice(arguments),
@@ -338,10 +341,6 @@
 		staticProps = hasParent? args[2] : args[1];
 		enableSuperMethods(parent, protoProps);
 		return inherit(Proto, parent, protoProps, staticProps);
-	};
-
-	Proto.merge = function(target){
-		return merge.apply(merge, [true, target].concat(slice(arguments)));
 	};
 
 	Proto.of = function(value, qualified){
