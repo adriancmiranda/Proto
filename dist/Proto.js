@@ -27,7 +27,7 @@
 
 	}
 
-}(this, 'Proto', '1.0.3', function(global, exports, name, version){
+}(typeof window !== 'undefined'? window : this, 'Proto', '1.0.3', function(global, exports, name, version){
 	'use strict';
 
 	// Helpers
