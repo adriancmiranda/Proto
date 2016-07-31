@@ -133,7 +133,8 @@ define([
 		},
 
 		overload:function(name, fn){
-			return overload(this.prototype, name, fn);
+      overload(this.prototype, name, fn);
+			return this;
 		},
 
 		unproxyAll:function(){
