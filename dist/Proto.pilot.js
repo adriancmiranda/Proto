@@ -224,11 +224,6 @@
     }
   }
 
-  function enableSuperMethods(parent, child){
-    each(child, bind(injectMethod, null, parent, child));
-    return child;
-  }
-
   function inherit(Proto, parent, child){
     var caste = child;
     child = createSuperMethod(child, parent);
