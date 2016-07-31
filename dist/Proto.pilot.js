@@ -352,10 +352,6 @@
 
     flush:function(){
       flush(this);
-    },
-
-    toString:function(){
-      return '[object '+ Proto.of(this, true) +']';
     }
   };
 
