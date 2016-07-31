@@ -245,16 +245,19 @@
   // -----
 
   function Proto(caste){
-    Proto.size = numInstances++;
-    caste = createSuperMethod(caste, null);
-    caste.prototype.$protoID = Proto.size;
-    caste.prototype.toString = this.toString;
-    caste.prototype.toString = this.toString;
-    caste.prototype.flush = this.flush;
-    caste.overload = this.overload;
-    caste.extends = this.extends;
-    caste.public = this.public;
-    return caste;
+    if(this instanceof Proto){
+      Proto.size = numInstances++;
+      caste = createSuperMethod(caste, null);
+      caste.prototype.$protoID = Proto.size;
+      caste.prototype.toString = this.toString;
+      caste.prototype.toString = this.toString;
+      caste.prototype.flush = this.flush;
+      caste.overload = this.overload;
+      caste.extends = this.extends;
+      caste.public = this.public;
+      return caste;
+    }
+    return new Proto(caste);
   }
 
   Proto.size = 0;
