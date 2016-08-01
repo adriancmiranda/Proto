@@ -300,8 +300,16 @@
       return isLikeObject(this.options)? this.options : {};
     },
 
-    extends:function(parent){
-      return inherit(Proto, parent, this);
+    define:function(){
+      var args = slice(arguments);
+      var definitions = Object.create(null);
+      if(args.length === 2 && isString(args[0])){
+        definitions[args[0]] = args[1];
+      }else if(args.length === 1){
+        definitions = args[0];
+      }
+      Object.defineProperties(this.prototype, definitions);
+      return this;
     },
 
     public:function(name, definition){
@@ -320,16 +328,8 @@
       return this;
     },
 
-    define:function(){
-      var args = slice(arguments);
-      var definitions = Object.create(null);
-      if(args.length === 2 && isString(args[0])){
-        definitions[args[0]] = args[1];
-      }else if(args.length === 1){
-        definitions = args[0];
-      }
-      Object.defineProperties(this.prototype, definitions);
-      return this;
+    extends:function(parent){
+      return inherit(Proto, parent, this);
     },
 
     unbindAll:function(){
