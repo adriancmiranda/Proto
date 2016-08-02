@@ -322,7 +322,18 @@
       }
       return this;
     },
-
+    
+    static:function(name, definition){
+      if(isString(name)){
+        this[name] = definition;
+      }else if(isLikeObject(name)){
+        each(name, function(value, key){
+          this.static(key, value);
+        }, this, true);
+      }
+      return this;
+    },
+    
     overload:function(name, fn){
       overload(this.prototype, name, fn);
       return this;
