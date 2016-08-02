@@ -254,6 +254,7 @@
       caste.prototype.flush = this.flush;
       caste.overload = this.overload;
       caste.extends = this.extends;
+      caste.static = this.static;
       caste.public = this.public;
       return caste;
     }
