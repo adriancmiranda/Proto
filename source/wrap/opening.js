@@ -1,4 +1,3 @@
-
 //     Proto.js v1.0.3
 
 //     (c) 2015-2016 Adrian C. Miranda
