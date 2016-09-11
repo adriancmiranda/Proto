@@ -1,34 +1,64 @@
-//     Proto.js v1.0.3
-
-//     (c) 2015-2016 Adrian C. Miranda
-//     Proto may be freely distributed under the MIT license.
-//     For all details and documentation:
-//     http://ambox.github.io
-(function(global, name, version, factory){
+(function(global, name, factory){
+	'use strict';
+	if(typeof module === 'object' && typeof module.exports === 'object'){
+		module.exports = factory(exports, name);
+	}else if(typeof define === 'function' && define.amd){
+		define(['exports'], function(exports){
+			return factory(exports, name);
+		});
+	}else global[name] = factory(global, name);
+}(typeof window !== 'undefined'? window : this, 'dotcfg', function(exports, name){
 	'use strict';
 
-	/* globals define:false, module:false */
-	if(typeof module === 'object' && typeof module.exports === 'object'){
+	var objectAssessor = /\[(["']?)([^\1]+?)\1?\]/g;
 
-		// Set up for Node.js or CommonJS.
-		global[name] = module.exports = factory(global, exports, name, version);
-
-	}else if(typeof define === 'function' && define.amd){
-
-		// Next for module appropriately for the environment. Start with AMD.
-		define(['exports'], function(exports){
-			return factory(global, exports, name, version);
-		});
-
-	}else{
-
-		// Finally, as a browser global.
-		global[name] = factory(global, {}, name, version);
-
+	function ls(path){
+		var keys = path.replace(objectAssessor, '.$2');
+		keys = keys.replace(/^\./, '');
+		return keys.split('.');
 	}
 
-}(typeof window !== 'undefined'? window : this, 'Proto', '1.0.3', function(global, exports, name, version){
-	'use strict';
+	function write(target, path, value, overwrite){
+		var id = 0;
+		var keys = ls(path);
+		var total = keys.length - 1;
+		var isLikeObject;
+		while(id < total){
+			path = keys[id++];
+			isLikeObject = target[path] === Object(target[path]);
+			target = target[path] = isLikeObject? target[path] : {};
+		}
+		path = keys[id];
+		if(typeof(value) === 'undefined'){
+			overwrite && delete(target[path]);
+		}else{
+			value = overwrite? value : target[path] || value;
+			target[path] = value;
+		}
+		return value;
+	}
 
-	// Helpers
-	// -------
+	function read(target, path){
+		var id = 0;
+		var keys = ls(path);
+		var total = keys.length;
+		while((target = target[keys[id++]]) && id < total){}
+		return id < total? void(0) : target;
+	}
+
+	function uri(key, value, overwrite){
+		var hasValue = arguments.length > 1;
+		overwrite = value && typeof overwrite === 'undefined'? true : !!overwrite;
+		return hasValue? write(this, key, value, overwrite) : read(this, key);
+	}
+
+	function stub(target, namespace){
+		target = target[namespace] = target[namespace] || {};
+		target.namespace = namespace;
+		target.uri = uri.bind(target);
+		return target;
+	}
+
+	exports[name] = stub;
+	return stub;
+}));
