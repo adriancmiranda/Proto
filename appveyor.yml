@@ -1,0 +1,56 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# General configuration
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+build: off
+clone_depth: 50
+
+# Branches to build
+branches:
+  only:
+    - master
+    - /^greenkeeper-/
+  except:
+    - gh-pages
+
+# Including commits with particular message
+only_commits:
+  message: /^(ci|build)/
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Environment configuration
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Scripts that are called at very beginning, before repo cloning
+init:
+  - git config --global core.autocrlf input
+
+# Environment variables
+environment:
+  matrix:
+    - nodejs_version: 8
+      job_part: test
+    - nodejs_version: 7
+      job_part: test
+
+# Jobs in the matrix
+matrix:
+  # Finish immediately build once one of the jobs fails.
+  fast_finish: true
+
+# Scripts that run after cloning repository
+install:
+  # Get the latest stable version of Node 0.STABLE.latest
+  - ps: Install-Product node $env:nodejs_version x64
+  - IF %nodejs_version% LSS 4 npm -g i npm@2
+  - set PATH=%APPDATA%\npm;%PATH%
+  # Install dependencies
+  - npm i -g testem
+  - npm i
+
+# To run your custom scripts instead of automatic tests (basically the post-install test scripts)
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # Run tests
+  - cmd: npm run %job_part%:appveyor

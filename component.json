@@ -1,15 +1,14 @@
 {
 	"name": "Proto",
-	"version": "1.0.3",
-	"main": "./dist/Proto.js",
+	"version": "1.1.0",
+	"main": "./dist/Proto.umd.js",
 	"description": "An extensible program-code-template for creating objects",
 	"repo": "adriancmiranda/Proto",
 	"license": "MIT",
 	"keywords": [
-		"class",
-		"superclass",
-		"inheritance",
-		"inherits"
+		"es3",
+    "class",
+    "utility"
 	],
 	"scripts": [
 		"./dist/Proto.js",

@@ -1,14 +1,60 @@
-language: node_js
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# General configuration
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Unneeded to use the sudo command
 sudo: false
-node_js:
-- '5.10'
-- 'iojs'
-install:
-- npm install phantomjs -g
-- npm install -g grunt
-- npm install -g bower
-- npm install
-- bower install
+
+# Defines a language
+language: node_js
+
+# Branches to build
+branches:
+  only:
+    - master
+    - /^greenkeeper-/
+  except:
+    - gh-pages
+
+# Never sends email notifications
+notifications:
+  email: false
+
+# Jobs in the matrix
+matrix:
+  # Finish immediately build once one of the jobs fails.
+  fast_finish: true
+
+  # Machines to test
+  include:
+    - os: linux
+      node_js: "5.10"
+      env: JOB_PART=test
+    - os: linux
+      node_js: "8"
+      env: JOB_PART=test
+    - os: linux
+      node_js: "7"
+      env: JOB_PART=test
+
+# Install browsers for the tests.
+addons:
+  chrome: stable
+  firefox: "49.0"
+
+# Convince the shell we’ve got a screen after all.
+before_install:
+  - export CHROME_BIN=chromium-browser
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+# Scripts that run after cloning repository and before the tests
 before_script:
-- phantomjs --version
-script: npm test
+  - npm install
+
+# To run your custom scripts instead of automatic tests (basically the post-install test scripts)
+script:
+  - npm run $JOB_PART:travis
+
+# Send coverage report
+after_sucess:
+  - npm run report-coverage

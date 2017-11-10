@@ -1,7 +1,7 @@
 {
   "name": "Proto",
-  "version": "1.0.3",
-  "main": ["dist/Proto.js", "dist/Proto.min.js", "dist/Proto.min.map"],
+  "version": "1.1.0",
+  "main": ["dist/Proto.umd.js", "dist/Proto.umd.min.js", "dist/Proto.umd.min.js.map"],
   "license": "MIT",
   "private": true,
   "devDependencies": {},
@@ -20,5 +20,10 @@
     "package.json",
     "build.command",
     "README.md"
+  ],
+  "keywords": [
+    "es3",
+    "class",
+    "utility"
   ]
 }
