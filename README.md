@@ -75,9 +75,10 @@ Get Started
 ## Installation
 
 ### Links to CDN
-* [Proto.js](https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js) (9kb)
-* [Proto.min.js](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.js) (4kb)
-* [Proto.min.map](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.map) (7kb)
+* [Proto.iife.js](https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.iife.js) (18.7 KB)
+* [Proto.iife.min.js](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.iife.min.js) (5.89 KB)
+* [Proto.iife.min.js.map](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.iife.min.js.map) (108 Bytes)
+* [Proto.iife.min.js.gz](https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.iife.min.js.gz) (2.31 KB)
 
 Use this URL for dev/testing
 
