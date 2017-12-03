@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit d3352bbeba9e778027e387fa3d0cd65c5db48745
- * @moment Friday, November 10, 2017 11:58 AM
+ * @commit bc66c2975a915ded889a610a0ab28b59bdfd57e8
+ * @moment Sunday, December 3, 2017 5:11 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -112,6 +112,28 @@
 	}
 
 	/**
+	 *
+	 * @function
+	 * @memberof is
+	 * @param {any} value
+	 * @returns {Boolean}
+	 */
+	function number(value) {
+		return typeof value === 'number' || value instanceof Number;
+	}
+
+	/**
+	 *
+	 * @function
+	 * @memberof is
+	 * @param {any} value
+	 * @returns {Boolean}
+	 */
+	function int(value) {
+		return number(value) && value === value && value % 1 === 0;
+	}
+
+	/**
 	 * The `intOf()` function parses a string argument and returns an integer of the
 	 * specified radix (the base in mathematical numeral systems).
 	 *
@@ -137,23 +159,37 @@
 	 * max: 2147483647
 	 */
 	function intOf(value, radix) {
-		return 0 | parseInt(value, radix);
+		value = (radix == null ? value : parseInt(value, radix));
+		return int(value) ? value : 0 | value;
 	}
 
+	/* eslint-disable no-nested-ternary */
 	/**
 	 *
 	 * @function
 	 * @memberof utility
-	 * @param {Object} context
-	 * @param {Boolean} getNum
-	 * @returns {Array}
+	 * @param {Number} n - index
+	 * @param {Number} a - divident
+	 * @param {Number} b - divisor
+	 * @returns {Number}
 	 */
-	function mod(index, min, max) {
-		min = intOf(min);
-		max = intOf(max) || min || 1;
-		index = intOf(index);
-		var value = index % max;
-		return value < min ? (value + max) : value;
+	function mod(n, a, b) {
+		n = intOf(n);
+		a = intOf(a);
+		b = intOf(b);
+		var rem;
+		if (a < 0 || b < 0) {
+			var places = (b - a);
+			rem = (n - a) % (places + 1);
+			rem = rem < 0 ? (rem + (places + 1)) : rem === 0 ? 0 : rem;
+			return rem - (places - b);
+		}
+		if (n === b) { return n; }
+		if (n === b + 1) { return a; }
+		if (n === a - 1) { return b; }
+		rem = n % (b || 1);
+		rem = rem < a ? (rem + b) : rem === 0 ? 0 : rem;
+		return rem;
 	}
 
 	/**
@@ -167,21 +203,23 @@
 	 */
 	function slice(list, startIndex, endIndex) {
 		var range = [];
-		if (arraylike(list)) {
-			var size = list.length;
-			var start = mod(startIndex, 0, size);
-			var end = mod(endIndex, 0, size) || size;
-			if (string(list)) {
-				range = '';
-				while (start < end) {
-					range += list[start];
-					start += 1;
-				}
-				return range;
+		var size = arraylike(list) && list.length;
+		if (size) {
+			var start = mod(startIndex, 0, size + 1);
+			if (number(endIndex)) {
+				size = mod(endIndex, 0, size - 1);
 			}
-			while (start < end) {
-				range[range.length] = list[start];
-				start += 1;
+			if (start < size) {
+				if (string(list)) {
+					range = '';
+					for (var c = start; c < size; c += 1) {
+						range += list[c];
+					}
+					return range;
+				}
+				for (var i = size - 1; i > start - 1; i -= 1) {
+					range[i - start] = list[i];
+				}
 			}
 		}
 		return range;
@@ -414,20 +452,25 @@
 	 * @param {any} context - .
 	 * @returns {any}
 	 */
-	function apply(cmd, context, args) {
-		var $ = arraylike(args) ? args : [];
-		switch ($.length) {
-			case 0: return cmd.call(context);
-			case 1: return cmd.call(context, $[0]);
-			case 2: return cmd.call(context, $[0], $[1]);
-			case 3: return cmd.call(context, $[0], $[1], $[2]);
-			case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
-			case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
-			case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
-			case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
-			case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
-			case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
-			default: return cmd.apply(context, $);
+	function apply(cmd, context, args, blindly) {
+		try {
+			var $ = arraylike(args) ? args : [];
+			switch ($.length) {
+				case 0: return cmd.call(context);
+				case 1: return cmd.call(context, $[0]);
+				case 2: return cmd.call(context, $[0], $[1]);
+				case 3: return cmd.call(context, $[0], $[1], $[2]);
+				case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
+				case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
+				case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
+				case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
+				case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
+				case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
+				default: return cmd.apply(context, $);
+			}
+		} catch (err) {
+			if (blindly) { return err; }
+			throw err;
 		}
 	}
 
