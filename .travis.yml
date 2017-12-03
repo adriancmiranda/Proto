@@ -27,13 +27,13 @@ matrix:
   # Machines to test
   include:
     - os: linux
-      node_js: "5.10"
-      env: JOB_PART=test
-    - os: linux
       node_js: "8"
       env: JOB_PART=test
     - os: linux
       node_js: "7"
+      env: JOB_PART=test
+    - os: linux
+      node_js: "6"
       env: JOB_PART=test
 
 # Install browsers for the tests.
