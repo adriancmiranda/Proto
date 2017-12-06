@@ -2,17 +2,17 @@ import Proto from '~';
 
 export const Ninja = new Proto({
 	// Objects doesn't affect implementations.
-	defaults:{
-		ninjateste:'**'
+	defaults: {
+		ninjateste: '**'
 	},
-	kill:function(flush){
+	kill(flush) {
 		console.log('kill '+ flush);
 		flush && this.flush();
 	},
 });
 
 export const Human = new Proto({
-	constructor:function(){
+	constructor() {
 		console.log('i r human', this.$protoID);
 		this.super();
 		this.option();
@@ -20,12 +20,12 @@ export const Human = new Proto({
 });
 
 export const ChuckNorris = new Proto(Human, { // doesn't inherits the Proto methods
-	defaults:{
-		skills:'ninja'
+	defaults: {
+		skills: 'ninja'
 	},
-	implements:[Ninja],
-	rise:3,
-	constructor:function(){
+	implements: [Ninja],
+	rise: 3,
+	constructor() {
 		console.log('i r badass and.. ', this.$protoID);
 		this.super();
 		this.kill('with thumb');
@@ -33,14 +33,14 @@ export const ChuckNorris = new Proto(Human, { // doesn't inherits the Proto meth
 });
 
 export const Goku = new Proto(ChuckNorris, { // doesn't inherits the Proto methods
-	defaults:{
-		superpowers:['unknown'],
+	defaults: {
+		superpowers: ['unknown'],
 	},
-	constructor:function(){
+	constructor() {
 		console.log('Hello! I\'m Goku and.. ', this.$protoID);
 		this.super();
 	},
-	rise:function(){ // override rise property
+	rise() { // override rise property
 		console.log('wait for', this.super(), 'days...'); // super returns rise property from superclass
 		return this.super();
 	},
