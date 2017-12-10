@@ -54,7 +54,7 @@
     "uninstall": "rimraf -rf node_modules package-lock.json"
   },
   "dependencies": {
-    "describe-type": "0.6.3"
+    "describe-type": "0.6.4"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
