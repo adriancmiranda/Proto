@@ -1,11 +1,14 @@
 import keys from 'describe-type/source/@/keys.js';
 import slice from 'describe-type/source/@/slice.js';
+import any from 'describe-type/source/is/any.js';
 import array from 'describe-type/source/is/array.js';
-import object from 'describe-type/source/is/object.js';
-import string from 'describe-type/source/is/string.js';
+import arraylike from 'describe-type/source/is/arraylike.js';
 import callable from 'describe-type/source/is/callable.js';
+import number from 'describe-type/source/is/number.js';
+import integer from 'describe-type/source/is/int.js';
+import string from 'describe-type/source/is/string.js';
+import instanceOf from 'describe-type/source/is/instanceOf.js';
 import stringOf from 'describe-type/source/built-in/stringOf.js';
-import exotic from 'describe-type/source/is/exotic.js';
 import each from './@/each.js';
 import ape from './@/ape.js';
 import create from './body/create.js';
@@ -44,17 +47,21 @@ Proto.flush = flush;
 Proto.keys = keys;
 Proto.copy = copy;
 Proto.ape = ape;
-Proto.isArray = array;
-Proto.isLikeObject = exotic;
-Proto.isObject = object;
-Proto.isFunction = callable;
-Proto.isString = string;
+Proto.instanceOf = instanceOf;
+Proto.is = create(null);
+Proto.is.any = any;
+Proto.is.string = string;
+Proto.is.array = array;
+Proto.is.arraylike = arraylike;
+Proto.is.number = number;
+Proto.is.integer = integer;
+Proto.is.callable = callable;
 Proto.of = stringOf;
 Proto.merge = proxy(merge, null, true);
 
 Proto.extends = function () {
 	const args = slice(arguments);
-	const hasParent = callable(args[0]);
+	const hasParent = any(Function, args[0]);
 	const parent = hasParent ? args[0] : this;
 	const protoProps = hasParent ? args[1] : args[0];
 	const staticProps = hasParent ? args[2] : args[1];
@@ -67,10 +74,10 @@ Proto.prototype = {
 	option(options) {
 		if (string(options) && this.options) {
 			return this.options[options];
-		} else if (exotic(options)) {
+		} else if (instanceOf(Object, options)) {
 			this.options = merge(true, {}, this.defaults, options);
 		}
-		return exotic(this.options) ? this.options : {};
+		return instanceOf(Object, this.options) ? this.options : {};
 	},
 
 	implement(list) {

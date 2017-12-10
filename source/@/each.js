@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import array from 'describe-type/source/is/array.js';
+import arraylike from 'describe-type/source/is/arraylike.js';
 import eachProperty from './eachProperty.js';
 import eachValue from './eachValue.js';
 
@@ -13,6 +13,6 @@ import eachValue from './eachValue.js';
  * @returns {?}
  */
 export default function each(value, cmd, context, keepReverseOrGetEnum) {
-	if (array(value)) return eachValue(value, cmd, context, keepReverseOrGetEnum);
+	if (arraylike(value)) return eachValue(value, cmd, context, keepReverseOrGetEnum);
 	return eachProperty(value, cmd, context, keepReverseOrGetEnum);
 }
