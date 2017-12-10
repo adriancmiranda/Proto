@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit aa0f1ba0b7e787a1a1ad509c3bc4594b16315f3f
- * @moment Sunday, December 10, 2017 12:30 PM
+ * @commit 7fcb30546fb9608e5c38564e2f163f67986da651
+ * @moment Sunday, December 10, 2017 1:56 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -308,7 +308,7 @@ define(function () { 'use strict';
 		var isFn = callable(value);
 		for (var key in value) {
 			if (getEnum || ownProperty(value, key)) {
-				if (isFn === false || key !== 'prototype' && key !== 'length' && key !== 'name') {
+				if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
 					var item = value[key];
 					var resolve = cmd.call(context || item, item, key, value, i += 1);
 					if (resolve !== undefined) {
@@ -681,10 +681,18 @@ define(function () { 'use strict';
 	 * @param {any} value - .
 	 * @returns {Function}
 	 */
-	function createSuperMethod(name, action, value) {
-		var pointer = createSuperPointer(value);
+	function createSuperMethod(name, action, context) {
+		var parent = context[name];
+		var pointer = createSuperPointer(parent);
+		var isSuperProperty = ownProperty(context, name) && callable(parent) === false;
 		return function Proto() {
 			this.super = pointer;
+			if (isSuperProperty) {
+				if (arguments.length) {
+					context[name] = arguments[0];
+				}
+				return context[name];
+			}
 			return apply(action, this, arguments);
 		};
 	}
@@ -698,7 +706,7 @@ define(function () { 'use strict';
 	 */
 	function injectSuperMethod(parent, proto, cmd, key) {
 		if (hasSuperCall(cmd)) {
-			proto[key] = createSuperMethod(key, cmd, parent[key]);
+			proto[key] = createSuperMethod(key, cmd, parent);
 		}
 	}
 

@@ -10,6 +10,6 @@ import createSuperMethod from './createSuperMethod';
  */
 export default function injectSuperMethod(parent, proto, cmd, key) {
 	if (hasSuperCall(cmd)) {
-		proto[key] = createSuperMethod(key, cmd, parent[key]);
+		proto[key] = createSuperMethod(key, cmd, parent);
 	}
 }
