@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit 7fcb30546fb9608e5c38564e2f163f67986da651
- * @moment Sunday, December 10, 2017 1:56 PM
+ * @commit b80e0847991119a31e9c04333fdb86202bf41df5
+ * @moment Sunday, December 10, 2017 4:44 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -61,29 +61,12 @@
 	 *
 	 * @function
 	 * @memberof is
-	 * @param {Function} expect
-	 * @param {any} value
-	 * @returns {Boolean}
-	 */
-	function a(expected, value) {
-		if (expected == null || value == null) { return value === expected; }
-		if (value.constructor === expected) { return true; }
-		if (value.constructor === undefined) { return expected === Object; }
-		return expected === Function && (
-			value.constructor.name === 'GeneratorFunction' ||
-			value.constructor.name === 'AsyncFunction'
-		);
-	}
-
-	/**
-	 *
-	 * @function
-	 * @memberof is
 	 * @param {any} value
 	 * @returns {Boolean}
 	 */
 	function array(value) {
-		return a(Array, value);
+		if (value == null) { return false; }
+		return value.constructor === Array;
 	}
 
 	/**
@@ -229,11 +212,49 @@
 	 *
 	 * @function
 	 * @memberof is
+	 * @param {Function} expect
+	 * @param {any} value
+	 * @returns {Boolean}
+	 */
+	function a(expected, value) {
+		if (expected == null || value == null) { return value === expected; }
+		if (value.constructor === expected) { return true; }
+		if (value.constructor === undefined) { return expected === Object; }
+		return expected === Function && (
+			value.constructor.name === 'GeneratorFunction' ||
+			value.constructor.name === 'AsyncFunction'
+		);
+	}
+
+	/**
+	 *
+	 * @function
+	 * @memberof is
+	 * @param {Function|Array.<Function>} expected
+	 * @param {any} value
+	 * @returns {Boolean}
+	 */
+	function any(expected, value) {
+		if (expected == null) { return expected === value; }
+		if (expected.constructor === Array && expected.length > 0) {
+			for (var i = expected.length - 1; i > -1; i -= 1) {
+				if (a(expected[i], value)) { return true; }
+			}
+		}
+		return a(expected, value);
+	}
+
+	/**
+	 *
+	 * @function
+	 * @memberof is
 	 * @param {any} value
 	 * @returns {Boolean}
 	 */
 	function object(value) {
-		return a(Object, value);
+		if (value == null) { return false; }
+		if (value.constructor === Object) { return true; }
+		return value.constructor === undefined;
 	}
 
 	/**
@@ -244,7 +265,28 @@
 	 * @returns {Boolean}
 	 */
 	function callable(value) {
-		return a(Function, value);
+		return typeof value === 'function';
+	}
+
+	/**
+	 *
+	 * @function
+	 * @memberof is
+	 * @param {Function|Array.<Function>} expected
+	 * @param {any} value
+	 * @returns {Boolean}
+	 */
+	function instanceOf(expected, value) {
+		if (expected == null) { return expected === value; }
+		if (expected.constructor === Array && expected.length > 0) {
+			for (var i = expected.length - 1; i > -1; i -= 1) {
+				var ctor = expected[i];
+				if (ctor === Number) { return a(ctor, value); }
+				if (typeof ctor === 'function' && value instanceof ctor) { return true; }
+			}
+		}
+		if (expected === Number) { return a(expected, value); }
+		return typeof expected === 'function' && value instanceof expected;
 	}
 
 	// pattern(s)
@@ -270,33 +312,6 @@
 		return slice(objectToString.call(value), 8, -1);
 	}
 
-	/**
-	 *
-	 * @function
-	 * @memberof is
-	 * @param {any} value
-	 * @returns {Boolean}
-	 */
-	function primitive(value) {
-		if (value == null) { return true; }
-		if (callable(value.valueOf)) { value = value.valueOf(); }
-		if (callable(value) || typeof value === 'object') {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 *
-	 * @function
-	 * @memberof is
-	 * @param {any}
-	 * @returns {Boolean}
-	 */
-	function exotic(value) {
-		return primitive(value) === false;
-	}
-
 	/* eslint-disable no-restricted-syntax */
 	/**
 	 *
@@ -309,7 +324,7 @@
 	 */
 	function eachProperty(value, cmd, context, getEnum) {
 		var i = 0;
-		var isFn = callable(value);
+		var isFn = any(Function, value);
 		for (var key in value) {
 			if (getEnum || ownProperty(value, key)) {
 				if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
@@ -357,7 +372,7 @@
 	 * @returns {?}
 	 */
 	function each(value, cmd, context, keepReverseOrGetEnum) {
-		if (array(value)) { return eachValue(value, cmd, context, keepReverseOrGetEnum); }
+		if (arraylike(value)) { return eachValue(value, cmd, context, keepReverseOrGetEnum); }
 		return eachProperty(value, cmd, context, keepReverseOrGetEnum);
 	}
 
@@ -799,17 +814,22 @@
 	Proto.keys = keys;
 	Proto.copy = copy;
 	Proto.ape = ape;
-	Proto.isArray = array;
-	Proto.isLikeObject = exotic;
-	Proto.isObject = object;
-	Proto.isFunction = callable;
-	Proto.isString = string;
+	Proto.instanceOf = instanceOf;
+	Proto.is = create(null);
+	Proto.is.any = any;
+	Proto.is.string = string;
+	Proto.is.array = array;
+	Proto.is.arraylike = arraylike;
+	Proto.is.number = number;
+	Proto.is.object = object;
+	Proto.is.integer = int;
+	Proto.is.callable = callable;
 	Proto.of = stringOf;
 	Proto.merge = proxy(merge, null, true);
 
 	Proto.extends = function () {
 		var args = slice(arguments);
-		var hasParent = callable(args[0]);
+		var hasParent = any(Function, args[0]);
 		var parent = hasParent ? args[0] : this;
 		var protoProps = hasParent ? args[1] : args[0];
 		var staticProps = hasParent ? args[2] : args[1];
@@ -822,10 +842,10 @@
 		option: function option(options) {
 			if (string(options) && this.options) {
 				return this.options[options];
-			} else if (exotic(options)) {
+			} else if (instanceOf(Object, options)) {
 				this.options = merge(true, {}, this.defaults, options);
 			}
-			return exotic(this.options) ? this.options : {};
+			return instanceOf(Object, this.options) ? this.options : {};
 		},
 
 		implement: function implement$1(list) {
