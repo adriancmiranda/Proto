@@ -1,5 +1,5 @@
 import slice from 'describe-type/source/@/slice.js';
-import each from './each.js';
+import each from '../@/each.js';
 
 /**
  *

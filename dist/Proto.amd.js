@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit bc66c2975a915ded889a610a0ab28b59bdfd57e8
- * @moment Sunday, December 3, 2017 5:11 PM
+ * @commit 7dfe819f4d70fd73d160fec9e4932a1e3919e2c7
+ * @moment Sunday, December 10, 2017 10:48 AM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -308,7 +308,7 @@ define(function () { 'use strict';
 		var isFn = callable(value);
 		for (var key in value) {
 			if (getEnum || ownProperty(value, key)) {
-				if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
+				if (isFn === false || key !== 'prototype' && key !== 'length' && key !== 'name') {
 					var item = value[key];
 					var resolve = cmd.call(context || item, item, key, value, i += 1);
 					if (resolve !== undefined) {
@@ -355,6 +355,46 @@ define(function () { 'use strict';
 	function each(value, cmd, context, keepReverseOrGetEnum) {
 		if (array(value)) { return eachValue(value, cmd, context, keepReverseOrGetEnum); }
 		return eachProperty(value, cmd, context, keepReverseOrGetEnum);
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @param {any} context - .
+	 * @returns {any}
+	 */
+	function apply(cmd, context, args, blindly) {
+		try {
+			var $ = arraylike(args) ? args : [];
+			switch ($.length) {
+				case 0: return cmd.call(context);
+				case 1: return cmd.call(context, $[0]);
+				case 2: return cmd.call(context, $[0], $[1]);
+				case 3: return cmd.call(context, $[0], $[1], $[2]);
+				case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
+				case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
+				case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
+				case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
+				case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
+				case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
+				default: return cmd.apply(context, $);
+			}
+		} catch (err) {
+			if (blindly) { return err; }
+			throw err;
+		}
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @param {Object} context - .
+	 * @returns {Function}
+	 */
+	function ape(cmd, context) {
+		return function $ape() {
+			apply(cmd, context, arguments);
+		};
 	}
 
 	/**
@@ -444,100 +484,6 @@ define(function () { 'use strict';
 
 	/**
 	 *
-	 * @param {Function} cmd - .
-	 * @param {any} context - .
-	 * @returns {any}
-	 */
-	function apply(cmd, context, args, blindly) {
-		try {
-			var $ = arraylike(args) ? args : [];
-			switch ($.length) {
-				case 0: return cmd.call(context);
-				case 1: return cmd.call(context, $[0]);
-				case 2: return cmd.call(context, $[0], $[1]);
-				case 3: return cmd.call(context, $[0], $[1], $[2]);
-				case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
-				case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
-				case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
-				case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
-				case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
-				case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
-				default: return cmd.apply(context, $);
-			}
-		} catch (err) {
-			if (blindly) { return err; }
-			throw err;
-		}
-	}
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @param {Object} context - .
-	 * @param {...rest} ...args - .
-	 * @returns {Function}
-	 */
-	function proxy(cmd, context) {
-		var args = slice(arguments, 2);
-		var fn = function $proxy() {
-			return apply(cmd, context, args.concat(slice(arguments)));
-		};
-		fn.__bind__ = fn.__bind__ || cmd;
-		return fn;
-	}
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @returns {Function}
-	 */
-	function unproxy(cmd) {
-		var cache = cmd.__bind__;
-		delete cmd.__bind__;
-		return cache;
-	}
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @param {Object} context - .
-	 * @param {Array} methods - .
-	 * @returns {Object}
-	 */
-	function mapContext(cmd, context, methods) {
-		var names = methods.length ? methods : keys(context, true);
-		eachValue(names, function (method) {
-			if (callable(context[method])) {
-				context[method] = cmd(context[method], context);
-			}
-		});
-		return context;
-	}
-
-	/**
-	 *
-	 * @param {Object} context - .
-	 * @param {Array|...rest} ...methods - .
-	 * @returns {Object}
-	 */
-	function proxyAll(context, methods) {
-		var args = array(methods) ? methods : slice(arguments, 1);
-		return mapContext(proxy, context, args);
-	}
-
-	/**
-	 *
-	 * @param {Object} context - .
-	 * @param {Array|...rest} ...methods - .
-	 * @returns {Object}
-	 */
-	function unproxyAll(context, methods) {
-		var args = array(methods) ? methods : slice(arguments, 1);
-		return mapContext(unproxy, context, args);
-	}
-
-	/**
-	 *
 	 * @param {Object} target - .
 	 * @param {String} name - .
 	 * @param {Function} cmd - .
@@ -599,18 +545,6 @@ define(function () { 'use strict';
 
 	/**
 	 *
-	 * @param {Function} cmd - .
-	 * @param {Object} context - .
-	 * @returns {Function}
-	 */
-	function ape(cmd, context) {
-		return function $ape() {
-			apply(cmd, context, arguments);
-		};
-	}
-
-	/**
-	 *
 	 * @param {Function} overwrite - .
 	 * @param {Function} target - .
 	 * @param {...rest} args - .
@@ -630,70 +564,13 @@ define(function () { 'use strict';
 		return target;
 	}
 
-	// pattern(s)
-	var reSuper = /\bsuper\b/;
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @returns {Boolean}
-	 */
-	function hasSuperCall(cmd) {
-		return callable(cmd) && reSuper.test(cmd.toString());
-	}
-
-	/**
-	 *
-	 * @param {String} name - .
-	 * @param {Function} action - .
-	 * @param {any} value - .
-	 * @returns {Function}
-	 */
-	function createSuperMethod(name, action, value) {
-		var pointer = callable(value) ? value : function $super() {
-			return value;
-		};
-		return function Proto() {
-			this.super = pointer;
-			return apply(action, this, arguments);
-		};
-	}
-
-	/**
-	 *
-	 * @param {Object} parent - .
-	 * @param {Object} proto - .
-	 * @param {Function} cmd - .
-	 * @param {String} key - .
-	 */
-	function injectSuperMethod(parent, proto, cmd, key) {
-		if (hasSuperCall(cmd)) {
-			proto[key] = createSuperMethod(key, cmd, parent[key]);
-		}
-	}
-
-	/**
-	 *
-	 * @param {String} name - .
-	 * @param {Function} action - .
-	 * @param {any} value - .
-	 * @returns {Function}
-	 */
-	function enableSuperMethods(parent, proto) {
-		if (ownProperty(proto, 'constructor') === false) {
-			proto.constructor = function Proto() {};
-		}
-		each(proto, proxy(injectSuperMethod, null, parent.prototype, proto));
-		return proto;
-	}
-
 	/**
 	 *
 	 * @param {Function} parent - .
 	 * @param {Object} protoProps - .
 	 * @returns {Boolean}
 	 */
-	function getChild(parent, protoProps) {
+	function ensureConstructor(parent, protoProps) {
 		if (ownProperty(protoProps, 'constructor')) {
 			return protoProps.constructor;
 		}
@@ -712,7 +589,7 @@ define(function () { 'use strict';
 	 */
 	var numInstances = 0;
 	function inherit(Proto, parent, protoProps, staticProps) {
-		var child = getChild(parent, protoProps);
+		var child = ensureConstructor(parent, protoProps);
 
 		shallowMerge(child, parent, staticProps);
 
@@ -738,6 +615,138 @@ define(function () { 'use strict';
 		child.super = parent.prototype;
 
 		return child;
+	}
+
+	// pattern(s)
+	var reSuper = /\bsuper\b/;
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @returns {Boolean}
+	 */
+	function hasSuperCall(cmd) {
+		return callable(cmd) && reSuper.test(cmd.toString());
+	}
+
+	/**
+	 *
+	 * @param {any} value - .
+	 * @returns {Function}
+	 */
+	function createSuperPointer(value) {
+		return callable(value) ? value : function $super() {
+			return value;
+		};
+	}
+
+	/**
+	 *
+	 * @param {String} name - .
+	 * @param {Function} action - .
+	 * @param {any} value - .
+	 * @returns {Function}
+	 */
+	function createSuperMethod(name, action, value) {
+		var pointer = createSuperPointer(value);
+		return function Proto() {
+			this.super = pointer;
+			return apply(action, this, arguments);
+		};
+	}
+
+	/**
+	 *
+	 * @param {Object} parent - .
+	 * @param {Object} proto - .
+	 * @param {Function} cmd - .
+	 * @param {String} key - .
+	 */
+	function injectSuperMethod(parent, proto, cmd, key) {
+		if (hasSuperCall(cmd)) {
+			proto[key] = createSuperMethod(key, cmd, parent[key]);
+		}
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @param {Object} context - .
+	 * @param {...rest} ...args - .
+	 * @returns {Function}
+	 */
+	function proxy(cmd, context) {
+		var args = slice(arguments, 2);
+		var fn = function $proxy() {
+			return apply(cmd, context, args.concat(slice(arguments)));
+		};
+		fn.__bind__ = fn.__bind__ || cmd;
+		return fn;
+	}
+
+	/**
+	 *
+	 * @param {String} name - .
+	 * @param {Function} action - .
+	 * @param {any} value - .
+	 * @returns {Function}
+	 */
+	function enableSuperMethods(parent, proto) {
+		if (ownProperty(proto, 'constructor') === false) {
+			proto.constructor = function Proto() {};
+		}
+		each(proto, proxy(injectSuperMethod, null, parent.prototype, proto));
+		return proto;
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @returns {Function}
+	 */
+	function unproxy(cmd) {
+		var cache = cmd.__bind__;
+		delete cmd.__bind__;
+		return cache;
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @param {Object} context - .
+	 * @param {Array} methods - .
+	 * @returns {Object}
+	 */
+	function mapContext(cmd, context, methods) {
+		var names = methods.length ? methods : keys(context, true);
+		eachValue(names, function (method) {
+			if (callable(context[method])) {
+				context[method] = cmd(context[method], context);
+			}
+		});
+		return context;
+	}
+
+	/**
+	 *
+	 * @param {Object} context - .
+	 * @param {Array|...rest} ...methods - .
+	 * @returns {Object}
+	 */
+	function proxyAll(context, methods) {
+		var args = array(methods) ? methods : slice(arguments, 1);
+		return mapContext(proxy, context, args);
+	}
+
+	/**
+	 *
+	 * @param {Object} context - .
+	 * @param {Array|...rest} ...methods - .
+	 * @returns {Object}
+	 */
+	function unproxyAll(context, methods) {
+		var args = array(methods) ? methods : slice(arguments, 1);
+		return mapContext(unproxy, context, args);
 	}
 
 	function Proto(parent, protoProps, staticProps) {

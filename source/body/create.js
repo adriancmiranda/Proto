@@ -1,5 +1,5 @@
 import callable from 'describe-type/source/is/callable.js';
-import each from './each.js';
+import each from '../@/each.js';
 
 /**
  *

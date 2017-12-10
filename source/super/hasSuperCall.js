@@ -1,5 +1,5 @@
 import callable from 'describe-type/source/is/callable.js';
-import { reSuper } from './patterns.js';
+import { reSuper } from '../@/patterns.js';
 
 /**
  *

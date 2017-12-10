@@ -1,6 +1,6 @@
 import keys from 'describe-type/source/@/keys.js';
 import callable from 'describe-type/source/is/callable.js';
-import eachValue from './eachValue.js';
+import eachValue from '../@/eachValue.js';
 
 /**
  *

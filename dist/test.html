@@ -1,0 +1,52 @@
+<html>
+	<body>
+		<script src="Proto.iife.js"></script>
+		<script>
+			// fix: typeof Object.getOwnPropertyDescriptor(protoProps, 'test').set === 'function'
+			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor
+			// IE9+ (IE8 DOM): http://kangax.github.io/compat-table/es5/#get-own-property-descriptor-ie-note
+			// +: https://javascript.info/property-descriptors
+			const ComponentA = Proto.extends({
+				constructor(name) {
+					this.name(name);
+				},
+				name(name) {
+					if (typeof name === 'string' || name instanceof String) {
+						this.$name = name;
+					}
+					return this.$name || 'unknown';
+				},
+				set test(val) {
+					console.log('set test var with', val);
+					this.$test = val;
+				},
+				get test() {
+					return this.$test || 'untested';
+				},
+			});
+
+			// const ComponentB = new Proto(ComponentA, {
+			// 	constructor(name) {
+			// 		this.super(name);
+			// 	},
+			// 	name(name) {
+			// 		return this.super('page:' + name);
+			// 	},
+			// });
+
+			// class ComponentC extends ComponentB {
+			// 	constructor() {
+			// 		super('about');
+			// 		// this.test = 'tested'; // fix
+			// 		console.log('->', this.name('?'))
+			// 	}
+			// }
+
+			const component = new ComponentA();
+			// const component = new ComponentB();
+			// const component = new ComponentC();
+			component.test = 'aeaeaea'; // fix
+			console.log('ComponentC:', component);
+		</script>
+	</body>
+</html>

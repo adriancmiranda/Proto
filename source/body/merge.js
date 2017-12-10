@@ -1,6 +1,6 @@
 import slice from 'describe-type/source/@/slice.js';
 import object from 'describe-type/source/is/object.js';
-import each from './each';
+import each from '../@/each';
 
 /**
  *

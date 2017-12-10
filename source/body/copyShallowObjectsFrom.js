@@ -1,5 +1,5 @@
 import object from 'describe-type/source/is/object.js';
-import each from './each.js';
+import each from '../@/each.js';
 
 /**
  *

@@ -1,7 +1,7 @@
 import array from 'describe-type/source/is/array.js';
 import callable from 'describe-type/source/is/callable.js';
+import each from '../@/each.js';
 import extend from './extend.js';
-import each from './each.js';
 
 /**
  *
