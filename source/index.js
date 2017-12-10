@@ -1,4 +1,5 @@
 import keys from 'describe-type/source/@/keys.js';
+import apply from 'describe-type/source/@/apply.js';
 import slice from 'describe-type/source/@/slice.js';
 import any from 'describe-type/source/is/any.js';
 import array from 'describe-type/source/is/array.js';
@@ -47,9 +48,8 @@ Proto.shallowMerge = shallowMerge;
 Proto.flush = flush;
 Proto.keys = keys;
 Proto.copy = copy;
-Proto.ape = ape;
-Proto.instanceOf = instanceOf;
 Proto.is = create(null);
+Proto.is.instanceOf = instanceOf;
 Proto.is.any = any;
 Proto.is.string = string;
 Proto.is.array = array;
@@ -60,6 +60,11 @@ Proto.is.integer = integer;
 Proto.is.callable = callable;
 Proto.of = stringOf;
 Proto.merge = proxy(merge, null, true);
+Proto.ape = ape;
+
+Proto.invoke = function (cmd, context, args) {
+	return callable(cmd) ? apply(cmd, context, args) : undefined;
+};
 
 Proto.extends = function () {
 	const args = slice(arguments);

@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit b80e0847991119a31e9c04333fdb86202bf41df5
- * @moment Sunday, December 10, 2017 4:44 PM
+ * @commit b0cf0d38d0fa39629faf1e9dfbe97202f212aa57
+ * @moment Sunday, December 10, 2017 6:38 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -92,6 +92,34 @@
 			(!!value && typeof value === 'object' && typeof value.length === 'number') &&
 			(value.length === 0 || (value.length > 0 && (value.length - 1) in value))
 		);
+	}
+
+	/**
+	 *
+	 * @param {Function} cmd - .
+	 * @param {any} context - .
+	 * @returns {any}
+	 */
+	function apply(cmd, context, args, blindly) {
+		try {
+			var $ = arraylike(args) ? args : [];
+			switch ($.length) {
+				case 0: return cmd.call(context);
+				case 1: return cmd.call(context, $[0]);
+				case 2: return cmd.call(context, $[0], $[1]);
+				case 3: return cmd.call(context, $[0], $[1], $[2]);
+				case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
+				case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
+				case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
+				case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
+				case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
+				case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
+				default: return cmd.apply(context, $);
+			}
+		} catch (err) {
+			if (blindly) { return err; }
+			throw err;
+		}
 	}
 
 	/**
@@ -374,34 +402,6 @@
 	function each(value, cmd, context, keepReverseOrGetEnum) {
 		if (arraylike(value)) { return eachValue(value, cmd, context, keepReverseOrGetEnum); }
 		return eachProperty(value, cmd, context, keepReverseOrGetEnum);
-	}
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @param {any} context - .
-	 * @returns {any}
-	 */
-	function apply(cmd, context, args, blindly) {
-		try {
-			var $ = arraylike(args) ? args : [];
-			switch ($.length) {
-				case 0: return cmd.call(context);
-				case 1: return cmd.call(context, $[0]);
-				case 2: return cmd.call(context, $[0], $[1]);
-				case 3: return cmd.call(context, $[0], $[1], $[2]);
-				case 4: return cmd.call(context, $[0], $[1], $[2], $[3]);
-				case 5: return cmd.call(context, $[0], $[1], $[2], $[3], $[4]);
-				case 6: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5]);
-				case 7: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6]);
-				case 8: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]);
-				case 9: return cmd.call(context, $[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7], $[8]);
-				default: return cmd.apply(context, $);
-			}
-		} catch (err) {
-			if (blindly) { return err; }
-			throw err;
-		}
 	}
 
 	/**
@@ -813,9 +813,8 @@
 	Proto.flush = flush;
 	Proto.keys = keys;
 	Proto.copy = copy;
-	Proto.ape = ape;
-	Proto.instanceOf = instanceOf;
 	Proto.is = create(null);
+	Proto.is.instanceOf = instanceOf;
 	Proto.is.any = any;
 	Proto.is.string = string;
 	Proto.is.array = array;
@@ -826,6 +825,11 @@
 	Proto.is.callable = callable;
 	Proto.of = stringOf;
 	Proto.merge = proxy(merge, null, true);
+	Proto.ape = ape;
+
+	Proto.invoke = function(cmd, context, args) {
+		return callable(cmd) ? apply(cmd, context, args) : void 0;
+	};
 
 	Proto.extends = function () {
 		var args = slice(arguments);
