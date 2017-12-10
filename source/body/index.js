@@ -1,0 +1,11 @@
+export { default as copy } from './copy.js';
+export { default as copyShallowObjectsFrom } from './copyShallowObjectsFrom.js';
+export { default as create } from './create.js';
+export { default as ensureConstructor } from './ensureConstructor.js';
+export { default as extend } from './extend.js';
+export { default as flush } from './flush.js';
+export { default as implement } from './implement.js';
+export { default as inherit } from './inherit.js';
+export { default as merge } from './merge.js';
+export { default as overload } from './overload.js';
+export { default as shallowMerge } from './shallowMerge.js';
