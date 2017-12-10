@@ -1,9 +1,11 @@
 import * as iwp from 'fixtures/iwp.fixture';
 import * as iwe from 'fixtures/iwe.fixture';
+import * as iwi from 'fixtures/iwi.fixture';
 import Proto from '~';
 
 const goku = new iwp.Goku();
 const blueGoku = new iwe.Goku();
+const entity = new iwi.Entity();
 
 describe('Proto', function(){
 	it('is available to be called', function(){
@@ -134,5 +136,59 @@ describe('Proto.prototype.proxyAll', function(){
 describe('Proto.prototype.flush', function(){
 	it('is available to be called', function(){
 		expect(blueGoku.flush).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.implement', function(){
+	it('is available to be called', function(){
+		expect(entity.implement).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.overload', function(){
+	it('is available to be called', function(){
+		expect(entity.overload).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.option', function(){
+	it('is available to be called', function(){
+		expect(entity.option).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.unproxyAll', function(){
+	it('is available to be called', function(){
+		expect(entity.unproxyAll).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.proxyAll', function(){
+	it('is available to be called', function(){
+		expect(entity.proxyAll).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.flush', function(){
+	it('is available to be called', function(){
+		expect(entity.flush).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.kill', function(){
+	it('is available to be called', function(){
+		expect(entity.kill).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.prototype.rise', function(){
+	it('is available to be called', function(){
+		expect(entity.rise).toEqual(jasmine.any(Function));
+	});
+});
+
+describe('entity.defaults', function(){
+	it('is available to be called', function(){
+		expect(entity.defaults).toEqual(jasmine.any(Object));
 	});
 });
