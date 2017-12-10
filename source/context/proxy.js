@@ -10,8 +10,10 @@ import apply from 'describe-type/source/@/apply.js';
  */
 export default function proxy(cmd, context) {
 	const args = slice(arguments, 2);
+	const hasArgs = args.length;
 	const fn = function $proxy() {
-		return apply(cmd, context, args.concat(slice(arguments)));
+		const fnArgs = slice(arguments);
+		return apply(cmd, context, hasArgs ? args.concat(fnArgs) : fnArgs);
 	};
 	fn.__bind__ = fn.__bind__ || cmd;
 	return fn;

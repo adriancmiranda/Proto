@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit 7dfe819f4d70fd73d160fec9e4932a1e3919e2c7
- * @moment Sunday, December 10, 2017 10:48 AM
+ * @commit 7cdab60ff714ebe00055c514a47068e153dba826
+ * @moment Sunday, December 10, 2017 11:41 AM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -570,13 +570,35 @@
 
 	/**
 	 *
+	 * @param {Function} cmd - .
+	 * @param {Object} context - .
+	 * @param {...rest} ...args - .
+	 * @returns {Function}
+	 */
+	function proxy(cmd, context) {
+		var args = slice(arguments, 2);
+		var hasArgs = args.length;
+		var fn = function $proxy() {
+			var fnArgs = slice(arguments);
+			return apply(cmd, context, hasArgs ? args.concat(fnArgs) : fnArgs);
+		};
+		fn.__bind__ = fn.__bind__ || cmd;
+		return fn;
+	}
+
+	/**
+	 *
 	 * @param {Function} parent - .
 	 * @param {Object} protoProps - .
 	 * @returns {Boolean}
 	 */
 	function ensureConstructor(parent, protoProps) {
 		if (ownProperty(protoProps, 'constructor')) {
-			return protoProps.constructor;
+			var ctor = protoProps.constructor;
+			if (ctor.prototype === undefined && callable(ctor)) {
+				return proxy(ctor, protoProps);
+			}
+			return ctor;
 		}
 		return function Proto() {
 			return apply(parent, this, arguments);
@@ -670,22 +692,6 @@
 		if (hasSuperCall(cmd)) {
 			proto[key] = createSuperMethod(key, cmd, parent[key]);
 		}
-	}
-
-	/**
-	 *
-	 * @param {Function} cmd - .
-	 * @param {Object} context - .
-	 * @param {...rest} ...args - .
-	 * @returns {Function}
-	 */
-	function proxy(cmd, context) {
-		var args = slice(arguments, 2);
-		var fn = function $proxy() {
-			return apply(cmd, context, args.concat(slice(arguments)));
-		};
-		fn.__bind__ = fn.__bind__ || cmd;
-		return fn;
 	}
 
 	/**
