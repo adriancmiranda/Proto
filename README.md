@@ -3,6 +3,7 @@
 
 > __Proto__ is an extensible program-code-template for creating objects
 
+[![stability]][stability-url] 
 [![build status][travis_build_status_image]][travis_build_status_url]
 [![dependencies status][david_dependencies_status_image]][david_dependencies_status_url]
 [![devDependency status][david_devdependencies_status_image]][david_devdependencies_status_url]
@@ -10,6 +11,10 @@
 [![License][shields_license_image]][shields_license_url]
 
 [![NPM][nodei_status_image]][nodei_status_url]
+
+<!-- stability -->
+[stability]: http://badges.github.io/stability-badges/dist/experimental.svg
+[stability-url]: http://learnhtmlwithsong.com/blog/wp-content/uploads/2014/12/errors-everywhere-meme.png
 
 <!-- travis -->
 [travis_build_status_image]: https://travis-ci.org/adriancmiranda/Proto.svg?branch=master
