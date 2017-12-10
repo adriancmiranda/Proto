@@ -9,4 +9,4 @@ export default function createSuperPointer(value) {
 	return callable(value) ? value : function $super() {
 		return value;
 	};
-};
+}

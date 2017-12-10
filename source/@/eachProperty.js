@@ -16,7 +16,7 @@ export default function eachProperty(value, cmd, context, getEnum) {
 	const isFn = callable(value);
 	for (const key in value) {
 		if (getEnum || ownProperty(value, key)) {
-			if (isFn === false || key !== 'prototype' && key !== 'length' && key !== 'name') {
+			if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
 				const item = value[key];
 				const resolve = cmd.call(context || item, item, key, value, i += 1);
 				if (resolve !== undefined) {

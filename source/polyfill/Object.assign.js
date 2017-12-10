@@ -24,4 +24,4 @@ export default Object.assign || function assign(target, ...rest) {
 		}
 	}
 	return target;
-}
+};

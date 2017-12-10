@@ -2,8 +2,8 @@
  * 
  * ~~~~ Proto v1.1.0
  * 
- * @commit 7cdab60ff714ebe00055c514a47068e153dba826
- * @moment Sunday, December 10, 2017 11:41 AM
+ * @commit aa0f1ba0b7e787a1a1ad509c3bc4594b16315f3f
+ * @moment Sunday, December 10, 2017 12:30 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -523,10 +523,16 @@ var Proto = (function () {
 	 * @returns {Object}
 	 */
 	function shallowMerge(target) {
+		var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+		var useDescriptors = callable(getOwnPropertyDescriptor);
 		var args = slice(arguments, 1);
 		each(args, function (parameter) {
 			each(parameter, function (value, key) {
-				target[key] = value;
+				if (useDescriptors) {
+					Object.defineProperty(target, key, getOwnPropertyDescriptor(parameter, key));
+				} else {
+					target[key] = value;
+				}
 			});
 		});
 		return target;
@@ -552,13 +558,19 @@ var Proto = (function () {
 	 * @returns {Function}
 	 */
 	function merge(overwrite, target) {
+		var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+		var useDescriptors = callable(getOwnPropertyDescriptor);
 		var args = slice(arguments, 2);
 		each(args, function (parameter) {
 			each(parameter, function (value, key) {
 				if (object(value) && object(target[key])) {
 					merge(overwrite, target[key], value);
 				} else if (overwrite || !target[key]) {
-					target[key] = value;
+					if (useDescriptors) {
+						Object.defineProperty(target, key, getOwnPropertyDescriptor(parameter, key));
+					} else {
+						target[key] = value;
+					}
 				}
 			}, null, true);
 		});

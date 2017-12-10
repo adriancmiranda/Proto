@@ -18,4 +18,4 @@ export default Object.setPrototypeOf || function setPrototypeOf(target, source) 
 		return target;
 	}
 	return Object.assign(target, source);
-}
+};
