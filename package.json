@@ -2,7 +2,7 @@
   "name": "Proto",
   "author": "Adrian C. Miranda",
   "description": "An extensible program-code-template for creating objects",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "types": "./source/index.d.ts",
   "module": "./source/index.js",
   "main": "./dist/Proto.umd.js",
