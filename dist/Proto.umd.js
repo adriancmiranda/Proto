@@ -1,9 +1,9 @@
 /*!
  * 
- * ~~~~ Proto v1.1.3
+ * ~~~~ Proto v1.1.4
  * 
- * @commit 772a58dfbc0ea70022b22d235ff3d7d9e7e11b72
- * @moment Tuesday, December 12, 2017 7:34 AM
+ * @commit a01d0cb1cc7b6aa2da985cd0ccba32c0aead0298
+ * @moment Tuesday, December 12, 2017 4:47 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -812,7 +812,7 @@
 		return Proto.extends(parent, protoProps, staticProps);
 	}
 
-	Proto.VERSION = '1.1.3';
+	Proto.VERSION = '1.1.4';
 	Proto.size = 0;
 	Proto.create = create;
 	Proto.each = each;
