@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
-import ownProperty from 'describe-type/source/has/ownProperty.js';
 import callable from 'describe-type/source/is/callable.js';
+import ownProperty from 'describe-type/source/has/ownProperty.js';
+import resolveProperty from './resolveProperty.js';
 
 /**
  *
@@ -13,15 +14,12 @@ import callable from 'describe-type/source/is/callable.js';
  */
 export default function eachProperty(value, cmd, context, getEnum) {
 	let i = 0;
-	const isFn = callable(value);
+	const isCallable = callable(value);
 	for (const key in value) {
 		if (getEnum || ownProperty(value, key)) {
-			if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
-				const item = value[key];
-				const resolve = cmd.call(context || item, item, key, value, i += 1);
-				if (resolve !== undefined) {
-					return resolve;
-				}
+			const response = resolveProperty(value, key, isCallable, cmd, context, i += 1);
+			if (response !== undefined) {
+				return response;
 			}
 		}
 	}
