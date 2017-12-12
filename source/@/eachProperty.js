@@ -14,10 +14,10 @@ import resolveProperty from './resolveProperty.js';
  */
 export default function eachProperty(value, cmd, context, getEnum) {
 	let i = 0;
-	const isCallable = callable(value);
+	const readStatics = callable(value) === false;
 	for (const key in value) {
 		if (getEnum || ownProperty(value, key)) {
-			const response = resolveProperty(value, key, isCallable, cmd, context, i += 1);
+			const response = resolveProperty(value, key, readStatics, cmd, context, i += 1);
 			if (response !== undefined) {
 				return response;
 			}
