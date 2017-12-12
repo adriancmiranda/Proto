@@ -1,9 +1,9 @@
 /*!
  * 
- * ~~~~ Proto v1.1.1
+ * ~~~~ Proto v1.1.3
  * 
- * @commit bcd21375d596f3b83cb8803da46504ae0ccb2d01
- * @moment Tuesday, December 12, 2017 7:09 AM
+ * @commit 772a58dfbc0ea70022b22d235ff3d7d9e7e11b72
+ * @moment Tuesday, December 12, 2017 7:34 AM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -365,10 +365,10 @@ define(function () { 'use strict';
 	 */
 	function eachProperty(value, cmd, context, getEnum) {
 		var i = 0;
-		var isCallable = callable(value);
+		var readStatics = callable(value) === false;
 		for (var key in value) {
 			if (getEnum || ownProperty(value, key)) {
-				var response = resolveProperty(value, key, isCallable, cmd, context, i += 1);
+				var response = resolveProperty(value, key, readStatics, cmd, context, i += 1);
 				if (response !== undefined) {
 					return response;
 				}
@@ -808,7 +808,7 @@ define(function () { 'use strict';
 		return Proto.extends(parent, protoProps, staticProps);
 	}
 
-	Proto.VERSION = '1.1.1';
+	Proto.VERSION = '1.1.3';
 	Proto.size = 0;
 	Proto.create = create;
 	Proto.each = each;
