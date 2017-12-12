@@ -1,9 +1,9 @@
 /*!
  * 
- * ~~~~ Proto v1.1.0
+ * ~~~~ Proto v1.1.1
  * 
- * @commit b0cf0d38d0fa39629faf1e9dfbe97202f212aa57
- * @moment Sunday, December 10, 2017 6:38 PM
+ * @commit bcd21375d596f3b83cb8803da46504ae0ccb2d01
+ * @moment Tuesday, December 12, 2017 7:09 AM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
  * @license (c) 2016-2020 Adrian C. Miranda
@@ -340,6 +340,23 @@
 		return slice(objectToString.call(value), 8, -1);
 	}
 
+	/**
+	 *
+	 * @param {Object} value
+	 * @param {String} key
+	 * @param {Function} cmd
+	 * @param {Object} ctx
+	 * @param {any} args
+	 * @returns {any}
+	 */
+	function resolveProperty(value, key, readStatic, cmd, ctx, args) {
+		if (readStatic || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
+			var item = value[key];
+			return apply(cmd, ctx || item, [item, key, value, args]);
+		}
+		return undefined;
+	}
+
 	/* eslint-disable no-restricted-syntax */
 	/**
 	 *
@@ -352,15 +369,12 @@
 	 */
 	function eachProperty(value, cmd, context, getEnum) {
 		var i = 0;
-		var isFn = any(Function, value);
+		var isCallable = callable(value);
 		for (var key in value) {
 			if (getEnum || ownProperty(value, key)) {
-				if (isFn === false || (key !== 'prototype' && key !== 'length' && key !== 'name')) {
-					var item = value[key];
-					var resolve = cmd.call(context || item, item, key, value, i += 1);
-					if (resolve !== undefined) {
-						return resolve;
-					}
+				var response = resolveProperty(value, key, isCallable, cmd, context, i += 1);
+				if (response !== undefined) {
+					return response;
 				}
 			}
 		}
@@ -798,7 +812,7 @@
 		return Proto.extends(parent, protoProps, staticProps);
 	}
 
-	Proto.VERSION = '1.1.0';
+	Proto.VERSION = '1.1.1';
 	Proto.size = 0;
 	Proto.create = create;
 	Proto.each = each;
@@ -827,8 +841,8 @@
 	Proto.merge = proxy(merge, null, true);
 	Proto.ape = ape;
 
-	Proto.invoke = function(cmd, context, args) {
-		return callable(cmd) ? apply(cmd, context, args) : void 0;
+	Proto.invoke = function (cmd, context, args) {
+		return callable(cmd) ? apply(cmd, context, args) : undefined;
 	};
 
 	Proto.extends = function () {
