@@ -88,13 +88,13 @@ Get Started
 Use this URL for dev/testing
 
 ```html
-<script src="https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.js"></script>
+<script src="https://rawgit.com/adriancmiranda/Proto/master/dist/Proto.umd.js"></script>
 ```
 
 Use this URL in production
 
 ```html
-<script src="https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.min.js"></script>
+<script src="https://cdn.rawgit.com/adriancmiranda/Proto/master/dist/Proto.umd.min.js"></script>
 ```
 
 ### via JSPM
