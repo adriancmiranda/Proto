@@ -4,9 +4,9 @@ const moment = require('moment');
 moment.locale();
 
 module.exports = (pack, git, options) => pirateFlag(pack, {
-	commit: git.commithash(),
+	commit: git.commithash,
 	moment: moment().format('LLLL'),
 	homepage: pack.homepage,
 	author: pack.author,
-	license: `(c) 2016-${+moment().format('GGGG') + 3} Adrian C. Miranda\n`,
+	license: `(c) 2016-${+moment().format('GGGG') + 3} ${pack.author}\n`,
 }, Object.assign({ comment: true, image: [''] }, options));

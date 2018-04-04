@@ -21,6 +21,7 @@ Session.vim
 # Dotfiles
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .*
+!.eslintrc
 !.slugignore
 !.gitattributes
 !.gitignore

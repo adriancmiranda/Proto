@@ -2,11 +2,11 @@
  * 
  * ~~~~ Proto v1.1.4
  * 
- * @commit a01d0cb1cc7b6aa2da985cd0ccba32c0aead0298
- * @moment Tuesday, December 12, 2017 4:47 PM
+ * @commit f75ecb8c7f2d3b5c7a665ed2d1f83f811227ba90
+ * @moment Wednesday, April 4, 2018 7:08 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
- * @license (c) 2016-2020 Adrian C. Miranda
+ * @license (c) 2016-2021 Adrian C. Miranda
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -35,6 +35,7 @@
 	}
 
 	/* eslint-disable no-restricted-syntax */
+
 	/**
 	 *
 	 * @function
@@ -175,6 +176,7 @@
 	}
 
 	/* eslint-disable no-nested-ternary */
+
 	/**
 	 *
 	 * @function
@@ -309,16 +311,15 @@
 		if (expected.constructor === Array && expected.length > 0) {
 			for (var i = expected.length - 1; i > -1; i -= 1) {
 				var ctor = expected[i];
-				if (ctor === Number) { return a(ctor, value); }
-				if (typeof ctor === 'function' && value instanceof ctor) { return true; }
+				if (ctor === Number) { return a(ctor, value); } // ... should normalize?!
+				if (callable(ctor) && value instanceof ctor) { return true; }
 			}
 		}
-		if (expected === Number) { return a(expected, value); }
-		return typeof expected === 'function' && value instanceof expected;
+		if (expected === Number) { return a(expected, value); } // ... should normalize?!
+		return callable(expected) && value instanceof expected;
 	}
 
 	// pattern(s)
-
 	var reFunctionName = /\s*function\s+([^(\s]*)\s*/;
 
 	/**
@@ -358,6 +359,7 @@
 	}
 
 	/* eslint-disable no-restricted-syntax */
+
 	/**
 	 *
 	 * @function
@@ -404,6 +406,7 @@
 	}
 
 	/* eslint-disable no-restricted-syntax */
+
 	/**
 	 *
 	 * @function
