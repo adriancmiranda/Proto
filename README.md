@@ -3,7 +3,6 @@
 
 > __Proto__ is an extensible program-code-template for creating objects
 
-[![stability]][stability-url] 
 [![build status][travis_build_status_image]][travis_build_status_url]
 [![dependencies status][david_dependencies_status_image]][david_dependencies_status_url]
 [![devDependency status][david_devdependencies_status_image]][david_devdependencies_status_url]
