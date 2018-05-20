@@ -2,7 +2,7 @@
   "name": "Proto",
   "author": "Adrian C. Miranda",
   "description": "An extensible program-code-template for creating objects",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "types": "./source/index.d.ts",
   "module": "./source/index.js",
   "main": "./dist/Proto.cjs.js",
@@ -47,9 +47,9 @@
     "watch": "npm run bin -- -w --environment=NODE_ENV:development",
     "lint": "eslint --ext .js index.js source",
     "flow": "flow",
-    "upgrade": "ncu -a --loglevel verbose --packageFile package.json && npm i",
+    "upgrade": "npx npm-check -uEy",
     "precommit": "npm run test",
-    "commitmsg": "validate-commit-msg",
+    "commitmsg": "commitlint -x @commitlint/config-conventional -e $GIT_PARAMS",
     "release": "standard-version",
     "untest": "rimraf *.log test/unit/coverage",
     "unbuild": "rimraf dist/*.{js,map,gz}",
@@ -59,6 +59,8 @@
     "describe-type": "0.6.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "6.2.0",
+    "@commitlint/config-conventional": "6.1.3",
     "babel-cli": "6.26.0",
     "babel-eslint": "8.2.2",
     "babel-loader": "7.1.4",
@@ -67,7 +69,6 @@
     "benchmark": "2.1.4",
     "chokidar": "2.0.3",
     "codecov": "3.0.0",
-    "conventional-commit-types": "2.2.0",
     "cross-env": "5.1.4",
     "documentation": "6.1.0",
     "eslint": "4.19.1",
@@ -125,17 +126,11 @@
     "strip-json-comments": "2.0.1",
     "tosource": "1.0.0",
     "uglify-es": "3.3.9",
-    "validate-commit-msg": "2.14.0",
     "webpack": "4.5.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/adriancmiranda/Proto.git"
-  },
-  "config": {
-    "validate-commit-msg": {
-      "types": "conventional-commit-types"
-    }
   },
   "keywords": [
     "es3",
