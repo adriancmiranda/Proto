@@ -1,17 +1,17 @@
 /*!
  * 
- * ~~~~ Proto v1.1.4
+ * ~~~~ Proto v1.1.5
  * 
- * @commit f75ecb8c7f2d3b5c7a665ed2d1f83f811227ba90
- * @moment Wednesday, April 4, 2018 7:08 PM
+ * @commit f14295e0f6
+ * @moment Saturday, May 16, 2020 7:29 PM
  * @homepage https://github.com/adriancmiranda/Proto
  * @author Adrian C. Miranda
- * @license (c) 2016-2021 Adrian C. Miranda
+ * @license (c) 2016-2023 Adrian C. Miranda
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Proto = factory());
+	(global = global || self, global.Proto = factory());
 }(this, (function () { 'use strict';
 
 	// prototypes
@@ -815,7 +815,7 @@
 		return Proto.extends(parent, protoProps, staticProps);
 	}
 
-	Proto.VERSION = '1.1.4';
+	Proto.VERSION = '1.1.5';
 	Proto.size = 0;
 	Proto.create = create;
 	Proto.each = each;

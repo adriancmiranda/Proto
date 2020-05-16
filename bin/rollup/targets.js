@@ -6,7 +6,7 @@ const defaultFormats = ['iife', 'umd', 'amd', 'cjs'];
 const target = (name, outputPath, format) => ({
   sourcemap: env.MINIFY,
   file: `${outputPath}.${format}${env.MINIFY ? '.min' : ''}.js`,
-  banner: env.SIGN ? flag : '',
+  banner: env.SIGN && !env.MINIFY ? flag : '',
   indent: env.INDENT,
   format,
   name,

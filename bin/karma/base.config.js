@@ -3,6 +3,7 @@ const { DefinePlugin } = require('webpack');
 const { aliases, env, pack, source } = require('../config');
 
 const webpack = {
+  mode: 'development',
   plugins: [new DefinePlugin(env)],
   devtool: '#inline-source-map',
   resolve: {
@@ -15,13 +16,13 @@ const webpack = {
       test: /\.jsx?$/,
       enforce: 'pre',
       use: ['remove-flow-types-loader'],
-      include: source,
+      include: source.path,
     }, {
       test: /\.jsx?$/,
       loader: 'babel-loader',
       exclude: /node_modules/,
       options: {
-        presets: ['env'],
+        presets: ['@babel/preset-env'],
       },
     }],
   },

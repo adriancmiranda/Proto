@@ -1,4 +1,4 @@
-const Git = require('git-revision-webpack-plugin');
+const getRepoInfo = require('git-repo-info');
 const { resolve, parse } = require('path');
 const { as } = require('describe-type');
 const { aliases } = require('./@common/aliases');
@@ -16,11 +16,11 @@ exports.env = params(process.env);
 
 exports.argv = args(process.argv);
 
-exports.git = new Git({ lightweightTags: true, branch: true });
+exports.git = getRepoInfo();
 
-exports.git.commithash = as(String, exports.git.commithash, exports.git) || '';
+exports.git.commithash = exports.git.abbreviatedSha;
 
-exports.git.version = as(String, exports.git.version, exports.git) || exports.pack.version;
+exports.git.version = exports.git.tag || exports.pack.version;
 
 exports.flag = banner(exports.pack, exports.git);
 
