@@ -113,7 +113,7 @@
     "redrun": "8.0.0",
     "remove-flow-types-loader": "1.1.0",
     "rimraf": "3.0.2",
-    "rollup": "2.10.2",
+    "rollup": "2.79.2",
     "rollup-plugin-es3": "1.1.0",
     "rollup-plugin-flow": "1.1.1",
     "rollup-plugin-gzip": "2.5.0",
