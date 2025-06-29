@@ -104,7 +104,7 @@
     "karma-sinon": "1.0.5",
     "karma-sourcemap-loader": "0.3.7",
     "karma-spec-reporter": "0.0.32",
-    "karma-webpack": "4.0.2",
+    "karma-webpack": "5.0.1",
     "make-arrow-function": "1.2.0",
     "make-generator-function": "2.0.0",
     "moment": "2.25.3",
