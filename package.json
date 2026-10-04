@@ -107,7 +107,7 @@
     "karma-webpack": "5.0.1",
     "make-arrow-function": "1.2.0",
     "make-generator-function": "2.0.0",
-    "moment": "2.29.4",
+    "moment": "2.31.0",
     "npm-check-updates": "18.0.1",
     "pirate-flag": "0.1.0",
     "redrun": "8.0.0",
